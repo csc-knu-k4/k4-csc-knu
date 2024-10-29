@@ -1,1 +1,1 @@
-# k4-csc-knu
+# k4-csc-knu (Osvita+)
