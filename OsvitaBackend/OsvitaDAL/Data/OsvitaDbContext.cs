@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
-using System.Reflection.PortableExecutable;
 using OsvitaDAL.Entities;
 
 namespace OsvitaDAL.Data
