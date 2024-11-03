@@ -41,7 +41,7 @@ namespace OsvitaBLL.Services
 
         public async Task<IEnumerable<MaterialModel>> GetAllAsync()
         {
-            var materials = await materialRepository.GetAllAsync();
+            var materials = await materialRepository.GetAllWithDetailsAsync();
             var materialsModels = mapper.Map<IEnumerable<Material>, IEnumerable<MaterialModel>>(materials);
             return materialsModels;
         }
