@@ -5,8 +5,9 @@ namespace OsvitaDAL.Entities
 	{
 		public string Title { get; set; }
 		public int SubjectId { get; set; }
+        public int OrderPosition { get; set; }
 
-		public Subject Subject { get; set; }
+        public Subject Subject { get; set; }
 		public List<Topic> Topics { get; set; }
 	}
 }

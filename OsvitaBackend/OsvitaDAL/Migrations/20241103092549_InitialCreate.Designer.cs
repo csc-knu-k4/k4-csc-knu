@@ -11,7 +11,7 @@ using OsvitaDAL.Data;
 namespace OsvitaDAL.Migrations
 {
     [DbContext(typeof(OsvitaDbContext))]
-    [Migration("20241102185232_InitialCreate")]
+    [Migration("20241103092549_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -31,6 +31,9 @@ namespace OsvitaDAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderPosition")
+                        .HasColumnType("int");
 
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
@@ -60,6 +63,9 @@ namespace OsvitaDAL.Migrations
                     b.Property<int>("MaterialId")
                         .HasColumnType("int");
 
+                    b.Property<int>("OrderPosition")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -82,6 +88,9 @@ namespace OsvitaDAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderPosition")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -123,6 +132,9 @@ namespace OsvitaDAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ChapterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderPosition")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
