@@ -42,6 +42,10 @@ namespace OsvitaBLL.Services
         public async Task<IEnumerable<TopicModel>> GetAllAsync()
         {
             var topics = await topicRepository.GetAllAsync();
+            foreach (var topic in topics)
+            {
+                topic.Materials = (await unitOfWork.MaterialRepository.GetAllAsync()).Where(x => x.TopicId == topic.Id).ToList();
+            }
             var topicsModels = mapper.Map<IEnumerable<Topic>, IEnumerable<TopicModel>>(topics);
             return topicsModels;
         }
@@ -69,6 +73,7 @@ namespace OsvitaBLL.Services
         public async Task<TopicModel> GetByIdAsync(int id)
         {
             var topic = await topicRepository.GetByIdAsync(id);
+            topic.Materials = (await unitOfWork.MaterialRepository.GetAllAsync()).Where(x => x.TopicId == topic.Id).ToList();
             var topicModel = mapper.Map<Topic, TopicModel>(topic);
             return topicModel;
         }
