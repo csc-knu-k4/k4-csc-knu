@@ -8,5 +8,6 @@ namespace OsvitaDAL.Entities
 {
     public enum ObjectType
     {
+        Material = 1,
     }
 }

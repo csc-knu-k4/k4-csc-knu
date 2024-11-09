@@ -10,7 +10,7 @@ namespace OsvitaDAL.Entities
     {
         public string ProblemDescription { get; set; }
         public string Explanation { get; set; }
-        public TaskType? TaskType { get; set; }
+        public TaskType? AssignmentType { get; set; }
         public int? ParentAssignmentId { get; set; }
 
         public Assignment? ParentAssignment { get; set; }

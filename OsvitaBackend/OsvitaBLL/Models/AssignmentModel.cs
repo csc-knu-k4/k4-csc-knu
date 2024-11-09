@@ -11,7 +11,7 @@ namespace OsvitaBLL.Models
         public int Id { get; set; }
         public string ProblemDescription { get; set; }
         public string Explanation { get; set; }
-        public TaskType? TaskType { get; set; }
+        public TaskType? AssignmentType { get; set; }
         public int? ParentAssignmentId { get; set; }
     }
 }
