@@ -7,7 +7,7 @@ using OsvitaDAL.Interfaces;
 
 namespace OsvitaBLL.Services
 {
-	public class ChapterService : IChapterService
+    public class ChapterService : IChapterService
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IChapterRepository chapterRepository;
@@ -42,7 +42,7 @@ namespace OsvitaBLL.Services
         public async Task<IEnumerable<ChapterModel>> GetAllAsync()
         {
             var chapters = await chapterRepository.GetAllAsync();
-            foreach (var chapter in chapters)
+            foreach(var chapter in chapters)
             {
                 chapter.Topics = (await unitOfWork.TopicRepository.GetAllAsync()).Where(x => x.ChapterId == chapter.Id).ToList();
             }

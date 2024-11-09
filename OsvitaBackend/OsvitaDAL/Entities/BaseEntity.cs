@@ -1,9 +1,9 @@
 ﻿using System;
 namespace OsvitaDAL.Entities
 {
-	public class BaseEntity
-	{
-		public int Id { get; set; }
-	}
+    public class BaseEntity
+    {
+        public int Id { get; set; }
+    }
 }
 

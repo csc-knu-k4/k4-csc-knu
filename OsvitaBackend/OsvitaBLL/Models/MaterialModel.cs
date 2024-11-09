@@ -1,8 +1,8 @@
 ﻿using System;
 namespace OsvitaBLL.Models
 {
-	public class MaterialModel
-	{
+    public class MaterialModel
+    {
         public int Id { get; set; }
         public string Title { get; set; }
         public int TopicId { get; set; }
