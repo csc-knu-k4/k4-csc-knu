@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { AddButton } from '@/shared/ui/AddButton';
 import { GoPlusCircle } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,15 +10,10 @@ export function AddSectionButton() {
   };
 
   return (
-    <Button
+    <AddButton
+      text="Додати розділ"
+      icon={<GoPlusCircle size="1.5rem" color="#5C6CFF" />}
       onClick={handleAddSection}
-      p={2}
-      fontSize="xl"
-      variant="outline"
-      borderRadius="0.5rem"
-      border="1px solid black"
-    >
-      <GoPlusCircle size="1.5rem" color="#5C6CFF" /> Додати розділ
-    </Button>
+    />
   );
 }
