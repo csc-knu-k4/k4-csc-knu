@@ -10,7 +10,6 @@ export default function BaseLayout() {
 			gap="1.5rem"
 			h="100vh"
 		>
-			{/* Боковое меню */}
 			<GridItem area="sidebar" h="calc(100vh - 2.5rem)">
 				<Flex flexDir="column" borderRadius="1rem" bg="white" h="full">
 					<Button borderRadius="none" bgColor="#E4E7FF" color="#5C6CFF">
@@ -28,14 +27,12 @@ export default function BaseLayout() {
 				</Flex>
 			</GridItem>
 
-			{/* Панель инструментов */}
 			<GridItem area="toolbar">
 				<Box bg="white" p={4} borderRadius="1rem" w="full">
 					<Input size="sm" />
 				</Box>
 			</GridItem>
 
-			{/* Основной контент */}
 			<GridItem area="content" overflowY="auto">
 				<Box bg="white" p={5} borderRadius="1rem" h="calc(100vh - 8.25rem)">
 					<Outlet />
