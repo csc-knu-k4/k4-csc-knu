@@ -1,0 +1,44 @@
+name: Validate Build
+
+on:
+  push:
+    branches:
+      - "master"
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-node:
+    runs-on: ubuntu-latest
+    name: Build Node JS
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        working-directory: ./OsvitaClient
+        run: npm install && npm run build
+
+      - name: Lint
+        working-directory: OsvitaClient
+        run: npm run lint
+
+  bump-version:
+    runs-on: ubuntu-latest
+    name: Bump Version
+    permissions:
+      contents: write
+    needs: [build-node]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@v1
+        id: bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          WITH_V: false
