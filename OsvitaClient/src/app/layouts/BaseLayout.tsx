@@ -10,8 +10,12 @@ export default function BaseLayout() {
 			gap="1.5rem"
 			h="100vh"
 		>
-			<GridItem area="sidebar" h="calc(100vh - 2.5rem)">
-				<Flex flexDir="column" borderRadius="1rem" bg="white" h="full">
+			<GridItem area="sidebar" h="calc(100vh - 2.5rem)" bg="white">
+				<Button bgColor="#5C6CFF" color="white">
+					Підготовка до НМТ
+				</Button>
+
+				<Flex flexDir="column" borderRadius="1rem" h="full">
 					<Button borderRadius="none" bgColor="#E4E7FF" color="#5C6CFF">
 						Предмети
 					</Button>
