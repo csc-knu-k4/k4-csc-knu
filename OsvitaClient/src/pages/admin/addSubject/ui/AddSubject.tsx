@@ -12,7 +12,7 @@ const AddSubject = () => {
         <Input
           _placeholder={{ color: 'inherit' }}
           placeholder="Вкажіть назву"
-          color="blue.100"
+          color="blue.placeholder"
           borderColor="blue"
         />
       </Field>

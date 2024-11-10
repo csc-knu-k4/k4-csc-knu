@@ -12,7 +12,7 @@ const AddMaterial = () => {
         <Field color="blue" label="Наповнення" required errorText="Поле обов'язкове">
           <Textarea
             _placeholder={{ color: 'inherit' }}
-            color="blue.100"
+            color="blue.placeholder"
             borderColor="blue"
             placeholder="Начніть друкувати..."
             variant="outline"
@@ -23,7 +23,7 @@ const AddMaterial = () => {
         <Input
           _placeholder={{ color: 'inherit' }}
           placeholder="Вкажіть предмет"
-          color="blue.100"
+          color="blue.placeholder"
           borderColor="blue"
         />
       </Field>

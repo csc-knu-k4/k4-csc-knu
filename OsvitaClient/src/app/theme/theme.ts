@@ -19,6 +19,7 @@ const config = defineConfig({
           300: { value: '#E4E7FF' },
           400: { value: '#5C6CFF' },
           hover: { value: '#D7D9FF' },
+          placeholder: { value: '#B1B8FF' },
         },
       },
     },

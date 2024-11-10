@@ -12,7 +12,7 @@ const AddSection = () => {
         <Input
           _placeholder={{ color: 'inherit' }}
           placeholder="Вкажіть назву"
-          color="blue.100"
+          color="blue.placeholder"
           borderColor="blue"
         />
       </Field>
@@ -20,7 +20,7 @@ const AddSection = () => {
         <Input
           _placeholder={{ color: 'inherit' }}
           placeholder="Вкажіть предмет"
-          color="blue.100"
+          color="blue.placeholder"
           borderColor="blue"
         />
       </Field>
