@@ -6,12 +6,12 @@ export function SearchInput() {
   return (
     <InputGroup flex="1" endElement={<SearchIcon />}>
       <Input
-        color="#5C6CFF"
+        color="blue"
         placeholder="Пошук"
         w="20rem"
         h="2.25rem"
         borderRadius="6.25rem"
-        border="0.03rem solid #5C6CFF"
+        border="0.03rem solid blue"
         _placeholder={{ color: 'inherit' }}
         fontSize="md"
       />

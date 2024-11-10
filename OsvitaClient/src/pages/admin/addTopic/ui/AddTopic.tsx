@@ -8,23 +8,23 @@ const AddTopic = () => {
       <Text mb="2rem" fontSize="2xl" fontWeight="medium">
         Додати тему
       </Text>
-      <Field label="Назва" required mb={3} color="#5C6CFF">
+      <Field label="Назва" required mb={3} color="blue">
         <Input
           _placeholder={{ color: 'inherit' }}
           placeholder="Вкажіть назву"
-          color="#B1B8FF"
-          borderColor="#5C6CFF"
+          color="blue.100"
+          borderColor="blue"
         />
       </Field>
-      <Field label="Розділ" required mb={3} color="#5C6CFF">
+      <Field label="Розділ" required mb={3} color="blue">
         <Input
           _placeholder={{ color: 'inherit' }}
           placeholder="Вкажіть розділ"
-          color="#B1B8FF"
-          borderColor="#5C6CFF"
+          color="blue.100"
+          borderColor="blue"
         />
       </Field>
-      <Button bgColor="#5C6CFF">Додати</Button>
+      <Button bgColor="blue">Додати</Button>
     </Flex>
   );
 };

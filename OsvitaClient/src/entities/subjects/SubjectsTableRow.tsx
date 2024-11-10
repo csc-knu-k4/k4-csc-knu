@@ -23,7 +23,7 @@ export function SubjectsTableRow({ item }: SubjectsTableRowProps) {
   };
 
   return (
-    <Table.Row bgColor={item.id % 2 === 0 ? 'white' : '#F4F5FF'}>
+    <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'blue.100'}>
       <Table.Cell w="full">{item.subjectName}</Table.Cell>
       <Table.Cell textAlign="end" whiteSpace="nowrap">
         {item.date}

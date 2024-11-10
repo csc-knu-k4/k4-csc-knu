@@ -12,11 +12,11 @@ export function MaterialTable({ items }: MaterialTableProps) {
       <Table.Root size="lg">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader color="#5C6CFF">Тема</Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="#5C6CFF">
+            <Table.ColumnHeader color="blue">Тема</Table.ColumnHeader>
+            <Table.ColumnHeader textAlign="start" color="blue">
               Створено
             </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="#5C6CFF">
+            <Table.ColumnHeader textAlign="start" color="blue">
               Дії
             </Table.ColumnHeader>
           </Table.Row>

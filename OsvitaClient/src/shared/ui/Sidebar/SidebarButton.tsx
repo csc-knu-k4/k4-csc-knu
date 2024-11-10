@@ -16,9 +16,9 @@ export function SidebarButton({ label, icon, path }: SidebarButtonProps) {
     <Link to={path}>
       <Button
         borderRadius="none"
-        bgColor={isActive ? '#E4E7FF' : 'white'}
-        color={isActive ? '#5C6CFF' : 'black'}
-        borderRight={isActive ? '3px solid #5C6CFF' : 'none'}
+        bgColor={isActive ? 'blue.300' : 'white'}
+        color={isActive ? 'blue' : 'black'}
+        borderRight={isActive ? '3px solid blue' : 'none'}
         justifyContent="flex-start"
         w="full"
         fontSize="xl"

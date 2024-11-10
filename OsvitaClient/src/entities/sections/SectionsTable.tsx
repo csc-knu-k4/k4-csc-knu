@@ -12,14 +12,14 @@ export function SectionsTable({ items }: SectionsTableProps) {
       <Table.Root size="lg">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader color="#5C6CFF">Назва</Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="center" color="#5C6CFF">
+            <Table.ColumnHeader color="blue">Назва</Table.ColumnHeader>
+            <Table.ColumnHeader textAlign="center" color="blue">
               Предмет
             </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="#5C6CFF">
+            <Table.ColumnHeader textAlign="start" color="blue">
               Створено
             </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="#5C6CFF">
+            <Table.ColumnHeader textAlign="start" color="blue">
               Дії
             </Table.ColumnHeader>
           </Table.Row>

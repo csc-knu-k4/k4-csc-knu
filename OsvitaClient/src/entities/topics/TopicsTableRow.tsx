@@ -23,7 +23,7 @@ export function TopicsTableRow({ item }: TopicsTableRowProps) {
   };
 
   return (
-    <Table.Row bgColor={item.id % 2 === 0 ? 'white' : '#F4F5FF'}>
+    <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'blue.100'}>
       <Table.Cell textAlign="start" whiteSpace="nowrap">
         {item.topic}
       </Table.Cell>

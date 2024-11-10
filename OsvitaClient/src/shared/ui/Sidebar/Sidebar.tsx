@@ -7,7 +7,7 @@ export function Sidebar() {
   return (
     <Box h="calc(100vh - 2.5rem)" bg="white" borderRadius="1rem">
       <Flex justifyContent="center" alignItems="center" mb="1rem">
-        <Button mt={4} fontSize="sm" bgColor="#5C6CFF" color="white" borderRadius="0.5rem">
+        <Button mt={4} fontSize="sm" bgColor="blue" color="white" borderRadius="0.5rem">
           <GiTopHat />
           Підготовка до НМТ
         </Button>
