@@ -1,18 +1,18 @@
-import { Flex, Box, Button, Input } from "@chakra-ui/react";
+import { Grid, GridItem, Box, Button, Input, Flex } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
 export default function BaseLayout() {
 	return (
-		<Flex h="100vh">
-			<Box
-				borderRadius="1rem"
-				w="16rem"
-				bg="white"
-				mr="1.5rem"
-				position="fixed"
-				h="calc(100vh - 2.5rem)"
-			>
-				<Flex flexDir="column">
+		<Grid
+			templateAreas={`"sidebar toolbar" "sidebar content"`}
+			templateColumns="16rem 1fr"
+			templateRows="auto 1fr"
+			gap="1.5rem"
+			h="100vh"
+		>
+			{/* Боковое меню */}
+			<GridItem area="sidebar" h="calc(100vh - 2.5rem)">
+				<Flex flexDir="column" borderRadius="1rem" bg="white" h="full">
 					<Button borderRadius="none" bgColor="#E4E7FF" color="#5C6CFF">
 						Предмети
 					</Button>
@@ -26,38 +26,21 @@ export default function BaseLayout() {
 						Матеріали
 					</Button>
 				</Flex>
-			</Box>
+			</GridItem>
 
-			<Flex flexDir="column" flex="1" ml="17.5rem" gap="1.5rem">
-				<Box
-					w="calc(100% - 20.5rem)"
-					h="4rem"
-					bg="white"
-					p={4}
-					borderRadius="1rem"
-					position="fixed"
-					top="1.25rem"
-					right="1.5rem"
-					zIndex="10"
-				>
+			{/* Панель инструментов */}
+			<GridItem area="toolbar">
+				<Box bg="white" p={4} borderRadius="1rem" w="full">
 					<Input size="sm" />
 				</Box>
+			</GridItem>
 
-				<Box
-					mt={5}
-					p={5}
-					bg="white"
-					borderRadius="1rem"
-					h="calc(100vh - 7.5rem)"
-					overflowY="auto"
-					position="fixed"
-					top="5rem"
-					left="19rem"
-					right="1.5rem"
-				>
+			{/* Основной контент */}
+			<GridItem area="content" overflowY="auto">
+				<Box bg="white" p={5} borderRadius="1rem" h="calc(100vh - 8.25rem)">
 					<Outlet />
 				</Box>
-			</Flex>
-		</Flex>
+			</GridItem>
+		</Grid>
 	);
 }
