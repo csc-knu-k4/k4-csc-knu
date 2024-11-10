@@ -1,11 +1,11 @@
 import { Text } from '@chakra-ui/react';
 
-const Subjects = () => {
+const Topics = () => {
   return (
     <div>
-      <Text>Subjects</Text>
+      <Text>Topics</Text>
     </div>
   );
 };
 
-export default Subjects;
+export default Topics;
