@@ -7,7 +7,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'src/components/ui/**/*'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -31,5 +31,14 @@ export default tseslint.config(
       'prettier/prettier': 'off',
       'react-hooks/exhaustive-deps': 'off',
     },
+    overrides: [
+      {
+        files: ['src/components/ui/**/*'],
+        rules: {
+          '@typescript-eslint/no-empty-object-type': 'off',
+          'react-refresh/only-export-components': 'off',
+        },
+      },
+    ],
   },
 );
