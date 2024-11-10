@@ -31,14 +31,5 @@ export default tseslint.config(
       'prettier/prettier': 'off',
       'react-hooks/exhaustive-deps': 'off',
     },
-    overrides: [
-      {
-        files: ['src/components/ui/**/*'],
-        rules: {
-          '@typescript-eslint/no-empty-object-type': 'off',
-          'react-refresh/only-export-components': 'off',
-        },
-      },
-    ],
   },
 );
