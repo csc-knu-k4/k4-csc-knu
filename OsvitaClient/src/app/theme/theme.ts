@@ -4,9 +4,7 @@ const config = defineConfig({
   globalCss: {
     body: {
       margin: 0,
-      padding: '1.25rem 1.5rem',
       bgColor: 'gray.100',
-      overflow: 'hidden',
     },
   },
   theme: {
@@ -21,6 +19,10 @@ const config = defineConfig({
           hover: { value: '#D7D9FF' },
           placeholder: { value: '#B1B8FF' },
         },
+      },
+      fonts: {
+        body: { value: 'Inter, sans-serif' },
+        heading: { value: 'Inter, sans-serif' },
       },
     },
   },
