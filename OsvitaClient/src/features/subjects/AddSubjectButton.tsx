@@ -6,7 +6,7 @@ export function AddSubjectButton() {
   const navigate = useNavigate();
 
   const handleAddSubject = () => {
-    navigate('/add-subject');
+    navigate('/admin/add-subject');
   };
 
   return (

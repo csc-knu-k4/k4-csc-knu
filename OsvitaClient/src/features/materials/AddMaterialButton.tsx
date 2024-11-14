@@ -6,7 +6,7 @@ export function AddMaterialButton() {
   const navigate = useNavigate();
 
   const handleAddMaterial = () => {
-    navigate('/add-material');
+    navigate('/admin/add-material');
   };
 
   return (

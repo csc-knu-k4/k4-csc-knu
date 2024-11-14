@@ -6,7 +6,7 @@ export function AddSectionButton() {
   const navigate = useNavigate();
 
   const handleAddSection = () => {
-    navigate('/add-section');
+    navigate('/admin/add-section');
   };
 
   return (

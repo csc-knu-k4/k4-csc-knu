@@ -6,7 +6,7 @@ export function AddTopicButton() {
   const navigate = useNavigate();
 
   const handleAddTopic = () => {
-    navigate('/add-topic');
+    navigate('/admin/add-topic');
   };
 
   return (
