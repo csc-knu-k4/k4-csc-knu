@@ -19,10 +19,8 @@ const Footer = () => {
               </Highlight>{' '}
               з нами
             </Text>
-            <Text fontSize="xs">
-              У вас є запитання чи пропозиції? Напишіть нам, і ми з радістю відповімо на всі ваші
-              запитання!
-            </Text>
+            <Text fontSize="xs">У вас є запитання чи пропозиції?</Text>
+            <Text fontSize="xs">Напишіть нам, і ми з радістю відповімо на всі ваші запитання!</Text>
             <Flex flexDir="row" gap={6} mt={4}>
               <Input bgColor="white" placeholder="Ім’я" />
               <Input bgColor="white" placeholder="Email" />
