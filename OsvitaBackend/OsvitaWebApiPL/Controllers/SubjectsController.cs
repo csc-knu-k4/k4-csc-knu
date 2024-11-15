@@ -9,9 +9,11 @@ namespace OsvitaWebApiPL.Controllers
     public class SubjectsController : ControllerBase
     {
         private readonly ISubjectService subjectService;
-        public SubjectsController(ISubjectService subjectService)
+        private readonly IChapterService chapterService;
+        public SubjectsController(ISubjectService subjectService, IChapterService chapterService)
         {
             this.subjectService = subjectService;
+            this.chapterService = chapterService;
         }
 
         // GET: api/subjects
@@ -82,6 +84,18 @@ namespace OsvitaWebApiPL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // GET api/subjects/5/chapters
+        [HttpGet("{id}/chapters")]
+        public async Task<ActionResult<IEnumerable<ChapterModel>>> GetChapters(int id)
+        {
+            var chapterModels = await chapterService.GetBySubjectIdAsync(id);
+            if (chapterModels is not null)
+            {
+                return Ok(chapterModels);
+            }
+            return NotFound();
         }
     }
 }

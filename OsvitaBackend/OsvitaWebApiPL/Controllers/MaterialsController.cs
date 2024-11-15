@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
-using OsvitaBLL.Services;
 
 namespace OsvitaWebApiPL.Controllers
 {
@@ -11,9 +9,11 @@ namespace OsvitaWebApiPL.Controllers
     public class MaterialsController : ControllerBase
     {
         private readonly IMaterialService materialService;
-        public MaterialsController(IMaterialService materialService)
+        private readonly IContentBlockService contentBlockService;
+        public MaterialsController(IMaterialService materialService, IContentBlockService contentBlockService)
         {
             this.materialService = materialService;
+            this.contentBlockService = contentBlockService;
         }
 
         // GET: api/<MaterialsController>
@@ -84,6 +84,18 @@ namespace OsvitaWebApiPL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // GET api/materials/5/contentblocks
+        [HttpGet("{id}/contentblocks")]
+        public async Task<ActionResult<IEnumerable<ContentBlockModel>>> GetContentBlocks(int id)
+        {
+            var contentBlocksModels = await contentBlockService.GetByMaterialIdAsync(id);
+            if (contentBlocksModels is not null)
+            {
+                return Ok(contentBlocksModels);
+            }
+            return NotFound();
         }
     }
 }
