@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValueText,
 } from '@/components/ui/select';
-import { addChapter } from '@/shared/api/chaptersApi';
+import { addChapter, getChapters } from '@/shared/api/chaptersApi';
 import { getSubjects, Subject } from '@/shared/api/subjectsApi';
 
 const AddChapter = () => {
@@ -18,7 +18,11 @@ const AddChapter = () => {
   const [subjectId, setSubjectId] = useState<number | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: subjectsData, isLoading } = useQuery<Subject[]>(['subjects'], getSubjects);
+  const { data: subjectsData, isLoading: subjectsLoading } = useQuery<Subject[]>(
+    ['subjects'],
+    getSubjects,
+  );
+  const { data: chaptersData, isLoading: chaptersLoading } = useQuery(['chapters'], getChapters);
 
   const subjects = createListCollection({
     items: subjectsData
@@ -44,15 +48,22 @@ const AddChapter = () => {
       return;
     }
 
+    const maxOrderPosition = chaptersData
+      ? Math.max(
+          ...chaptersData.map((chapter: { orderPosition: number }) => chapter.orderPosition),
+          0,
+        )
+      : 0;
+
     mutation.mutate({
       title: title.trim(),
       subjectId,
-      orderPosition: 0,
+      orderPosition: maxOrderPosition + 1,
       topicsIds: [],
     });
   };
 
-  if (isLoading) {
+  if (subjectsLoading || chaptersLoading) {
     return <Text>Завантаження предметів...</Text>;
   }
 

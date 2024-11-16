@@ -1,10 +1,18 @@
 import axios from 'axios';
 
+export interface Chapter {
+  id: number;
+  title: string;
+  subjectId: number;
+  orderPosition: number;
+  topicIds: number[];
+}
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-export const getChapters = async () => {
+export const getChapters = async (): Promise<Chapter[]> => {
   const response = await api.get('/chapters');
   return response.data;
 };
@@ -26,4 +34,9 @@ export const updateChapter = async (id: number, chapter: any) => {
 
 export const deleteChapter = async (id: number) => {
   await api.delete(`/chapters/${id}`);
+};
+
+export const getChapterById = async (id: number) => {
+  const response = await api.get(`/chapters/${id}`);
+  return response.data;
 };

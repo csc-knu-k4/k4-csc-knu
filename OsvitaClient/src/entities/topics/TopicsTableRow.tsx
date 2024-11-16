@@ -4,44 +4,74 @@ import { TbEdit } from 'react-icons/tb';
 import { MdDeleteOutline } from 'react-icons/md';
 import { Topic } from './types';
 import { ActionButtons } from '@/shared/ui/ActionButtons';
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import { getChapterById } from '@/shared/api/chaptersApi';
+import { deleteTopic } from '@/shared/api/topicsApi';
+import { EditTopicModal } from '@/features/topics/EditTopicModal';
 
 interface TopicsTableRowProps {
   item: Topic;
 }
 
 export function TopicsTableRow({ item }: TopicsTableRowProps) {
-  const handleView = () => {
-    console.log('View', item.id);
-  };
+  const [isEditOpen, setEditOpen] = useState(false);
+  const [chapterTitle, setChapterTitle] = useState<string | null>(null);
 
-  const handleEdit = () => {
-    console.log('Edit', item.id);
-  };
+  const { data: subject, isLoading } = useQuery(
+    ['subject', item.chapterId],
+    () => getChapterById(item.chapterId),
+    {
+      enabled: !!item.chapterId,
+    },
+  );
+
+  useEffect(() => {
+    if (subject && subject.title) {
+      setChapterTitle(subject.title);
+    }
+  }, [subject]);
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteTopic,
+    onSuccess: () => {
+      console.log(`Chapter with ID ${item.id} deleted.`);
+    },
+  });
 
   const handleDelete = () => {
-    console.log('Delete', item.id);
+    deleteMutation.mutate(item.id);
   };
 
   return (
-    <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'orange.100'}>
-      <Table.Cell textAlign="start" whiteSpace="nowrap">
-        {item.topic}
-      </Table.Cell>
-      <Table.Cell w="full" textAlign="center">
-        {item.sectionName}
-      </Table.Cell>
-      <Table.Cell textAlign="start" whiteSpace="nowrap">
-        {item.date}
-      </Table.Cell>
-      <Table.Cell>
-        <ActionButtons
-          actions={[
-            { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: handleView },
-            { icon: <TbEdit />, ariaLabel: 'Edit', onClick: handleEdit },
-            { icon: <MdDeleteOutline />, ariaLabel: 'Delete', onClick: handleDelete },
-          ]}
-        />
-      </Table.Cell>
-    </Table.Row>
+    <>
+      <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'orange.100'}>
+        <Table.Cell textAlign="start" whiteSpace="nowrap">
+          {item.title}
+        </Table.Cell>
+        <Table.Cell w="full" textAlign="center">
+          {isLoading ? 'Завантаження...' : chapterTitle || 'Не знайдено'}
+        </Table.Cell>
+        <Table.Cell>
+          <ActionButtons
+            actions={[
+              { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: () => console.log('View') },
+              { icon: <TbEdit />, ariaLabel: 'Edit', onClick: () => setEditOpen(true) },
+              { icon: <MdDeleteOutline />, ariaLabel: 'Delete', onClick: handleDelete },
+            ]}
+          />
+        </Table.Cell>
+      </Table.Row>
+
+      <EditTopicModal
+        isOpen={isEditOpen}
+        onClose={() => setEditOpen(false)}
+        initialTitle={item.title}
+        topicId={item.id}
+        chapterId={item.chapterId}
+        orderPosition={item.orderPosition}
+        materialIds={item.materialsIds}
+      />
+    </>
   );
 }
