@@ -1,3 +1,3 @@
-export { SectionsTable } from './SectionsTable';
-export { SectionsTableRow } from './SectionsTableRow';
+export { ChaptersTable } from './ChaptersTable';
+export { ChaptersTableRow } from './ChaptersTableRow';
 export type { Section } from './types';

@@ -16,11 +16,11 @@ interface Section {
   topicsIds: number[];
 }
 
-interface SectionsTableRowProps {
+interface ChaptersTableRowProps {
   item: Section;
 }
 
-export function SectionsTableRow({ item }: SectionsTableRowProps) {
+export function ChaptersTableRow({ item }: ChaptersTableRowProps) {
   const [subjectTitle, setSubjectTitle] = useState<string | null>(null);
 
   const { data: subject, isLoading } = useQuery(

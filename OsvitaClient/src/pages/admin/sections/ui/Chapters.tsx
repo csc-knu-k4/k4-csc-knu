@@ -1,6 +1,6 @@
 import { Text, Flex } from '@chakra-ui/react';
 import { AddChapterButton } from '@/features/sections';
-import { SectionsTable } from '@/entities/sections';
+import { ChaptersTable } from '@/entities/sections';
 import { useQuery } from 'react-query';
 import { getChapters } from '@/shared/api/chaptersApi';
 
@@ -19,7 +19,7 @@ const Chapters = () => {
         </Text>
         <AddChapterButton />
       </Flex>
-      <SectionsTable items={chapters} />
+      <ChaptersTable items={chapters} />
     </>
   );
 };

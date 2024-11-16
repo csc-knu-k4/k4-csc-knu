@@ -1,12 +1,12 @@
 import { Table, Box } from '@chakra-ui/react';
-import { SectionsTableRow } from './SectionsTableRow';
+import { ChaptersTableRow } from './ChaptersTableRow';
 import { Section } from './types';
 
-interface SectionsTableProps {
+interface ChaptersTableProps {
   items: Section[];
 }
 
-export function SectionsTable({ items }: SectionsTableProps) {
+export function ChaptersTable({ items }: ChaptersTableProps) {
   const sortedItems = [...items].sort((a, b) => a.id - b.id);
 
   return (
@@ -25,7 +25,7 @@ export function SectionsTable({ items }: SectionsTableProps) {
         </Table.Header>
         <Table.Body>
           {sortedItems.map((item) => (
-            <SectionsTableRow key={item.id} item={item} />
+            <ChaptersTableRow key={item.id} item={item} />
           ))}
         </Table.Body>
       </Table.Root>
