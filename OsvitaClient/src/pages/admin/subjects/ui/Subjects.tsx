@@ -1,16 +1,15 @@
+import { useQuery } from 'react-query';
+import { getSubjects } from '@/shared/api/subjectsApi';
 import { Text, Flex } from '@chakra-ui/react';
 import { AddSubjectButton } from '@/features/subjects';
 import { SubjectsTable } from '@/entities/subjects';
 
-const items = [
-  { id: 1, subjectName: 'Математика', date: '20.10.2024, 16:32' },
-  { id: 2, subjectName: 'Українська мова', date: '20.10.2024, 16:32' },
-  { id: 3, subjectName: 'Англійська мова', date: '20.10.2024, 16:32' },
-  { id: 4, subjectName: 'Історія', date: '20.10.2024, 16:32' },
-  { id: 5, subjectName: 'Фізика', date: '20.10.2024, 16:32' },
-];
-
 const Subjects = () => {
+  const { data: subjects, isLoading } = useQuery(['subjects'], getSubjects);
+
+  if (isLoading) {
+    return <Text>Завантаження...</Text>;
+  }
   return (
     <>
       <Flex justifyContent="space-between" alignItems="center" mb={2}>
@@ -19,7 +18,7 @@ const Subjects = () => {
         </Text>
         <AddSubjectButton />
       </Flex>
-      <SubjectsTable items={items} />
+      <SubjectsTable items={subjects} />
     </>
   );
 };

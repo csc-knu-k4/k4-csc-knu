@@ -1,6 +1,11 @@
 import { Table, Box } from '@chakra-ui/react';
 import { SubjectsTableRow } from './SubjectsTableRow';
-import { Subject } from './types';
+
+interface Subject {
+  id: number;
+  title: string;
+  chaptersIds: number[];
+}
 
 interface SubjectsTableProps {
   items: Subject[];
@@ -13,9 +18,6 @@ export function SubjectsTable({ items }: SubjectsTableProps) {
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeader color="orange">Назва</Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="orange">
-              Створено
-            </Table.ColumnHeader>
             <Table.ColumnHeader textAlign="start" color="orange">
               Дії
             </Table.ColumnHeader>
