@@ -1,10 +1,10 @@
 import { Container } from '@chakra-ui/react';
-import WhyUsSection from './WhyUsSection';
-import Header from './Header';
-import Hero from './Hero';
-import Preparation from './Preparation';
-import FAQSection from './FAQSection';
-import Footer from './Footer';
+import { Header } from '@/entities/novigation';
+import { Hero } from '@/widgets/hero';
+import { WhyUsSection } from '@/widgets/why-us';
+import { FAQSection } from '@/widgets/faq';
+import { Footer } from '@/widgets/footer';
+import { Preparation } from '@/widgets/preparation';
 
 const Index = () => {
   return (
