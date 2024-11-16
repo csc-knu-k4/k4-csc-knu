@@ -1,83 +1,55 @@
 import { useState } from 'react';
+import { Button, Input, Text, Flex } from '@chakra-ui/react';
 import {
   DialogBody,
-  DialogCloseTrigger,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogRoot,
-  DialogTitle,
-  Button,
-  Input,
-  Text,
-  Flex,
-} from '@chakra-ui/react';
-import { toaster } from '@/components/ui/toaster';
-import { useMutation, useQueryClient } from 'react-query';
-import { updateSubject } from '@/shared/api/subjectsApi';
+} from '@/components/ui/dialog';
 
 interface EditSubjectModalProps {
-  open: boolean;
-  subject: { id: number; title: string; chaptersIds: number[] };
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (title: string) => void;
+  initialTitle: string;
 }
 
-export const EditSubjectModal = ({ open, subject }: EditSubjectModalProps) => {
-  const [title, setTitle] = useState(subject.title);
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: (updatedSubject: { id: number; title: string; chaptersIds: number[] }) =>
-      updateSubject(updatedSubject.id, updatedSubject),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['subjects']);
-      toaster.create({
-        title: 'Предмет оновлено!',
-        type: 'success',
-        duration: 3000,
-      });
-    },
-    onError: () => {
-      toaster.create({
-        title: 'Помилка при оновленні предмета.',
-        type: 'error',
-        duration: 3000,
-      });
-    },
-  });
+export const EditSubjectModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialTitle,
+}: EditSubjectModalProps) => {
+  const [title, setTitle] = useState(initialTitle);
 
   const handleSave = () => {
     if (!title.trim()) {
-      toaster.create({
-        title: 'Назва предмета не може бути порожньою.',
-        type: 'warning',
-        duration: 3000,
-      });
+      alert('Назва не може бути пустою!');
       return;
     }
-
-    mutation.mutate({ id: subject.id, title: title.trim(), chaptersIds: subject.chaptersIds });
+    onSubmit(title.trim());
   };
 
   return (
-    <DialogRoot open={open}>
-      <DialogCloseTrigger />
+    <DialogRoot lazyMount open={isOpen} onOpenChange={() => onClose()}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Редагувати предмет</DialogTitle>
-        </DialogHeader>
+        <DialogHeader>Редагувати предмет</DialogHeader>
         <DialogBody>
           <Flex flexDir="column" gap={4}>
-            <Text>Назва</Text>
+            <Text fontWeight="medium">Назва</Text>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Введіть назву предмета"
+              placeholder="Введіть нову назву"
             />
           </Flex>
         </DialogBody>
         <DialogFooter>
-          <Button mr={3}>Скасувати</Button>
-          <Button onClick={handleSave} bgColor="orange">
+          <Button variant="ghost" mr={3} onClick={onClose}>
+            Скасувати
+          </Button>
+          <Button bgColor="orange" onClick={handleSave}>
             Зберегти
           </Button>
         </DialogFooter>
