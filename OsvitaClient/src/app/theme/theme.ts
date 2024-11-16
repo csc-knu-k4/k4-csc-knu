@@ -4,9 +4,7 @@ const config = defineConfig({
   globalCss: {
     body: {
       margin: 0,
-      padding: '1.25rem 1.5rem',
       bgColor: 'gray.100',
-      overflow: 'hidden',
     },
   },
   theme: {
@@ -21,6 +19,18 @@ const config = defineConfig({
           hover: { value: '#D7D9FF' },
           placeholder: { value: '#B1B8FF' },
         },
+        orange: {
+          DEFAULT: { value: '#FF6D18' },
+          100: { value: '#FCEDE6' },
+          200: { value: '#FFCEB1' },
+          300: { value: '#FF6D18' },
+          hover: { value: '#fed7aa' },
+          placeholder: { value: '#fb923c' },
+        },
+      },
+      fonts: {
+        body: { value: 'Inter, sans-serif' },
+        heading: { value: 'Inter, sans-serif' },
       },
     },
   },

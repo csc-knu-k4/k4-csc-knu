@@ -1,0 +1,29 @@
+import HatIcon from '@/shared/assets/HatIcon';
+import { Button, Flex, Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+
+const Header = () => {
+  const navigate = useNavigate();
+
+  return (
+    <Flex justifyContent="space-between">
+      <Flex justifyContent="center" alignItems="center" flexDir="row" gap={2}>
+        <HatIcon />
+        <Text fontFamily="Oswald" fontSize="xl" color="orange">
+          Підготовка до НМТ
+        </Text>
+      </Flex>
+      <Button
+        fontSize="md"
+        px="2.5rem"
+        bgColor="orange"
+        borderRadius="0.6rem"
+        onClick={() => navigate('/admin')}
+      >
+        Увійти
+      </Button>
+    </Flex>
+  );
+};
+
+export default Header;

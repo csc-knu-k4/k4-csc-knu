@@ -12,11 +12,11 @@ export function SubjectsTable({ items }: SubjectsTableProps) {
       <Table.Root size="lg">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader color="blue">Назва</Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="blue">
+            <Table.ColumnHeader color="orange">Назва</Table.ColumnHeader>
+            <Table.ColumnHeader textAlign="start" color="orange">
               Створено
             </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="blue">
+            <Table.ColumnHeader textAlign="start" color="orange">
               Дії
             </Table.ColumnHeader>
           </Table.Row>

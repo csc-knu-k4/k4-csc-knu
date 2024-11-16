@@ -23,7 +23,7 @@ export function SectionsTableRow({ item }: SectionsTableRowProps) {
   };
 
   return (
-    <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'blue.100'}>
+    <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'orange.100'}>
       <Table.Cell textAlign="start" whiteSpace="nowrap">
         {item.topic}
       </Table.Cell>
