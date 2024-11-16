@@ -6,7 +6,12 @@ import { steps } from './stepsConfig';
 const Preparation = () => (
   <Flex bgColor="orange.100" mt="130px">
     <Container maxW="1232px" px="1rem">
-      <Flex justifyContent="center" alignItems="center" flexDir="row" bgColor="orange.100">
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        flexDir={{ base: 'column', lg: 'row' }}
+        bgColor="orange.100"
+      >
         <PreparationPicture />
         <Flex flexDir="column">
           <Text fontSize="2xl" fontWeight="bold" mt={10} ml={5}>
