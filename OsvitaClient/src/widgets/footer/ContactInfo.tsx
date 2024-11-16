@@ -8,7 +8,7 @@ export const ContactInfo = () => (
       </Highlight>{' '}
       з нами
     </Text>
-    <Text fontSize="xs">У вас є запитання чи пропозиції?</Text>
-    <Text fontSize="xs">Напишіть нам, і ми з радістю відповімо на всі ваші запитання!</Text>
+    <Text fontSize="sm">У вас є запитання чи пропозиції?</Text>
+    <Text fontSize="sm">Напишіть нам, і ми з радістю відповімо на всі ваші запитання!</Text>
   </Flex>
 );

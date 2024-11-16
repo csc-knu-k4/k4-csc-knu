@@ -32,7 +32,7 @@ const IconBox = ({ icon: Icon, title, description }: IconBoxProps) => (
       <Text fontWeight="bold" mt={4}>
         {title}
       </Text>
-      <Text mt={1} fontSize="xs" lineHeight="1rem">
+      <Text mt={1} fontSize="sm" lineHeight="1rem">
         {description}
       </Text>
     </Flex>

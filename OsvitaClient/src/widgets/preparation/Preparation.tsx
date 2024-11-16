@@ -12,7 +12,7 @@ const Preparation = () => (
         flexDir={{ base: 'column', lg: 'row' }}
         bgColor="orange.100"
       >
-        <PreparationPicture />
+        <PreparationPicture width="588px" />
         <Flex flexDir="column">
           <Text fontSize="2xl" fontWeight="bold" mt={10} ml={5}>
             Як проходить{' '}

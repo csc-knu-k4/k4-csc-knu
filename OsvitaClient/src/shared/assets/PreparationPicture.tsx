@@ -1,7 +1,18 @@
 import { Image } from '@chakra-ui/react';
 
-const PreparationPicture = ({ width = 588, height = 586 }) => (
-  <Image src="./PreparationPicture.png" alt="PreparationPicture" w={width} h={height} />
+interface PreparationPictureProps {
+  width?: string | number;
+  height?: string | number;
+}
+
+const PreparationPicture = ({ width = '100%', height = 'auto' }: PreparationPictureProps) => (
+  <Image
+    src="./PreparationPicture.png"
+    alt="PreparationPicture"
+    w={width}
+    h={height}
+    objectFit="contain"
+  />
 );
 
 export default PreparationPicture;
