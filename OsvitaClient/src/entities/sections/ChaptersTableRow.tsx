@@ -74,6 +74,10 @@ export function ChaptersTableRow({ item }: ChaptersTableRowProps) {
         isOpen={isEditOpen}
         onClose={() => setEditOpen(false)}
         initialTitle={item.title}
+        chapterId={item.id}
+        subjectId={item.subjectId}
+        orderPosition={item.orderPosition}
+        topicsIds={item.topicsIds}
       />
     </>
   );

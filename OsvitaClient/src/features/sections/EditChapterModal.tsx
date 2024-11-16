@@ -7,27 +7,67 @@ import {
   DialogHeader,
   DialogRoot,
 } from '@/components/ui/dialog';
+import { useMutation, useQueryClient } from 'react-query';
+import { updateChapter } from '@/shared/api/chaptersApi';
 
 interface EditChapterModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialTitle: string;
+  chapterId: number;
+  subjectId: number;
+  orderPosition: number;
+  topicsIds: number[];
 }
 
-export const EditChapterModal = ({ isOpen, onClose, initialTitle }: EditChapterModalProps) => {
+export const EditChapterModal = ({
+  isOpen,
+  onClose,
+  initialTitle,
+  chapterId,
+  subjectId,
+  orderPosition,
+  topicsIds,
+}: EditChapterModalProps) => {
   const [title, setTitle] = useState(initialTitle);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (updatedChapter: {
+      id: number;
+      title: string;
+      subjectId: number;
+      orderPosition: number;
+      topicsIds: number[];
+    }) => updateChapter(updatedChapter.id, updatedChapter),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['chapters']);
+      onClose();
+    },
+    onError: (error: string) => {
+      console.error('Error updating chapter:', error);
+    },
+  });
 
   const handleSave = () => {
     if (!title.trim()) {
       alert('Назва не може бути пустою!');
       return;
     }
+
+    mutation.mutate({
+      id: chapterId,
+      title: title.trim(),
+      subjectId,
+      orderPosition,
+      topicsIds,
+    });
   };
 
   return (
     <DialogRoot lazyMount open={isOpen} onOpenChange={() => onClose()}>
       <DialogContent>
-        <DialogHeader>Редагувати предмет</DialogHeader>
+        <DialogHeader>Редагувати розділ</DialogHeader>
         <DialogBody>
           <Flex flexDir="column" gap={4}>
             <Text fontWeight="medium">Назва</Text>
