@@ -9,13 +9,13 @@ import { Preparation } from '@/widgets/preparation';
 const Index = () => {
   return (
     <>
-      <Container p="1rem 120px 0px">
+      <Container maxW="1232px" p="1rem 1rem 0px">
         <Header />
         <Hero />
         <WhyUsSection />
       </Container>
       <Preparation />
-      <Container p="1rem 120px 0px">
+      <Container maxW="1232px" px="1rem">
         <FAQSection />
       </Container>
       <Footer />

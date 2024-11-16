@@ -16,7 +16,14 @@ const WhyUsSection = () => {
         Ми розуміємо, що підготовка до НМТ може бути складною. Наша платформа зробить цей процес
         захопливим та ефективним, щоб ти міг зосередитись на результаті!
       </Text>
-      <Flex flexDir="row" justifyContent="space-between" gap={6} mt={9}>
+      <Flex
+        flexDir="row"
+        flexWrap="wrap"
+        justifyContent="center"
+        alignItems="center"
+        gap={6}
+        mt={9}
+      >
         {boxData.map((box, index) => (
           <IconBox key={index} icon={VscBook} title={box.title} description={box.description} />
         ))}

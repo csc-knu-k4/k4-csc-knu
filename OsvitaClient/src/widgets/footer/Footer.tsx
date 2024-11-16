@@ -5,8 +5,12 @@ import { ContactInfo } from './ContactInfo';
 
 const Footer = () => (
   <Flex bgColor="orange.100" mt="130px">
-    <Container px="120px">
-      <Flex flexDir="row" justifyContent="space-between" alignItems="center">
+    <Container maxW="1232px" px="1rem">
+      <Flex
+        flexDir={{ base: 'column', md: 'row' }}
+        justifyContent="space-between"
+        alignItems="center"
+      >
         <Flex flexDir="column" justifyContent="center" alignItems="flex-start">
           <ContactInfo />
           <ContactForm />

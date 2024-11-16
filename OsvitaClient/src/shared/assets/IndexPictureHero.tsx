@@ -1,7 +1,12 @@
 import { Image } from '@chakra-ui/react';
 
-const IndexPictureHero = ({ width = 588, height = 565 }) => (
-  <Image src="./IndexPictureHero.png" alt="heroPicture" w={width} h={height} />
+interface IndexPictureHeroProps {
+  width?: string | number;
+  height?: string | number;
+}
+
+const IndexPictureHero = ({ width = '100%', height = 'auto' }: IndexPictureHeroProps) => (
+  <Image src="./IndexPictureHero.png" alt="heroPicture" w={width} h={height} objectFit="contain" />
 );
 
 export default IndexPictureHero;
