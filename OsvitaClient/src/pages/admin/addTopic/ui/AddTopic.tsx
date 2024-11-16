@@ -1,6 +1,13 @@
 import { Button } from '@/components/ui/button';
-import { Flex, Input, Text } from '@chakra-ui/react';
+import { createListCollection, Flex, Input, Text } from '@chakra-ui/react';
 import { Field } from '@/components/ui/field';
+import {
+  SelectContent,
+  SelectItem,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from '@/components/ui/select';
 
 const AddTopic = () => {
   return (
@@ -9,20 +16,21 @@ const AddTopic = () => {
         Додати тему
       </Text>
       <Field label="Назва" required mb={3} color="orange">
-        <Input
-          _placeholder={{ color: 'inherit' }}
-          placeholder="Вкажіть назву"
-          color="orange.placeholder"
-          borderColor="orange"
-        />
+        <Input placeholder="Вкажіть назву" />
       </Field>
       <Field label="Розділ" required mb={3} color="orange">
-        <Input
-          _placeholder={{ color: 'inherit' }}
-          placeholder="Вкажіть розділ"
-          color="orange.placeholder"
-          borderColor="orange"
-        />
+        <SelectRoot collection={topics}>
+          <SelectTrigger>
+            <SelectValueText placeholder="Вкажіть розділ" />
+          </SelectTrigger>
+          <SelectContent>
+            {topics.items.map((topic) => (
+              <SelectItem item={topic} key={topic.value}>
+                {topic.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </SelectRoot>
       </Field>
       <Button bgColor="orange">Додати</Button>
     </Flex>
@@ -30,3 +38,11 @@ const AddTopic = () => {
 };
 
 export default AddTopic;
+
+const topics = createListCollection({
+  items: [
+    { label: 'Розділ 1', value: '1' },
+    { label: 'Розділ 2', value: '2' },
+    { label: 'Розділ 3', value: '3' },
+  ],
+});

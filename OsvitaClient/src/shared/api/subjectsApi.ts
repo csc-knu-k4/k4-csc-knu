@@ -1,10 +1,16 @@
 import axios from 'axios';
 
+export interface Subject {
+  id: number;
+  title: string;
+  chaptersIds: number[];
+}
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-export const getSubjects = async () => {
+export const getSubjects = async (): Promise<Subject[]> => {
   const response = await api.get('/subjects');
   return response.data;
 };
@@ -24,4 +30,9 @@ export const updateSubject = async (
 
 export const deleteSubject = async (id: number) => {
   await api.delete(`/subjects/${id}`);
+};
+
+export const getSubjectById = async (id: number) => {
+  const response = await api.get(`/subjects/${id}`);
+  return response.data;
 };

@@ -1,43 +1,66 @@
+import { useEffect, useState } from 'react';
 import { Table } from '@chakra-ui/react';
 import { IoEyeOutline } from 'react-icons/io5';
 import { TbEdit } from 'react-icons/tb';
 import { MdDeleteOutline } from 'react-icons/md';
-import { Section } from './types';
+import { useMutation, useQuery } from 'react-query';
+import { deleteChapter } from '@/shared/api/chaptersApi';
+import { getSubjectById } from '@/shared/api/subjectsApi';
 import { ActionButtons } from '@/shared/ui/ActionButtons';
+
+interface Section {
+  id: number;
+  title: string;
+  subjectId: number;
+  orderPosition: number;
+  topicsIds: number[];
+}
 
 interface SectionsTableRowProps {
   item: Section;
 }
 
 export function SectionsTableRow({ item }: SectionsTableRowProps) {
-  const handleView = () => {
-    console.log('View', item.id);
-  };
+  const [subjectTitle, setSubjectTitle] = useState<string | null>(null);
 
-  const handleEdit = () => {
-    console.log('Edit', item.id);
-  };
+  const { data: subject, isLoading } = useQuery(
+    ['subject', item.subjectId],
+    () => getSubjectById(item.subjectId),
+    {
+      enabled: !!item.subjectId,
+    },
+  );
+
+  useEffect(() => {
+    if (subject && subject.title) {
+      setSubjectTitle(subject.title);
+    }
+  }, [subject]);
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteChapter,
+    onSuccess: () => {
+      console.log(`Chapter with ID ${item.id} deleted.`);
+    },
+  });
 
   const handleDelete = () => {
-    console.log('Delete', item.id);
+    deleteMutation.mutate(item.id);
   };
 
   return (
     <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'orange.100'}>
       <Table.Cell textAlign="start" whiteSpace="nowrap">
-        {item.topic}
+        {item.title}
       </Table.Cell>
       <Table.Cell w="full" textAlign="center">
-        {item.subjectName}
-      </Table.Cell>
-      <Table.Cell textAlign="start" whiteSpace="nowrap">
-        {item.date}
+        {isLoading ? 'Завантаження...' : subjectTitle || 'Не знайдено'}
       </Table.Cell>
       <Table.Cell>
         <ActionButtons
           actions={[
-            { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: handleView },
-            { icon: <TbEdit />, ariaLabel: 'Edit', onClick: handleEdit },
+            { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: () => console.log('View') },
+            { icon: <TbEdit />, ariaLabel: 'Edit', onClick: () => console.log('Edit') },
             { icon: <MdDeleteOutline />, ariaLabel: 'Delete', onClick: handleDelete },
           ]}
         />
