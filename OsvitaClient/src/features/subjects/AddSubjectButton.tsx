@@ -12,7 +12,7 @@ export function AddSubjectButton() {
   return (
     <AddButton
       text="Додати предмет"
-      icon={<GoPlusCircle size="1.5rem" color="#5C6CFF" />}
+      icon={<GoPlusCircle size="1.5rem" color="orange" />}
       onClick={handleAddSubject}
     />
   );

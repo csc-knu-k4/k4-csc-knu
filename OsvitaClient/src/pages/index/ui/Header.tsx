@@ -13,14 +13,14 @@ const Header = () => {
       <Flex justifyContent="space-between">
         <Flex justifyContent="center" alignItems="center" flexDir="row" gap={2}>
           <HatIcon />
-          <Text fontFamily="Oswald" fontSize="xl" color="#FF6D18">
+          <Text fontFamily="Oswald" fontSize="xl" color="orange">
             Підготовка до НМТ
           </Text>
         </Flex>
         <Button
           fontSize="md"
           px="2.5rem"
-          bgColor="#FF6D18"
+          bgColor="orange"
           borderRadius="0.6rem"
           onClick={routeToAdmin}
         >

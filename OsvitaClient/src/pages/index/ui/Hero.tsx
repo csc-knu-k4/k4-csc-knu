@@ -12,7 +12,7 @@ const Hero = () => {
             Поринь у світ підготовки до НМТ! Ми пропонуємо тобі всі необхідні інструменти для
             успішного складання.
           </Text>
-          <Button h="3.25rem" fontSize="2xl" bgColor="#FF6D18" borderRadius="1rem">
+          <Button h="3.25rem" fontSize="2xl" bgColor="orange" borderRadius="1rem">
             Розпочати підготовку
           </Button>
         </Flex>

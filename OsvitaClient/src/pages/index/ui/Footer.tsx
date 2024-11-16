@@ -9,12 +9,12 @@ const Footer = () => {
   const styles = recipe({ size: 'sm' });
 
   return (
-    <Flex bgColor="#FCEDE6" mt="130px">
+    <Flex bgColor="orange.100" mt="130px">
       <Container px="120px">
         <Flex flexDir="row" justifyContent="space-between" alignItems="center">
           <Flex flexDir="column" justifyContent="flex-start">
             <Text fontSize="2xl" fontWeight="bold">
-              <Highlight query="Зв’яжіться" styles={{ color: '#FF6D18' }}>
+              <Highlight query="Зв’яжіться" styles={{ color: 'orange' }}>
                 Зв’яжіться
               </Highlight>{' '}
               з нами
@@ -35,7 +35,7 @@ const Footer = () => {
               lineHeight="inherit"
               css={styles}
             ></StyledAutoResize>
-            <Button maxW="17.5rem" mt={4} bgColor="#FF6D18" borderRadius="1rem">
+            <Button maxW="17.5rem" mt={4} bgColor="orange" borderRadius="1rem">
               Відправити повідомлення
             </Button>
           </Flex>

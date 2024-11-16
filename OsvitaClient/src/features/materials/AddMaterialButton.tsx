@@ -12,7 +12,7 @@ export function AddMaterialButton() {
   return (
     <AddButton
       text="Додати матеріал"
-      icon={<GoPlusCircle size="1.5rem" color="blue" />}
+      icon={<GoPlusCircle size="1.5rem" color="orange" />}
       onClick={handleAddMaterial}
     />
   );

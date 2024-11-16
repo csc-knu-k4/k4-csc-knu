@@ -29,7 +29,7 @@ const WhyUsSection = () => {
       <Flex flexDir="column" justifyContent="center" alignItems="center" mt="130px">
         <Text fontSize="2xl" fontWeight="bold">
           Чому ми та які наші{' '}
-          <Highlight query="переваги?" styles={{ color: '#FF6D18' }}>
+          <Highlight query="переваги?" styles={{ color: 'orange' }}>
             переваги?
           </Highlight>
         </Text>
@@ -45,12 +45,13 @@ const WhyUsSection = () => {
             w="17.6rem"
             h="12.2rem"
             border="0.06rem solid #5C6CFF"
+            borderColor="blue"
             borderRadius="1.25rem"
             boxShadow="0rem 0rem 0.5rem 0rem #5C6CFF"
             flexDir="column"
           >
             <Flex
-              bgColor="#FF6D18"
+              bgColor="orange"
               justifyContent="center"
               alignItems="center"
               boxShadow="inset 0.13rem 0.13rem 0.94rem 0rem rgba(0, 0, 0, 0.25);"

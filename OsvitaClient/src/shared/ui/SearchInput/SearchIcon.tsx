@@ -1,5 +1,5 @@
-import { AiOutlineSearch } from 'react-icons/ai';
+import { HiOutlineSearch } from 'react-icons/hi';
 
 export function SearchIcon() {
-  return <AiOutlineSearch color="blue" size="1.25rem" />;
+  return <HiOutlineSearch color="orange" size="1.25rem" />;
 }

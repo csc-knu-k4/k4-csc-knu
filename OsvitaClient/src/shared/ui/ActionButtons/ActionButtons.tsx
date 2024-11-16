@@ -21,9 +21,9 @@ export function ActionButtons({ actions }: ActionButtonsProps) {
           key={index}
           aria-label={action.ariaLabel}
           onClick={action.onClick}
-          bgColor={action.bgColor || 'blue.200'}
-          _hover={{ bg: action.bgColor || 'blue.hover' }}
-          color={action.iconColor || 'blue'}
+          bgColor={action.bgColor || 'orange.200'}
+          _hover={{ bg: action.bgColor || 'orange.hover' }}
+          color={action.iconColor || 'orange'}
         >
           {action.icon}
         </IconButton>

@@ -30,12 +30,12 @@ const steps = [
 
 const Preparation = () => {
   return (
-    <Flex justifyContent="center" alignItems="center" flexDir="row" bgColor="#FCEDE6" mt="130px">
+    <Flex justifyContent="center" alignItems="center" flexDir="row" bgColor="orange.100" mt="130px">
       <PreparationPicture />
       <Flex flexDir="column">
         <Text fontSize="2xl" fontWeight="bold" mt={10} ml={5}>
           Як проходить{' '}
-          <Highlight query="підготовка ?" styles={{ color: '#FF6D18' }}>
+          <Highlight query="підготовка ?" styles={{ color: 'orange' }}>
             підготовка ?
           </Highlight>
         </Text>
@@ -46,7 +46,7 @@ const Preparation = () => {
                 <Flex direction="column" align="center" mr={4} position="relative">
                   <Circle
                     size="3.15rem"
-                    bg="#FF6D18"
+                    bg="orange"
                     color="white"
                     fontWeight="bold"
                     fontSize="lg"
@@ -55,13 +55,7 @@ const Preparation = () => {
                     {step.number}
                   </Circle>
                   {index < steps.length - 1 && (
-                    <Box
-                      position="absolute"
-                      top="2rem"
-                      w="2px"
-                      h="calc(100% + 4rem)"
-                      bg="#FF6D18"
-                    />
+                    <Box position="absolute" top="2rem" w="2px" h="calc(100% + 4rem)" bg="orange" />
                   )}
                 </Flex>
                 <Box pl={4}>

@@ -18,13 +18,13 @@ const FAQSection = () => {
     <Flex flexDir="column" justifyContent="center" alignItems="center">
       <Text fontSize="2xl" fontWeight="bold" mt="130px" textAlign="center">
         Часті{' '}
-        <Highlight query="запитання" styles={{ color: '#FF6D18' }}>
+        <Highlight query="запитання" styles={{ color: 'orange' }}>
           запитання
         </Highlight>
       </Text>
       <AccordionRoot multiple mt={8} maxW="52.5rem">
         {items.map((item, index) => (
-          <AccordionItem borderColor="#5C6CFF" key={index} value={item.value}>
+          <AccordionItem borderColor="blue" key={index} value={item.value}>
             <AccordionItemTrigger>{item.title}</AccordionItemTrigger>
             <AccordionItemContent fontSize="md">{item.text}</AccordionItemContent>
           </AccordionItem>
