@@ -1,5 +1,5 @@
 import { Text, Flex } from '@chakra-ui/react';
-import { AddSectionButton } from '@/features/sections';
+import { AddChapterButton } from '@/features/sections';
 import { SectionsTable } from '@/entities/sections';
 
 const items = [
@@ -37,7 +37,7 @@ const Sections = () => {
         <Text fontSize="2xl" fontWeight="medium">
           Розділи
         </Text>
-        <AddSectionButton />
+        <AddChapterButton />
       </Flex>
       <SectionsTable items={items} />
     </>

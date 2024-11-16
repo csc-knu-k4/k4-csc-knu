@@ -1,1 +1,1 @@
-export { AddSectionButton } from './AddSectionButton';
+export { AddChapterButton } from './AddChapterButton';
