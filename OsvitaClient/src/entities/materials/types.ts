@@ -1,5 +1,7 @@
 export interface Material {
   id: number;
-  topic: string;
-  date: string;
+  title: string;
+  topicId: number;
+  orderPosition: number;
+  contentBlocksIds: number[];
 }

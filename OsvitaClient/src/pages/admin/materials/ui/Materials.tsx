@@ -1,25 +1,54 @@
 import { Text, Flex } from '@chakra-ui/react';
 import { AddMaterialButton } from '@/features/materials';
 import { MaterialTable } from '@/entities/materials';
-
-const items = [
-  { id: 1, topic: 'Властивості дій з дійсними числа...', date: '20.10.2024, 16:32' },
-  { id: 2, topic: 'Правила порівняння дійсними чис...', date: '20.10.2024, 16:32' },
-  { id: 3, topic: 'Правила знаходження найбільшог...', date: '20.10.2024, 16:32' },
-  { id: 4, topic: 'Означення кореня п-го степеня і ...', date: '20.10.2024, 16:32' },
-  { id: 5, topic: 'Модуль дійсного числа та ймовір...', date: '20.10.2024, 16:32' },
-];
+import { getMaterials, getMaterialsByTopic } from '@/shared/api/materialsApi';
+import { useQuery } from 'react-query';
+import { useLocation } from 'react-router-dom';
 
 const Materials = () => {
+  const location = useLocation();
+  const topicId = location.state?.topicId;
+
+  const {
+    data: materials,
+    isLoading,
+    isError,
+  } = useQuery(
+    ['topics', topicId],
+    () => (topicId ? getMaterialsByTopic(topicId) : getMaterials()),
+    { keepPreviousData: true },
+  );
+
+  const header = (
+    <Flex justifyContent="space-between" alignItems="center" mb={2}>
+      <Text fontSize="2xl" fontWeight="medium">
+        {topicId ? `Матеріали для теми #${topicId}` : 'Матеріали'}
+      </Text>
+      <AddMaterialButton />
+    </Flex>
+  );
+
+  if (isLoading) {
+    return <Text>Завантаження...</Text>;
+  }
+
+  if (isError) {
+    return (
+      <>
+        {header}
+        <Text color="red.500">Помилка завантаження даних.</Text>
+      </>
+    );
+  }
+
   return (
     <>
-      <Flex justifyContent="space-between" alignItems="center" mb={2}>
-        <Text fontSize="2xl" fontWeight="medium">
-          Матеріали
-        </Text>
-        <AddMaterialButton />
-      </Flex>
-      <MaterialTable items={items} />
+      {header}
+      {materials && materials.length > 0 ? (
+        <MaterialTable items={materials} />
+      ) : (
+        <Text>Дані відсутні.</Text>
+      )}
     </>
   );
 };

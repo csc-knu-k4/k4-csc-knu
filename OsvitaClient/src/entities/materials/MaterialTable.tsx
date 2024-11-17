@@ -7,6 +7,8 @@ interface MaterialTableProps {
 }
 
 export function MaterialTable({ items }: MaterialTableProps) {
+  const sortedItems = [...items].sort((a, b) => a.id - b.id);
+
   return (
     <Box overflowX="auto" w="full">
       <Table.Root size="lg">
@@ -14,15 +16,12 @@ export function MaterialTable({ items }: MaterialTableProps) {
           <Table.Row>
             <Table.ColumnHeader color="orange">Тема</Table.ColumnHeader>
             <Table.ColumnHeader textAlign="start" color="orange">
-              Створено
-            </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="orange">
               Дії
             </Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {items.map((item) => (
+          {sortedItems.map((item) => (
             <MaterialTableRow key={item.id} item={item} />
           ))}
         </Table.Body>

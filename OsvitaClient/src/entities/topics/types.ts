@@ -1,6 +1,7 @@
 export interface Topic {
   id: number;
-  topic: string;
-  sectionName: string;
-  date: string;
+  title: string;
+  chapterId: number;
+  orderPosition: number;
+  materialsIds: number[];
 }

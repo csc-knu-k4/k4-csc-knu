@@ -1,30 +1,30 @@
 import { Text, Flex } from '@chakra-ui/react';
-import { AddTopicButton } from '@/features/topics';
-import { TopicsTable } from '@/entities/topics';
+import { AddChapterButton } from '@/features/sections';
+import { ChaptersTable } from '@/entities/sections';
 import { useQuery } from 'react-query';
-import { getTopics, getTopicsByChapter } from '@/shared/api/topicsApi';
+import { getChapters, getChaptersBySubject } from '@/shared/api/chaptersApi';
 import { useLocation } from 'react-router-dom';
 
-const Topics = () => {
+const Chapters = () => {
   const location = useLocation();
-  const chapterId = location.state?.chapterId;
+  const subjectId = location.state?.subjectId;
 
   const {
-    data: topics,
+    data: chapters,
     isLoading,
     isError,
   } = useQuery(
-    ['topics', chapterId],
-    () => (chapterId ? getTopicsByChapter(chapterId) : getTopics()),
+    ['chapters', subjectId],
+    () => (subjectId ? getChaptersBySubject(subjectId) : getChapters()),
     { keepPreviousData: true },
   );
 
   const header = (
     <Flex justifyContent="space-between" alignItems="center" mb={2}>
       <Text fontSize="2xl" fontWeight="medium">
-        {chapterId ? `Теми для розділу #${chapterId}` : 'Теми'}
+        {subjectId ? `Розділи для предмету #${subjectId}` : 'Розділи'}
       </Text>
-      <AddTopicButton />
+      <AddChapterButton />
     </Flex>
   );
 
@@ -44,9 +44,13 @@ const Topics = () => {
   return (
     <>
       {header}
-      {topics && topics.length > 0 ? <TopicsTable items={topics} /> : <Text>Дані відсутні.</Text>}
+      {chapters && chapters.length > 0 ? (
+        <ChaptersTable items={chapters} />
+      ) : (
+        <Text>Дані відсутні.</Text>
+      )}
     </>
   );
 };
 
-export default Topics;
+export default Chapters;
