@@ -42,12 +42,13 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST api/<MaterialsController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] MaterialModel model)
+        public async Task<ActionResult<MaterialModel>> Post([FromBody] MaterialModel model)
         {
             try
             {
-                await materialService.AddAsync(model);
-                return Created();
+                var id = await materialService.AddAsync(model);
+                var materialModel = await materialService.GetByIdAsync(id);
+                return Ok(materialModel);
             }
             catch (Exception ex)
             {
