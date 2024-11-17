@@ -17,7 +17,12 @@ export const getMaterials = async (): Promise<Material[]> => {
   return response.data;
 };
 
-export const addMaterial = async (material: { title: string; topicIds: number[] }) => {
+export const addMaterial = async (material: {
+  title: string;
+  topicId: number;
+  orderPosition: number;
+  contentBlocksIds: number[];
+}) => {
   const response = await api.post('/materials', material);
   return response.data;
 };

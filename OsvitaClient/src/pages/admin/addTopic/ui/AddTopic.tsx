@@ -19,7 +19,7 @@ const AddTopic = () => {
   const queryClient = useQueryClient();
 
   const { data: chaptersData, isLoading: chaptersLoading } = useQuery<Chapter[]>(
-    ['subjects'],
+    ['chapters'],
     getChapters,
   );
   const { data: topicsData, isLoading: topicsLoading } = useQuery(['topics'], getTopics);
