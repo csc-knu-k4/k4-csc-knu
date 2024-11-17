@@ -23,7 +23,7 @@ export function MaterialTableRow({ item }: MaterialTableRowProps) {
   };
 
   return (
-    <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'blue.100'}>
+    <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'orange.100'}>
       <Table.Cell w="full">{item.topic}</Table.Cell>
       <Table.Cell textAlign="end" whiteSpace="nowrap">
         {item.date}

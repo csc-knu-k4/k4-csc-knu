@@ -6,13 +6,13 @@ export function AddMaterialButton() {
   const navigate = useNavigate();
 
   const handleAddMaterial = () => {
-    navigate('/add-material');
+    navigate('/admin/add-material');
   };
 
   return (
     <AddButton
       text="Додати матеріал"
-      icon={<GoPlusCircle size="1.5rem" color="blue" />}
+      icon={<GoPlusCircle size="1.5rem" color="orange" />}
       onClick={handleAddMaterial}
     />
   );

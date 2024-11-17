@@ -6,13 +6,13 @@ export function AddTopicButton() {
   const navigate = useNavigate();
 
   const handleAddTopic = () => {
-    navigate('/add-topic');
+    navigate('/admin/add-topic');
   };
 
   return (
     <AddButton
       text="Додати тему"
-      icon={<GoPlusCircle size="1.5rem" color="blue" />}
+      icon={<GoPlusCircle size="1.5rem" color="orange" />}
       onClick={handleAddTopic}
     />
   );
