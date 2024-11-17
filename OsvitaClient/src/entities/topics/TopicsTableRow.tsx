@@ -9,6 +9,7 @@ import { useMutation, useQuery } from 'react-query';
 import { getChapterById } from '@/shared/api/chaptersApi';
 import { deleteTopic } from '@/shared/api/topicsApi';
 import { EditTopicModal } from '@/features/topics/EditTopicModal';
+import { useNavigate } from 'react-router-dom';
 
 interface TopicsTableRowProps {
   item: Topic;
@@ -18,8 +19,14 @@ export function TopicsTableRow({ item }: TopicsTableRowProps) {
   const [isEditOpen, setEditOpen] = useState(false);
   const [chapterTitle, setChapterTitle] = useState<string | null>(null);
 
+  const navigate = useNavigate();
+
+  const handleViewMaterials = () => {
+    navigate(`/admin/materials`, { state: { topicId: item.id } });
+  };
+
   const { data: subject, isLoading } = useQuery(
-    ['subject', item.chapterId],
+    ['chapters', item.chapterId],
     () => getChapterById(item.chapterId),
     {
       enabled: !!item.chapterId,
@@ -35,7 +42,7 @@ export function TopicsTableRow({ item }: TopicsTableRowProps) {
   const deleteMutation = useMutation({
     mutationFn: deleteTopic,
     onSuccess: () => {
-      console.log(`Chapter with ID ${item.id} deleted.`);
+      console.log(`Topic with ID ${item.id} deleted.`);
     },
   });
 
@@ -55,7 +62,7 @@ export function TopicsTableRow({ item }: TopicsTableRowProps) {
         <Table.Cell>
           <ActionButtons
             actions={[
-              { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: () => console.log('View') },
+              { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: handleViewMaterials },
               { icon: <TbEdit />, ariaLabel: 'Edit', onClick: () => setEditOpen(true) },
               { icon: <MdDeleteOutline />, ariaLabel: 'Delete', onClick: handleDelete },
             ]}

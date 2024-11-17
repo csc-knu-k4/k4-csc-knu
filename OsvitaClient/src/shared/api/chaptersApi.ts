@@ -40,3 +40,8 @@ export const getChapterById = async (id: number) => {
   const response = await api.get(`/chapters/${id}`);
   return response.data;
 };
+
+export const getChaptersBySubject = async (subjectId: number) => {
+  const response = await api.get(`/subjects/${subjectId}/chapters`);
+  return response.data;
+};

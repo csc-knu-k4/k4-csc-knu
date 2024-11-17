@@ -43,3 +43,8 @@ export const getMaterialById = async (id: number) => {
   const response = await api.get(`/materials/${id}`);
   return response.data;
 };
+
+export const getMaterialsByTopic = async (topicId: number) => {
+  const response = await api.get(`/topics/${topicId}/materials`);
+  return response.data;
+};

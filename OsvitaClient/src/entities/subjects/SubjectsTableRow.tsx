@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { deleteSubject, updateSubject } from '@/shared/api/subjectsApi';
 import { ActionButtons } from '@/shared/ui/ActionButtons';
 import { EditSubjectModal } from '@/features/subjects/EditSubjectModal';
+import { useNavigate } from 'react-router-dom';
 
 interface Subject {
   id: number;
@@ -21,6 +22,11 @@ interface SubjectsTableRowProps {
 export function SubjectsTableRow({ item }: SubjectsTableRowProps) {
   const [isEditOpen, setEditOpen] = useState(false);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const handleViewChapters = () => {
+    navigate(`/admin/chapters`, { state: { subjectId: item.id } });
+  };
 
   const deleteMutation = useMutation({
     mutationFn: deleteSubject,
@@ -52,7 +58,7 @@ export function SubjectsTableRow({ item }: SubjectsTableRowProps) {
         <Table.Cell>
           <ActionButtons
             actions={[
-              { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: () => console.log('View') },
+              { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: handleViewChapters },
               { icon: <TbEdit />, ariaLabel: 'Edit', onClick: () => setEditOpen(true) },
               { icon: <MdDeleteOutline />, ariaLabel: 'Delete', onClick: handleDelete },
             ]}

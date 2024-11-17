@@ -32,3 +32,8 @@ export const getTopicById = async (id: number) => {
   const response = await api.get(`/topics/${id}`);
   return response.data;
 };
+
+export const getTopicsByChapter = async (chapterId: number) => {
+  const response = await api.get(`/chapters/${chapterId}/topics`);
+  return response.data;
+};

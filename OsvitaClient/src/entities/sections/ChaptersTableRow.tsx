@@ -8,6 +8,7 @@ import { deleteChapter } from '@/shared/api/chaptersApi';
 import { getSubjectById } from '@/shared/api/subjectsApi';
 import { ActionButtons } from '@/shared/ui/ActionButtons';
 import { EditChapterModal } from '@/features/sections/EditChapterModal';
+import { useNavigate } from 'react-router-dom';
 
 interface Section {
   id: number;
@@ -24,9 +25,14 @@ interface ChaptersTableRowProps {
 export function ChaptersTableRow({ item }: ChaptersTableRowProps) {
   const [isEditOpen, setEditOpen] = useState(false);
   const [subjectTitle, setSubjectTitle] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleViewTopics = () => {
+    navigate(`/admin/topics`, { state: { chapterId: item.id } });
+  };
 
   const { data: subject, isLoading } = useQuery(
-    ['subject', item.subjectId],
+    ['subjects', item.subjectId],
     () => getSubjectById(item.subjectId),
     {
       enabled: !!item.subjectId,
@@ -62,7 +68,7 @@ export function ChaptersTableRow({ item }: ChaptersTableRowProps) {
         <Table.Cell>
           <ActionButtons
             actions={[
-              { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: () => console.log('View') },
+              { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: handleViewTopics },
               { icon: <TbEdit />, ariaLabel: 'Edit', onClick: () => setEditOpen(true) },
               { icon: <MdDeleteOutline />, ariaLabel: 'Delete', onClick: handleDelete },
             ]}

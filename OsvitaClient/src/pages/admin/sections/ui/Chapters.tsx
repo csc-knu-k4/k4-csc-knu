@@ -2,20 +2,27 @@ import { Text, Flex } from '@chakra-ui/react';
 import { AddChapterButton } from '@/features/sections';
 import { ChaptersTable } from '@/entities/sections';
 import { useQuery } from 'react-query';
-import { getChapters } from '@/shared/api/chaptersApi';
+import { getChapters, getChaptersBySubject } from '@/shared/api/chaptersApi';
+import { useLocation } from 'react-router-dom';
 
 const Chapters = () => {
-  const { data: chapters, isLoading } = useQuery(['chapters'], getChapters);
+  const location = useLocation();
+  const subjectId = location.state?.subjectId;
+
+  const { data: chapters, isLoading } = useQuery(
+    ['chapters', subjectId],
+    () => (subjectId ? getChaptersBySubject(subjectId) : getChapters()),
+    { keepPreviousData: true },
+  );
 
   if (isLoading) {
     return <Text>Завантаження...</Text>;
   }
-
   return (
     <>
       <Flex justifyContent="space-between" alignItems="center" mb={2}>
         <Text fontSize="2xl" fontWeight="medium">
-          Розділи
+          {subjectId ? `Розділи для предмету #${subjectId}` : 'Розділи'}
         </Text>
         <AddChapterButton />
       </Flex>

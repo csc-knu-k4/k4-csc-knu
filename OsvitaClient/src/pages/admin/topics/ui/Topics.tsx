@@ -2,10 +2,18 @@ import { Text, Flex } from '@chakra-ui/react';
 import { AddTopicButton } from '@/features/topics';
 import { TopicsTable } from '@/entities/topics';
 import { useQuery } from 'react-query';
-import { getTopics } from '@/shared/api/topicsApi';
+import { getTopics, getTopicsByChapter } from '@/shared/api/topicsApi';
+import { useLocation } from 'react-router-dom';
 
 const Topics = () => {
-  const { data: topics, isLoading } = useQuery(['topics'], getTopics);
+  const location = useLocation();
+  const chapterId = location.state?.chapterId;
+
+  const { data: topics, isLoading } = useQuery(
+    ['topics', chapterId],
+    () => (chapterId ? getTopicsByChapter(chapterId) : getTopics()),
+    { keepPreviousData: true },
+  );
 
   if (isLoading) {
     return <Text>Завантаження...</Text>;
@@ -15,7 +23,7 @@ const Topics = () => {
     <>
       <Flex justifyContent="space-between" alignItems="center" mb={2}>
         <Text fontSize="2xl" fontWeight="medium">
-          Теми
+          {chapterId ? `Теми для розділу #${chapterId}` : 'Теми'}
         </Text>
         <AddTopicButton />
       </Flex>
