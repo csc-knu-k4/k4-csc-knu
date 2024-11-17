@@ -46,8 +46,9 @@ namespace OsvitaWebApiPL.Controllers
         {
             try
             {
-                await topicService.AddAsync(model);
-                return Created();
+                var id = await topicService.AddAsync(model);
+                var topicModel = await topicService.GetByIdAsync(id);
+                return Ok(topicModel);
             }
             catch (Exception ex)
             {

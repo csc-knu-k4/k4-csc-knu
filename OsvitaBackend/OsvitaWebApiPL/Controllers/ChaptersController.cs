@@ -41,12 +41,13 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST api/chapters
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] ChapterModel model)
+        public async Task<ActionResult<ChapterModel>> Post([FromBody] ChapterModel model)
         {
             try
             {
-                await chapterService.AddAsync(model);
-                return Created();
+                var id = await chapterService.AddAsync(model);
+                var chapterModel = await chapterService.GetByIdAsync(id);
+                return Ok();
             }
             catch (Exception ex)
             {

@@ -44,12 +44,13 @@ namespace OsvitaWebApiPL.Controllers
         // POST api/subjects
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult> Post([FromBody] SubjectModel model)
+        public async Task<ActionResult<SubjectModel>> Post([FromBody] SubjectModel model)
         {
             try
             {
-                await subjectService.AddAsync(model);
-                return Created();
+                var id = await subjectService.AddAsync(model);
+                var subjectModel = await subjectService.GetByIdAsync(id);
+                return Ok();
             }
             catch (Exception ex)
             {
