@@ -1,19 +1,30 @@
-﻿using OsvitaDAL.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OsvitaDAL.Data;
 using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OsvitaDAL.Repositories
 {
     public class AssignmentRepository : Repository<Assignment>, IAssignmentRepository
     {
-        public AssignmentRepository(OsvitaDbContext context) : base(context)
+        public AssignmentRepository(OsvitaDbContext context)
+        : base(context)
         {
+        }
 
+        public async Task<IEnumerable<Assignment>> GetAllWithDetailsAsync()
+        {
+            return await context.Assignments
+                .Include(x => x.Answers)
+                .ToListAsync();
+        }
+
+        public async Task<Assignment> GetByIdWithDetailsAsync(int id)
+        {
+            return await context.Assignments
+                .Include(x => x.Answers)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Id == id);
         }
     }
 }

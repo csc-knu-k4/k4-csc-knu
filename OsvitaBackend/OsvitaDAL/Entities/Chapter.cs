@@ -1,5 +1,4 @@
-﻿using System;
-namespace OsvitaDAL.Entities
+﻿namespace OsvitaDAL.Entities
 {
     public class Chapter : BaseEntity
     {

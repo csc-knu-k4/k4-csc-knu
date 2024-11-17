@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OsvitaBLL.Models
+﻿namespace OsvitaBLL.Models
 {
     public class AssignmentModel
     {
         public int Id { get; set; }
+        public int? ObjectId { get; set; }
         public string ProblemDescription { get; set; }
         public string Explanation { get; set; }
-        public TaskType? AssignmentType { get; set; }
+        public AssignmentModelType AssignmentModelType { get; set; }
         public int? ParentAssignmentId { get; set; }
+
+        public List<AnswerModel> Answers { get; set; }
+        public List<AssignmentModel> ChildAssignments { get; set; }
     }
 }

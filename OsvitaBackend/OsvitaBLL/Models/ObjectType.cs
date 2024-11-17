@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OsvitaBLL.Models
+﻿namespace OsvitaBLL.Models
 {
-    public enum ObjectType
+    public enum ObjectModelType
     {
-        Material = 1,
+        MaterialModel
     }
 }
