@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { SidebarButton } from './SidebarButton';
-import { GiTopHat } from 'react-icons/gi';
 import { sidebarItems } from './sidebarItems';
+import HatIcon from '@/shared/assets/HatIcon';
 
 export function Sidebar() {
   return (
@@ -18,7 +18,7 @@ export function Sidebar() {
           color="orange"
           cursor="pointer"
         >
-          <GiTopHat size="2.5rem" />
+          <HatIcon />
           Підготовка до НМТ
         </Flex>
       </Flex>
