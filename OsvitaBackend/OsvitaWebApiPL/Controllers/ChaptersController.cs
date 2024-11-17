@@ -47,7 +47,7 @@ namespace OsvitaWebApiPL.Controllers
             {
                 var id = await chapterService.AddAsync(model);
                 var chapterModel = await chapterService.GetByIdAsync(id);
-                return Ok();
+                return Ok(chapterModel);
             }
             catch (Exception ex)
             {
