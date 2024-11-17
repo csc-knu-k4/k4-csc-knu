@@ -20,6 +20,16 @@ public class Program
 
         // Add services to the container.
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowLocalhost5173", policy =>
+            {
+                policy.WithOrigins("http://localhost:5173") 
+                    .AllowAnyHeader()                   
+                    .AllowAnyMethod();                
+            });
+        }); 
+
         builder.Services.AddControllers();
 
         builder.Services.AddDbContext<OsvitaDbContext>(option =>
@@ -60,6 +70,9 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        
+        app.UseCors("AllowLocalhost5173");
+
         app.UseHttpsRedirection();
 
         app.UseStaticFiles();

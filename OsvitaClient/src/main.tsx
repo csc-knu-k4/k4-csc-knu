@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import router from './app/providers/routes/AppRoutes';
 import config from './app/theme/theme';
+import { ReactQueryProvider } from './app/providers/ReactQueryProvider';
 
 const system = createSystem(defaultConfig, config);
 
@@ -12,7 +13,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ChakraProvider value={system}>
       <ThemeProvider attribute="class" disableTransitionOnChange>
-        <RouterProvider router={router} />
+        <ReactQueryProvider>
+          <RouterProvider router={router} />
+        </ReactQueryProvider>
       </ThemeProvider>
     </ChakraProvider>
   </StrictMode>,

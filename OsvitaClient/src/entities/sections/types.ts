@@ -1,6 +1,7 @@
 export interface Section {
   id: number;
-  topic: string;
-  subjectName: string;
-  date: string;
+  title: string;
+  subjectId: number;
+  orderPosition: number;
+  topicsIds: number[];
 }

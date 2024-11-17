@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Button } from '@/components/ui/button';
 import { createListCollection, Flex, Input, Text } from '@chakra-ui/react';
 import { Field } from '@/components/ui/field';
@@ -8,84 +10,86 @@ import {
   SelectTrigger,
   SelectValueText,
 } from '@/components/ui/select';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useState } from 'react';
-import { Chapter, getChapters } from '@/shared/api/chaptersApi';
-import { addTopic, getTopics } from '@/shared/api/topicsApi';
+import { addChapter, getChapters } from '@/shared/api/chaptersApi';
+import { getSubjects, Subject } from '@/shared/api/subjectsApi';
 
-const AddTopic = () => {
+const AddChapter = () => {
   const [title, setTitle] = useState('');
-  const [chapterId, setChapterId] = useState<number | null>(null);
+  const [subjectId, setSubjectId] = useState<number | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: chaptersData, isLoading: chaptersLoading } = useQuery<Chapter[]>(
-    ['chapters'],
-    getChapters,
+  const { data: subjectsData, isLoading: subjectsLoading } = useQuery<Subject[]>(
+    ['subjects'],
+    getSubjects,
   );
-  const { data: topicsData, isLoading: topicsLoading } = useQuery(['topics'], getTopics);
+  const { data: chaptersData, isLoading: chaptersLoading } = useQuery(['chapters'], getChapters);
 
-  const chapters = createListCollection({
-    items: chaptersData
-      ? chaptersData.map((chapter: { id: number; title: string }) => ({
-          label: chapter.title,
-          value: chapter.id.toString(),
+  const subjects = createListCollection({
+    items: subjectsData
+      ? subjectsData.map((subject: { id: number; title: string }) => ({
+          label: subject.title,
+          value: subject.id.toString(),
         }))
       : [],
   });
 
   const mutation = useMutation({
-    mutationFn: addTopic,
+    mutationFn: addChapter,
     onSuccess: () => {
-      queryClient.invalidateQueries(['topics']);
+      queryClient.invalidateQueries(['chapters']);
       setTitle('');
-      setChapterId(null);
+      setSubjectId(null);
     },
   });
 
   const handleAdd = () => {
-    if (!title.trim() || chapterId === null) {
+    if (!title.trim() || subjectId === null) {
       alert('Будь ласка, заповніть всі поля!');
       return;
     }
 
-    const maxOrderPosition = topicsData
-      ? Math.max(...topicsData.map((topic: { orderPosition: number }) => topic.orderPosition), 0)
+    const maxOrderPosition = chaptersData
+      ? Math.max(
+          ...chaptersData.map((chapter: { orderPosition: number }) => chapter.orderPosition),
+          0,
+        )
       : 0;
 
     mutation.mutate({
       title: title.trim(),
-      chapterId,
+      subjectId,
       orderPosition: maxOrderPosition + 1,
-      materialsIds: [],
+      topicsIds: [],
     });
   };
 
-  if (chaptersLoading || topicsLoading) {
+  if (subjectsLoading || chaptersLoading) {
     return <Text>Завантаження предметів...</Text>;
   }
 
   return (
     <Flex maxWidth="30.25rem" flexDir="column">
       <Text mb="2rem" fontSize="2xl" fontWeight="medium">
-        Додати тему
+        Додати розділ
       </Text>
       <Field label="Назва" required mb={3} color="orange">
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Вкажіть назву"
+          color="orange.placeholder"
         />
       </Field>
-      <Field label="Розділ" required mb={3} color="orange">
+      <Field label="Предмет" required mb={3} color="orange">
         <SelectRoot
-          collection={chapters}
-          onValueChange={(selected) => setChapterId(Number(selected?.value))}
+          collection={subjects}
+          onValueChange={(selected) => setSubjectId(Number(selected?.value))}
         >
           <SelectTrigger>
-            <SelectValueText placeholder="Вкажіть розділ" />
+            <SelectValueText placeholder="Вкажіть предмет" />
           </SelectTrigger>
           <SelectContent>
-            {chapters.items.map((subject) => (
+            {subjects.items.map((subject) => (
               <SelectItem item={subject} key={subject.value}>
                 {subject.label}
               </SelectItem>
@@ -100,4 +104,4 @@ const AddTopic = () => {
   );
 };
 
-export default AddTopic;
+export default AddChapter;

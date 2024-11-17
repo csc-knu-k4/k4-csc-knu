@@ -1,12 +1,14 @@
 import { Table, Box } from '@chakra-ui/react';
-import { SectionsTableRow } from './SectionsTableRow';
+import { ChaptersTableRow } from './ChaptersTableRow';
 import { Section } from './types';
 
-interface SectionsTableProps {
+interface ChaptersTableProps {
   items: Section[];
 }
 
-export function SectionsTable({ items }: SectionsTableProps) {
+export function ChaptersTable({ items }: ChaptersTableProps) {
+  const sortedItems = [...items].sort((a, b) => a.id - b.id);
+
   return (
     <Box overflowX="auto" w="full">
       <Table.Root size="lg">
@@ -17,16 +19,13 @@ export function SectionsTable({ items }: SectionsTableProps) {
               Предмет
             </Table.ColumnHeader>
             <Table.ColumnHeader textAlign="start" color="orange">
-              Створено
-            </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="orange">
               Дії
             </Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {items.map((item) => (
-            <SectionsTableRow key={item.id} item={item} />
+          {sortedItems.map((item) => (
+            <ChaptersTableRow key={item.id} item={item} />
           ))}
         </Table.Body>
       </Table.Root>

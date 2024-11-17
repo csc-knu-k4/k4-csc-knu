@@ -7,6 +7,8 @@ interface TopicsTableProps {
 }
 
 export function TopicsTable({ items }: TopicsTableProps) {
+  const sortedItems = [...items].sort((a, b) => a.id - b.id);
+
   return (
     <Box overflowX="auto" w="full">
       <Table.Root size="lg">
@@ -14,10 +16,7 @@ export function TopicsTable({ items }: TopicsTableProps) {
           <Table.Row>
             <Table.ColumnHeader color="orange">Назва</Table.ColumnHeader>
             <Table.ColumnHeader textAlign="center" color="orange">
-              Предмет
-            </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="start" color="orange">
-              Створено
+              Розділ
             </Table.ColumnHeader>
             <Table.ColumnHeader textAlign="start" color="orange">
               Дії
@@ -25,7 +24,7 @@ export function TopicsTable({ items }: TopicsTableProps) {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {items.map((item) => (
+          {sortedItems.map((item) => (
             <TopicsTableRow key={item.id} item={item} />
           ))}
         </Table.Body>
