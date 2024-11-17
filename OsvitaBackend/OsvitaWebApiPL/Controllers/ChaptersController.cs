@@ -10,9 +10,10 @@ namespace OsvitaWebApiPL.Controllers
     {
         private readonly IChapterService chapterService;
         private readonly ITopicService topicService;
-        public ChaptersController(IChapterService chapterService)
+        public ChaptersController(IChapterService chapterService, ITopicService topicService)
         {
             this.chapterService = chapterService;
+            this.topicService = topicService;
         }
 
         // GET: api/chapters
