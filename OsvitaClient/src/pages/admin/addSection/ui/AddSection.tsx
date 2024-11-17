@@ -8,23 +8,23 @@ const AddSection = () => {
       <Text mb="2rem" fontSize="2xl" fontWeight="medium">
         Додати розділ
       </Text>
-      <Field label="Назва" required mb={3} color="blue">
+      <Field label="Назва" required mb={3} color="orange">
         <Input
           _placeholder={{ color: 'inherit' }}
           placeholder="Вкажіть назву"
-          color="blue.placeholder"
-          borderColor="blue"
+          color="orange.placeholder"
+          borderColor="orange"
         />
       </Field>
-      <Field label="Предмет" required mb={3} color="blue">
+      <Field label="Предмет" required mb={3} color="orange">
         <Input
           _placeholder={{ color: 'inherit' }}
           placeholder="Вкажіть предмет"
-          color="blue.placeholder"
-          borderColor="blue"
+          color="orange.placeholder"
+          borderColor="orange"
         />
       </Field>
-      <Button bgColor="blue">Додати</Button>
+      <Button bgColor="orange">Додати</Button>
     </Flex>
   );
 };

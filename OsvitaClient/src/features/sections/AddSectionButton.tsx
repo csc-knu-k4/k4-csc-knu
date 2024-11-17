@@ -6,13 +6,13 @@ export function AddSectionButton() {
   const navigate = useNavigate();
 
   const handleAddSection = () => {
-    navigate('/add-section');
+    navigate('/admin/add-section');
   };
 
   return (
     <AddButton
       text="Додати розділ"
-      icon={<GoPlusCircle size="1.5rem" color="blue" />}
+      icon={<GoPlusCircle size="1.5rem" color="orange" />}
       onClick={handleAddSection}
     />
   );

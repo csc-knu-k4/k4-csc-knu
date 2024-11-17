@@ -11,6 +11,8 @@ export default function BaseLayout() {
       templateRows="auto 1fr"
       gap="1.5rem"
       h="100vh"
+      padding="1.25rem 1.5rem"
+      overflow="hidden"
     >
       <GridItem area="sidebar">
         <Sidebar />

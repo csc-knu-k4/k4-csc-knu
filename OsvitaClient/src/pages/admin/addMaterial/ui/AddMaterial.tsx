@@ -9,25 +9,25 @@ const AddMaterial = () => {
         Додати матеріал
       </Text>
       <HStack gap="10" width="full">
-        <Field color="blue" label="Наповнення" required errorText="Поле обов'язкове">
+        <Field color="orange" label="Наповнення" required errorText="Поле обов'язкове">
           <Textarea
             _placeholder={{ color: 'inherit' }}
-            color="blue.placeholder"
-            borderColor="blue"
+            color="orange.placeholder"
+            borderColor="orange"
             placeholder="Начніть друкувати..."
             variant="outline"
           />
         </Field>
       </HStack>
-      <Field label="Предмет" required mb={3} color="blue">
+      <Field label="Предмет" required mb={3} color="orange">
         <Input
           _placeholder={{ color: 'inherit' }}
           placeholder="Вкажіть предмет"
-          color="blue.placeholder"
-          borderColor="blue"
+          color="orange.placeholder"
+          borderColor="orange"
         />
       </Field>
-      <Button bgColor="blue">Додати</Button>
+      <Button bgColor="orange">Додати</Button>
     </Flex>
   );
 };
