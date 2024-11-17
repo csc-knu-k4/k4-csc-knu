@@ -50,7 +50,7 @@ namespace OsvitaWebApiPL.Controllers
             {
                 var id = await subjectService.AddAsync(model);
                 var subjectModel = await subjectService.GetByIdAsync(id);
-                return Ok();
+                return Ok(subjectModel);
             }
             catch (Exception ex)
             {
