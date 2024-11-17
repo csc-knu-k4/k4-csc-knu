@@ -5,7 +5,7 @@ import { MdDeleteOutline } from 'react-icons/md';
 import { Topic } from './types';
 import { ActionButtons } from '@/shared/ui/ActionButtons';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getChapterById } from '@/shared/api/chaptersApi';
 import { deleteTopic } from '@/shared/api/topicsApi';
 import { EditTopicModal } from '@/features/topics/EditTopicModal';
@@ -18,6 +18,7 @@ interface TopicsTableRowProps {
 export function TopicsTableRow({ item }: TopicsTableRowProps) {
   const [isEditOpen, setEditOpen] = useState(false);
   const [chapterTitle, setChapterTitle] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ export function TopicsTableRow({ item }: TopicsTableRowProps) {
   const deleteMutation = useMutation({
     mutationFn: deleteTopic,
     onSuccess: () => {
-      console.log(`Topic with ID ${item.id} deleted.`);
+      queryClient.invalidateQueries(['topics']);
     },
   });
 

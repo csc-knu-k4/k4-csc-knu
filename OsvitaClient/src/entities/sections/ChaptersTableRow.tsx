@@ -3,7 +3,7 @@ import { Table } from '@chakra-ui/react';
 import { IoEyeOutline } from 'react-icons/io5';
 import { TbEdit } from 'react-icons/tb';
 import { MdDeleteOutline } from 'react-icons/md';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { deleteChapter } from '@/shared/api/chaptersApi';
 import { getSubjectById } from '@/shared/api/subjectsApi';
 import { ActionButtons } from '@/shared/ui/ActionButtons';
@@ -26,6 +26,7 @@ export function ChaptersTableRow({ item }: ChaptersTableRowProps) {
   const [isEditOpen, setEditOpen] = useState(false);
   const [subjectTitle, setSubjectTitle] = useState<string | null>(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleViewTopics = () => {
     navigate(`/admin/topics`, { state: { chapterId: item.id } });
@@ -48,7 +49,7 @@ export function ChaptersTableRow({ item }: ChaptersTableRowProps) {
   const deleteMutation = useMutation({
     mutationFn: deleteChapter,
     onSuccess: () => {
-      console.log(`Chapter with ID ${item.id} deleted.`);
+      queryClient.invalidateQueries(['chapters']);
     },
   });
 

@@ -5,7 +5,7 @@ import { MdDeleteOutline } from 'react-icons/md';
 import { Material } from './types';
 import { ActionButtons } from '@/shared/ui/ActionButtons';
 import { useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { deleteMaterial } from '@/shared/api/materialsApi';
 import { EditMaterialModal } from '@/features/materials/EditMaterialModal';
 
@@ -15,11 +15,12 @@ interface MaterialTableRowProps {
 
 export function MaterialTableRow({ item }: MaterialTableRowProps) {
   const [isEditOpen, setEditOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
     mutationFn: deleteMaterial,
     onSuccess: () => {
-      console.log(`Chapter with ID ${item.id} deleted.`);
+      queryClient.invalidateQueries(['materials']);
     },
   });
 
