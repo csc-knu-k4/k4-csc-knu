@@ -27,3 +27,8 @@ export const updateTopic = async (id: number, topic: any) => {
 export const deleteTopic = async (id: number) => {
   await api.delete(`/topics/${id}`);
 };
+
+export const getTopicById = async (id: number) => {
+  const response = await api.get(`/topics/${id}`);
+  return response.data;
+};
