@@ -20,11 +20,12 @@ namespace OsvitaBLL.Services
             this.mapper = mapper;
         }
 
-        public async Task AddAsync(ChapterModel model)
+        public async Task<int> AddAsync(ChapterModel model)
         {
             var chapter = mapper.Map<Chapter>(model);
             await chapterRepository.AddAsync(chapter);
             await unitOfWork.SaveChangesAsync();
+            return chapter.Id;
         }
 
         public async Task DeleteAsync(ChapterModel model)

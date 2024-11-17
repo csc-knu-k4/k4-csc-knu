@@ -1,0 +1,27 @@
+name: Build All
+
+on:
+  push:
+    branches:
+      - "*"
+      - "!master"
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-node:
+    runs-on: ubuntu-latest
+    name: Build Node JS
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        working-directory: OsvitaClient
+        run: npm install && npm run build
+
+      - name: Lint
+        working-directory: OsvitaClient
+        run: npm run lint

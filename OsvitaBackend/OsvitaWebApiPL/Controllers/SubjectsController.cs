@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
@@ -9,9 +10,11 @@ namespace OsvitaWebApiPL.Controllers
     public class SubjectsController : ControllerBase
     {
         private readonly ISubjectService subjectService;
-        public SubjectsController(ISubjectService subjectService)
+        private readonly IChapterService chapterService;
+        public SubjectsController(ISubjectService subjectService, IChapterService chapterService)
         {
             this.subjectService = subjectService;
+            this.chapterService = chapterService;
         }
 
         // GET: api/subjects
@@ -40,12 +43,14 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST api/subjects
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] SubjectModel model)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<SubjectModel>> Post([FromBody] SubjectModel model)
         {
             try
             {
-                await subjectService.AddAsync(model);
-                return Created();
+                var id = await subjectService.AddAsync(model);
+                var subjectModel = await subjectService.GetByIdAsync(id);
+                return Ok(subjectModel);
             }
             catch (Exception ex)
             {
@@ -55,6 +60,7 @@ namespace OsvitaWebApiPL.Controllers
 
         // PUT api/subjects/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Put(int id, [FromBody] SubjectModel model)
         {
             try
@@ -71,6 +77,7 @@ namespace OsvitaWebApiPL.Controllers
 
         // DELETE api/subjects/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Delete(int id)
         {
             try
@@ -82,6 +89,18 @@ namespace OsvitaWebApiPL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // GET api/subjects/5/chapters
+        [HttpGet("{id}/chapters")]
+        public async Task<ActionResult<IEnumerable<ChapterModel>>> GetChapters(int id)
+        {
+            var chapterModels = await chapterService.GetBySubjectIdAsync(id);
+            if (chapterModels is not null)
+            {
+                return Ok(chapterModels);
+            }
+            return NotFound();
         }
     }
 }

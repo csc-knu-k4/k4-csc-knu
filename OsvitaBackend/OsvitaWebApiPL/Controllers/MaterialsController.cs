@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
-using OsvitaBLL.Services;
 
 namespace OsvitaWebApiPL.Controllers
 {
@@ -11,9 +9,11 @@ namespace OsvitaWebApiPL.Controllers
     public class MaterialsController : ControllerBase
     {
         private readonly IMaterialService materialService;
-        public MaterialsController(IMaterialService materialService)
+        private readonly IContentBlockService contentBlockService;
+        public MaterialsController(IMaterialService materialService, IContentBlockService contentBlockService)
         {
             this.materialService = materialService;
+            this.contentBlockService = contentBlockService;
         }
 
         // GET: api/<MaterialsController>
@@ -42,12 +42,13 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST api/<MaterialsController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] MaterialModel model)
+        public async Task<ActionResult<MaterialModel>> Post([FromBody] MaterialModel model)
         {
             try
             {
-                await materialService.AddAsync(model);
-                return Created();
+                var id = await materialService.AddAsync(model);
+                var materialModel = await materialService.GetByIdAsync(id);
+                return Ok(materialModel);
             }
             catch (Exception ex)
             {
@@ -84,6 +85,18 @@ namespace OsvitaWebApiPL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // GET api/materials/5/contentblocks
+        [HttpGet("{id}/contentblocks")]
+        public async Task<ActionResult<IEnumerable<ContentBlockModel>>> GetContentBlocks(int id)
+        {
+            var contentBlocksModels = await contentBlockService.GetByMaterialIdAsync(id);
+            if (contentBlocksModels is not null)
+            {
+                return Ok(contentBlocksModels);
+            }
+            return NotFound();
         }
     }
 }

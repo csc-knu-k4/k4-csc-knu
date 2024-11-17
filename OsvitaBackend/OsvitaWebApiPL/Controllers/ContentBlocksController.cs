@@ -40,12 +40,13 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST api/contentblocks
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] ContentBlockModel model)
+        public async Task<ActionResult<ContentBlockModel>> Post([FromBody] ContentBlockModel model)
         {
             try
             {
-                await contentBlockService.AddAsync(model);
-                return Created();
+                var id = await contentBlockService.AddAsync(model);
+                var contentBlockModel = await contentBlockService.GetByIdAsync(id);
+                return Ok(contentBlockModel);
             }
             catch (Exception ex)
             {

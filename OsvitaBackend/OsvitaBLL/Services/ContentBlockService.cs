@@ -20,11 +20,12 @@ namespace OsvitaBLL.Services
             this.mapper = mapper;
         }
 
-        public async Task AddAsync(ContentBlockModel model)
+        public async Task<int> AddAsync(ContentBlockModel model)
         {
             var contentBlock = mapper.Map<ContentBlock>(model);
             await contentBlockRepository.AddAsync(contentBlock);
             await unitOfWork.SaveChangesAsync();
+            return contentBlock.Id;
         }
 
         public async Task DeleteAsync(ContentBlockModel model)

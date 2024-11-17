@@ -20,11 +20,12 @@ namespace OsvitaBLL.Services
             this.mapper = mapper;
         }
 
-        public async Task AddAsync(TopicModel model)
+        public async Task<int> AddAsync(TopicModel model)
         {
             var topic = mapper.Map<Topic>(model);
             await topicRepository.AddAsync(topic);
             await unitOfWork.SaveChangesAsync();
+            return topic.Id;
         }
 
         public async Task DeleteAsync(TopicModel model)

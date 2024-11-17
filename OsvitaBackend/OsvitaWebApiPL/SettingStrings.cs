@@ -4,6 +4,11 @@ namespace OsvitaWebApiPL
 	public static class SettingStrings
 	{
         public const string OsvitaDbConnection = "OsvitaDbConnection";
+        public const string IdentityOsvitaDbConnection = "IdentityOsvitaDbConnection";
+        public const string AdminSettings = "AdminSettings";
+        public const string JwtSection = "Jwt";
+        public const string JwtIssuer = "Issuer";
+        public const string JwtKey = "Key";
     }
 }
 

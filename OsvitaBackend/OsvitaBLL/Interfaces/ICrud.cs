@@ -3,7 +3,7 @@ namespace OsvitaBLL.Interfaces
 {
 	public interface ICrud<T> where T : class
 	{
-        Task AddAsync(T entity);
+        Task<int> AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteByIdAsync(int id);
         Task DeleteAsync(T entity);

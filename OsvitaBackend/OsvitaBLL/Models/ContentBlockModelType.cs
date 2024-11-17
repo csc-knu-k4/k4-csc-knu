@@ -1,10 +1,9 @@
-﻿using System;
-namespace OsvitaBLL.Models
+﻿namespace OsvitaBLL.Models
 {
-	public enum ContentBlockModelType
-	{
-		TextBlock,
-		ImageBlock
-	}
+    public enum ContentBlockModelType
+    {
+        TextBlock,
+        ImageBlock
+    }
 }
 

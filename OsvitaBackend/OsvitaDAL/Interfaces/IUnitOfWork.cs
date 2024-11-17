@@ -8,6 +8,7 @@ namespace OsvitaDAL.Interfaces
 		ITopicRepository TopicRepository { get; }
 		IMaterialRepository MaterialRepository { get; }
 		IContentBlockRepository ContentBlockRepository { get; }
+        IUserRepository UserRepository { get; }
         Task SaveChangesAsync();
     }
 }

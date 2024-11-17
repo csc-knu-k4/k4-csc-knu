@@ -36,6 +36,9 @@ namespace OsvitaBLL.Configurations
                     .MapValue(ContentType.ImageBlock, ContentBlockModelType.TextBlock)
                 )
                 .ReverseMap();
+
+            CreateMap<User, UserModel>()
+                .ReverseMap();
         }
     }
 }

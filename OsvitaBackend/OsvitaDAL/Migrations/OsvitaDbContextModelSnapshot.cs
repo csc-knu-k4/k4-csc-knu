@@ -145,6 +145,29 @@ namespace OsvitaDAL.Migrations
                     b.ToTable("Topics");
                 });
 
+            modelBuilder.Entity("OsvitaDAL.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecondName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("OsvitaDAL.Entities.Chapter", b =>
                 {
                     b.HasOne("OsvitaDAL.Entities.Subject", "Subject")

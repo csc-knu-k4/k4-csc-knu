@@ -9,9 +9,11 @@ namespace OsvitaWebApiPL.Controllers
     public class TopicsController : ControllerBase
     {
         private readonly ITopicService topicService;
-        public TopicsController(ITopicService topicService)
+        private readonly IMaterialService materialService;
+        public TopicsController(ITopicService topicService, IMaterialService materialService)
         {
             this.topicService = topicService;
+            this.materialService = materialService;
         }
 
         // GET: api/topics
@@ -40,12 +42,13 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST api/topics
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] TopicModel model)
+        public async Task<ActionResult<TopicModel>> Post([FromBody] TopicModel model)
         {
             try
             {
-                await topicService.AddAsync(model);
-                return Created();
+                var id = await topicService.AddAsync(model);
+                var topicModel = await topicService.GetByIdAsync(id);
+                return Ok(topicModel);
             }
             catch (Exception ex)
             {
@@ -82,6 +85,18 @@ namespace OsvitaWebApiPL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // GET api/topics/5/materials
+        [HttpGet("{id}/materials")]
+        public async Task<ActionResult<IEnumerable<MaterialModel>>> GetMaterials(int id)
+        {
+            var materialModels = await materialService.GetByTopicIdAsync(id);
+            if (materialModels is not null)
+            {
+                return Ok(materialModels);
+            }
+            return NotFound();
         }
     }
 }
