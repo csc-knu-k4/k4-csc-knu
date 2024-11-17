@@ -69,40 +69,44 @@ const AddMaterial = () => {
   }
 
   return (
-    <Flex maxWidth="30.25rem" flexDir="column">
+    <Flex flexDir="column">
       <Text mb="2rem" fontSize="2xl" fontWeight="medium">
         Додати матеріал
       </Text>
-      <Field label="Назва" required mb={3} color="orange">
-        <Input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Вкажіть назву"
-        />
-      </Field>
-      <Field label="Тема" required mb={3} color="orange">
-        <SelectRoot
-          collection={topics}
-          onValueChange={(selected) => setTopicId(Number(selected?.value))}
-        >
-          <SelectTrigger>
-            <SelectValueText placeholder="Вкажіть тему" />
-          </SelectTrigger>
-          <SelectContent>
-            {topics.items.map((topic) => (
-              <SelectItem item={topic} key={topic.value}>
-                {topic.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </SelectRoot>
-      </Field>
-      <HStack gap="10" width="full" mb={3}>
+      <Flex flexDir="row" gap={4}>
+        <Field label="Назва" required mb={3} color="orange">
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Вкажіть назву"
+            color="orange.placeholder"
+            _placeholder={{ color: 'inherit' }}
+          />
+        </Field>
+        <Field label="Тема" required mb={3} color="orange">
+          <SelectRoot
+            collection={topics}
+            onValueChange={(selected) => setTopicId(Number(selected?.value))}
+          >
+            <SelectTrigger>
+              <SelectValueText placeholder="Вкажіть тему" />
+            </SelectTrigger>
+            <SelectContent>
+              {topics.items.map((topic) => (
+                <SelectItem item={topic} key={topic.value}>
+                  {topic.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </SelectRoot>
+        </Field>
+      </Flex>
+      <HStack width="full" mb={3}>
         <Field color="orange" label="Наповнення" required errorText="Поле обов'язкове">
           <Textarea
             _placeholder={{ color: 'inherit' }}
+            minH="450px"
             color="orange.placeholder"
-            borderColor="orange"
             placeholder="Начніть друкувати..."
             variant="outline"
           />
