@@ -16,6 +16,7 @@ namespace OsvitaDAL.Data
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<ContentBlock> ContentBlocks { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
