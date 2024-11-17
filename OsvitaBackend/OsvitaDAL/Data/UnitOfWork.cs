@@ -18,6 +18,7 @@ namespace OsvitaDAL.Data
         ITopicRepository topicRepository;
         IMaterialRepository materialRepository;
         IContentBlockRepository contentBlockRepository;
+        IUserRepository userRepository;
 
         public ISubjectRepository SubjectRepository
         {
@@ -76,6 +77,18 @@ namespace OsvitaDAL.Data
                     contentBlockRepository = new ContentBlockRepository(context);
                 }
                 return contentBlockRepository;
+            }
+        }
+
+        public IUserRepository UserRepository
+        {
+            get
+            {
+                if (userRepository is null)
+                {
+                    userRepository = new UserRepository(context);
+                }
+                return userRepository;
             }
         }
 

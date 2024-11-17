@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
@@ -42,6 +43,7 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST api/subjects
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Post([FromBody] SubjectModel model)
         {
             try
@@ -57,6 +59,7 @@ namespace OsvitaWebApiPL.Controllers
 
         // PUT api/subjects/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Put(int id, [FromBody] SubjectModel model)
         {
             try
@@ -73,6 +76,7 @@ namespace OsvitaWebApiPL.Controllers
 
         // DELETE api/subjects/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Delete(int id)
         {
             try
