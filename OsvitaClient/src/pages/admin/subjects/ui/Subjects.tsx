@@ -5,11 +5,18 @@ import { AddSubjectButton } from '@/features/subjects';
 import { SubjectsTable } from '@/entities/subjects';
 
 const Subjects = () => {
-  const { data: subjects, isLoading } = useQuery(['subjects'], getSubjects);
+  const { data: subjects, isLoading, isError } = useQuery(['subjects'], getSubjects);
 
   if (isLoading) {
     return <Text>Завантаження...</Text>;
   }
+
+  if (isError) {
+    return <Text color="red.500">Помилка завантаження даних.</Text>;
+  }
+
+  const items = subjects || [];
+
   return (
     <>
       <Flex justifyContent="space-between" alignItems="center" mb={2}>
@@ -18,7 +25,7 @@ const Subjects = () => {
         </Text>
         <AddSubjectButton />
       </Flex>
-      <SubjectsTable items={subjects} />
+      {items.length > 0 ? <SubjectsTable items={items} /> : <Text>Дані відсутні.</Text>}
     </>
   );
 };

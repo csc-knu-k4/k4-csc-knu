@@ -9,25 +9,42 @@ const Topics = () => {
   const location = useLocation();
   const chapterId = location.state?.chapterId;
 
-  const { data: topics, isLoading } = useQuery(
+  const {
+    data: topics,
+    isLoading,
+    isError,
+  } = useQuery(
     ['topics', chapterId],
     () => (chapterId ? getTopicsByChapter(chapterId) : getTopics()),
     { keepPreviousData: true },
+  );
+
+  const header = (
+    <Flex justifyContent="space-between" alignItems="center" mb={2}>
+      <Text fontSize="2xl" fontWeight="medium">
+        {chapterId ? `Теми для розділу #${chapterId}` : 'Теми'}
+      </Text>
+      <AddTopicButton />
+    </Flex>
   );
 
   if (isLoading) {
     return <Text>Завантаження...</Text>;
   }
 
+  if (isError) {
+    return (
+      <>
+        {header}
+        <Text color="red.500">Помилка завантаження даних.</Text>
+      </>
+    );
+  }
+
   return (
     <>
-      <Flex justifyContent="space-between" alignItems="center" mb={2}>
-        <Text fontSize="2xl" fontWeight="medium">
-          {chapterId ? `Теми для розділу #${chapterId}` : 'Теми'}
-        </Text>
-        <AddTopicButton />
-      </Flex>
-      <TopicsTable items={topics} />
+      {header}
+      {topics && topics.length > 0 ? <TopicsTable items={topics} /> : <Text>Дані відсутні.</Text>}
     </>
   );
 };
