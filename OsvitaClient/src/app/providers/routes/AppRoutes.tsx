@@ -8,6 +8,8 @@ import Chapters from '@/pages/admin/sections/ui/Chapters';
 import Subjects from '@/pages/admin/subjects/ui/Subjects';
 import Topics from '@/pages/admin/topics/ui/Topics';
 import Index from '@/pages/index/ui/Index';
+import Login from '@/pages/login/ui/Login';
+import Register from '@/pages/register/ui/Register';
 
 import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
 
@@ -15,6 +17,10 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Index />} />
+
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/register" element={<Register />} />
 
       <Route path="/admin" element={<BaseLayout />}>
         <Route path="subjects" element={<Subjects />} />
