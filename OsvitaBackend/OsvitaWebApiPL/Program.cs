@@ -1,16 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using OsvitaBLL.Configurations;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Services;
 using OsvitaDAL.Data;
 using OsvitaDAL.Interfaces;
 using OsvitaWebApiPL.Configurations;
+using OsvitaWebApiPL.Identity;
+using OsvitaWebApiPL.Interfaces;
+using OsvitaWebApiPL.Services;
 
 namespace OsvitaWebApiPL;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +36,15 @@ public class Program
             option.UseSqlServer(builder.Configuration.GetConnectionString(SettingStrings.OsvitaDbConnection))
         );
 
+        builder.Services.AddDbContext<OsvitaIdentityDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString(SettingStrings.IdentityOsvitaDbConnection))
+        );
+
+        builder.Services.AddAuthentication();
+        builder.Services.AddAuthorization();
+        builder.Services.ConfigureIdentity();
+        builder.Services.ConfigureJWT(builder.Configuration);
+
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddAutoMapper(typeof(OsvitaAutomapperProfile));
         builder.Services.AddTransient<ISubjectService, SubjectService>();
@@ -39,10 +52,15 @@ public class Program
         builder.Services.AddTransient<ITopicService, TopicService>();
         builder.Services.AddTransient<IMaterialService, MaterialService>();
         builder.Services.AddTransient<IContentBlockService, ContentBlockService>();
+        builder.Services.AddTransient<IUserService, UserService>();
+
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));
+        builder.Services.AddScoped<IIdentityService, IdentityService>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        //builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerDoc();
 
         var app = builder.Build();
 
@@ -62,7 +80,9 @@ public class Program
         app.UseAuthorization();
 
         app.MigrateDatabase();
+        app.MigrateIdentityDatabase();
 
+        await app.InitializeAdminAsync();
 
         app.MapControllers();
 

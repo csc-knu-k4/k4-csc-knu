@@ -42,12 +42,13 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST api/topics
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] TopicModel model)
+        public async Task<ActionResult<TopicModel>> Post([FromBody] TopicModel model)
         {
             try
             {
-                await topicService.AddAsync(model);
-                return Created();
+                var id = await topicService.AddAsync(model);
+                var topicModel = await topicService.GetByIdAsync(id);
+                return Ok(topicModel);
             }
             catch (Exception ex)
             {

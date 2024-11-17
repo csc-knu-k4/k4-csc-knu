@@ -7,8 +7,8 @@ namespace OsvitaDAL.Repositories
 {
 	public class SubjectRepository : Repository<Subject>, ISubjectRepository
     {
-		public SubjectRepository(OsvitaDbContext conteext)
-		: base(conteext)
+		public SubjectRepository(OsvitaDbContext context)
+		: base(context)
 		{
 		}
 	}
