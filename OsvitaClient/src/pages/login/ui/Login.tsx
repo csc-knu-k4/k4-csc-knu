@@ -11,10 +11,10 @@ const Login = () => {
         Вхід
       </Text>
       <Field label="Електронна пошта">
-        <Input variant="flushed" placeholder="Введіть електронну пошту" />
+        <Input type="email" variant="flushed" placeholder="Введіть електронну пошту" />
       </Field>
       <Field label="Пароль" mt={6}>
-        <Input variant="flushed" placeholder="Введіть пароль" />
+        <Input type="password" variant="flushed" placeholder="Введіть пароль" />
       </Field>
       <Flex my={7} w="full" flexDir="row" justifyContent="space-between" alignItems="center">
         <Checkbox color="gray" colorPalette="orange">
