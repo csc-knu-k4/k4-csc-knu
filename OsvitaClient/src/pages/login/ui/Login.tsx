@@ -3,8 +3,15 @@ import { Container, Flex, Text, Highlight } from '@chakra-ui/react';
 import { Input } from '@chakra-ui/react';
 import { Field } from '@/components/ui/field';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const handleRegister = () => {
+    navigate('/register');
+  };
+
   return (
     <Container maxW="500px" centerContent>
       <Text color="orange" fontSize="2xl" fontWeight="bold">
@@ -32,7 +39,7 @@ const Login = () => {
       <Button fontSize="lg" w="full" borderRadius="1.5rem" bgColor="orange">
         Увійти
       </Button>
-      <Text color="gray" mt={6}>
+      <Text onClick={handleRegister} color="gray" mt={6}>
         Не маєте акаунту?{' '}
         <Highlight
           query="Створити акаунт"
