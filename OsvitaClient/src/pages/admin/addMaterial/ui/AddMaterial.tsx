@@ -13,16 +13,22 @@ import { useState } from 'react';
 import { getTopics } from '@/shared/api/topicsApi';
 import { Topic } from '@/entities/topics';
 import { addMaterial, getMaterials } from '@/shared/api/materialsApi';
+import { addContentBlock, getContentBlocks } from '@/shared/api/contentBlocksApi';
 
 const AddMaterial = () => {
   const [title, setTitle] = useState('');
   const [topicId, setTopicId] = useState<number | null>(null);
+  const [contentValue, setContentValue] = useState('');
   const queryClient = useQueryClient();
 
   const { data: topicsData, isLoading: topicsLoading } = useQuery<Topic[]>(['topics'], getTopics);
   const { data: materialsData, isLoading: materialsLoading } = useQuery(
     ['materials'],
     getMaterials,
+  );
+  const { data: contentBlocksData, isLoading: contentBlocksLoading } = useQuery(
+    ['contentBlocks'],
+    getContentBlocks,
   );
 
   const topics = createListCollection({
@@ -34,17 +40,44 @@ const AddMaterial = () => {
       : [],
   });
 
-  const mutation = useMutation({
+  const addMaterialMutation = useMutation({
     mutationFn: addMaterial,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries(['materials']);
-      setTitle('');
-      setTopicId(null);
+      handleAddContentBlock(data.id);
     },
   });
 
-  const handleAdd = () => {
-    if (!title.trim() || topicId === null) {
+  const addContentBlockMutation = useMutation({
+    mutationFn: addContentBlock,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['contentBlocks']);
+      setTitle('');
+      setTopicId(null);
+      setContentValue('');
+    },
+  });
+
+  const handleAddContentBlock = (materialId: number) => {
+    if (!contentBlocksData) return;
+
+    const maxOrderPosition = Math.max(
+      ...contentBlocksData.map((block: { orderPosition: number }) => block.orderPosition),
+      0,
+    );
+
+    addContentBlockMutation.mutate({
+      id: 0,
+      title,
+      contentBlockModelType: 0,
+      orderPosition: maxOrderPosition + 1,
+      materialId,
+      value: contentValue,
+    });
+  };
+
+  const handleAddMaterial = () => {
+    if (!title.trim() || topicId === null || !contentValue.trim()) {
       alert('Будь ласка, заповніть всі поля!');
       return;
     }
@@ -56,7 +89,7 @@ const AddMaterial = () => {
         )
       : 0;
 
-    mutation.mutate({
+    addMaterialMutation.mutate({
       title: title.trim(),
       topicId,
       orderPosition: maxOrderPosition + 1,
@@ -64,8 +97,8 @@ const AddMaterial = () => {
     });
   };
 
-  if (materialsLoading || topicsLoading) {
-    return <Text>Завантаження предметів...</Text>;
+  if (materialsLoading || topicsLoading || contentBlocksLoading) {
+    return <Text>Завантаження даних...</Text>;
   }
 
   return (
@@ -109,10 +142,12 @@ const AddMaterial = () => {
             color="orange.placeholder"
             placeholder="Начніть друкувати..."
             variant="outline"
+            value={contentValue}
+            onChange={(e) => setContentValue(e.target.value)}
           />
         </Field>
       </HStack>
-      <Button bgColor="orange" onClick={handleAdd}>
+      <Button bgColor="orange" onClick={handleAddMaterial}>
         Додати
       </Button>
     </Flex>
