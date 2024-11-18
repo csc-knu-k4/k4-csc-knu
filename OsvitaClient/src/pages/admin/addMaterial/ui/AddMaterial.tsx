@@ -14,6 +14,7 @@ import { getTopics } from '@/shared/api/topicsApi';
 import { Topic } from '@/entities/topics';
 import { addMaterial, getMaterials } from '@/shared/api/materialsApi';
 import { addContentBlock, getContentBlocks } from '@/shared/api/contentBlocksApi';
+import { toaster } from '@/components/ui/toaster';
 
 const AddMaterial = () => {
   const [title, setTitle] = useState('');
@@ -78,7 +79,10 @@ const AddMaterial = () => {
 
   const handleAddMaterial = () => {
     if (!title.trim() || topicId === null || !contentValue.trim()) {
-      alert('Будь ласка, заповніть всі поля!');
+      toaster.create({
+        title: `Будь ласка, заповніть всі поля!`,
+        type: 'error',
+      });
       return;
     }
 
