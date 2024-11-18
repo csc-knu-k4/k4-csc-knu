@@ -10,10 +10,12 @@ namespace OsvitaWebApiPL.Controllers
     {
         private readonly IMaterialService materialService;
         private readonly IContentBlockService contentBlockService;
-        public MaterialsController(IMaterialService materialService, IContentBlockService contentBlockService)
+        private readonly IAssignmentService assignmentService;
+        public MaterialsController(IMaterialService materialService, IContentBlockService contentBlockService, IAssignmentService assignmentService)
         {
             this.materialService = materialService;
             this.contentBlockService = contentBlockService;
+            this.assignmentService = assignmentService;
         }
 
         // GET: api/<MaterialsController>
@@ -95,6 +97,18 @@ namespace OsvitaWebApiPL.Controllers
             if (contentBlocksModels is not null)
             {
                 return Ok(contentBlocksModels);
+            }
+            return NotFound();
+        }
+
+        // GET api/materials/5/assignments
+        [HttpGet("{id}/assignments")]
+        public async Task<ActionResult<IEnumerable<ContentBlockModel>>> GetTestsBlocks(int id)
+        {
+            var assignmentsModels = await assignmentService.GetAssignmentsByObjectIdAsync(id, ObjectModelType.MaterialModel);
+            if (assignmentsModels is not null)
+            {
+                return Ok(assignmentsModels);
             }
             return NotFound();
         }

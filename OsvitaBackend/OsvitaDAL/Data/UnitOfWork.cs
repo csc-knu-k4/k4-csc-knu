@@ -87,7 +87,7 @@ namespace OsvitaDAL.Data
         {
             get
             {
-                if (AssignmentRepository is null)
+                if (assignmentRepository is null)
                 {
                     assignmentRepository = new AssignmentRepository(context);
                 }
@@ -99,7 +99,7 @@ namespace OsvitaDAL.Data
         {
             get
             {
-                if (AnswerRepository is null)
+                if (answerRepository is null)
                 {
                     answerRepository = new AnswerRepository(context);
                 }
@@ -111,7 +111,7 @@ namespace OsvitaDAL.Data
         {
             get
             {
-                if (AssignmentLinkRepository is null)
+                if (assignmentLinkRepository is null)
                 {
                     assignmentLinkRepository = new AssignmentLinkRepository(context);
                 }

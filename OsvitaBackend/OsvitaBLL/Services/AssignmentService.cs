@@ -88,14 +88,16 @@ namespace OsvitaBLL.Services
                 {
                     await assignmentRepository.DeleteByIdAsync(childAssignment.Id);
                 }
+                await unitOfWork.SaveChangesAsync();
             }
             var assignmentLinks = (await assignmentLinkRepository.GetAllAsync()).Where(x => x.AssignmentId == id);
             foreach (var assignmentLink in assignmentLinks)
             {
                 await assignmentLinkRepository.DeleteByIdAsync(assignmentLink.Id);
             }
+            await unitOfWork.SaveChangesAsync();
             await assignmentRepository.DeleteByIdAsync(id);
-
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task UpdateAssignmentAsync(AssignmentModel model)
@@ -130,6 +132,10 @@ namespace OsvitaBLL.Services
         private async Task<int> AddOneAssignmentAsync(AssignmentModel model)
         {
             var assignment = mapper.Map<Assignment>(model);
+            if (assignment.AssignmentType != AssignmentType.ChildAssignment)
+            {
+                assignment.ParentAssignmentId = null;
+            }
             await assignmentRepository.AddAsync(assignment);
             await unitOfWork.SaveChangesAsync();
             if (model.ObjectId is not null)
@@ -144,6 +150,10 @@ namespace OsvitaBLL.Services
         private async Task UpdateOneAssignmentAsync(AssignmentModel model)
         {
             var assignment = mapper.Map<Assignment>(model);
+            if (assignment.AssignmentType != AssignmentType.ChildAssignment)
+            {
+                assignment.ParentAssignmentId = null;
+            }
             await assignmentRepository.UpdateAsync(assignment);
             await unitOfWork.SaveChangesAsync();
             if (model.ObjectId is not null)
