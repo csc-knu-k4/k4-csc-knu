@@ -109,7 +109,7 @@ namespace OsvitaBLL.Services
                 {
                     childAssignment.ParentAssignmentId = model.Id;
                     childAssignment.ObjectId = null;
-                    var oldChildAssignmentsIds = (await assignmentRepository.GetAllAsync()).Where(x => x.Id == childAssignment.Id).Select(x => x.Id);
+                    var oldChildAssignmentsIds = (await assignmentRepository.GetAllAsync()).Where(x => x.ParentAssignmentId == childAssignment.ParentAssignmentId).Select(x => x.Id);
                     if (oldChildAssignmentsIds.Contains(childAssignment.Id))
                     {
                         await UpdateOneAssignmentAsync(childAssignment);
@@ -156,6 +156,16 @@ namespace OsvitaBLL.Services
             }
             await assignmentRepository.UpdateAsync(assignment);
             await unitOfWork.SaveChangesAsync();
+
+            var oldAssignmentAnswersIds = (await answerRepository.GetAllAsync()).Where(x => x.AssignmentId == assignment.Id).Select(x => x.Id);
+            foreach (var oldAssignmentAnswerId in oldAssignmentAnswersIds)
+            {
+                if (!assignment.Answers.Select(x => x.Id).Contains(oldAssignmentAnswerId))
+                {
+                    await answerRepository.DeleteByIdAsync(oldAssignmentAnswerId);
+                }
+            }
+
             if (model.ObjectId is not null)
             {
                 var assignmentLink = (await assignmentLinkRepository.GetAllAsync()).FirstOrDefault(x => x.AssignmentId == model.Id);

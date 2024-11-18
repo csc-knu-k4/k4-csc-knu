@@ -33,8 +33,11 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddDbContext<OsvitaDbContext>(option =>
-            option.UseSqlServer(builder.Configuration.GetConnectionString(SettingStrings.OsvitaDbConnection))
-        );
+            {
+                option.UseSqlServer(builder.Configuration.GetConnectionString(SettingStrings.OsvitaDbConnection));
+                option.EnableSensitiveDataLogging();
+            }
+        );;
 
         builder.Services.AddDbContext<OsvitaIdentityDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString(SettingStrings.IdentityOsvitaDbConnection))
