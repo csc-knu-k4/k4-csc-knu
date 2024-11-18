@@ -81,6 +81,7 @@ public class Program
 
         app.UseStaticFiles();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MigrateDatabase();
