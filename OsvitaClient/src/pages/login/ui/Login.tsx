@@ -8,10 +8,11 @@ import { useDispatch } from 'react-redux';
 import { toaster } from '@/components/ui/toaster';
 import Layout from '@/app/layouts/AuthLayout/AuthLayout';
 import { login } from '@/shared/api/auth';
+import { AppDispatch } from '@/processes/store';
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

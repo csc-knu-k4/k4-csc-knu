@@ -1,0 +1,14 @@
+import { lazy } from 'react';
+
+export const BaseLayout = lazy(() => import('@/app/layouts/BaseLayout/BaseLayout'));
+export const AddMaterial = lazy(() => import('@/pages/admin/addMaterial/ui/AddMaterial'));
+export const AddChapter = lazy(() => import('@/pages/admin/addSection/ui/AddChapter'));
+export const AddSubject = lazy(() => import('@/pages/admin/addSubject/ui/AddSubject'));
+export const AddTopic = lazy(() => import('@/pages/admin/addTopic/ui/AddTopic'));
+export const Materials = lazy(() => import('@/pages/admin/materials/ui/Materials'));
+export const Chapters = lazy(() => import('@/pages/admin/sections/ui/Chapters'));
+export const Subjects = lazy(() => import('@/pages/admin/subjects/ui/Subjects'));
+export const Topics = lazy(() => import('@/pages/admin/topics/ui/Topics'));
+export const Index = lazy(() => import('@/pages/index/ui/Index'));
+export const Login = lazy(() => import('@/pages/login/ui/Login'));
+export const Register = lazy(() => import('@/pages/register/ui/Register'));

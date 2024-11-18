@@ -1,4 +1,3 @@
-import store from '@/processes/store';
 import axios from 'axios';
 
 const api = axios.create({
@@ -9,13 +8,10 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const state = store.getState();
-  const token = state.auth.token;
-
+  const token = localStorage.getItem('authToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-
   return config;
 });
 
