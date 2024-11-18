@@ -6,17 +6,23 @@ import { RouterProvider } from 'react-router-dom';
 import router from './app/providers/routes/AppRoutes';
 import config from './app/theme/theme';
 import { ReactQueryProvider } from './app/providers/ReactQueryProvider';
+import { Provider } from 'react-redux';
+import store from './processes/store';
+import { Toaster } from './components/ui/toaster';
 
 const system = createSystem(defaultConfig, config);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ChakraProvider value={system}>
-      <ThemeProvider attribute="class" disableTransitionOnChange>
-        <ReactQueryProvider>
-          <RouterProvider router={router} />
-        </ReactQueryProvider>
-      </ThemeProvider>
-    </ChakraProvider>
+    <Provider store={store}>
+      <ChakraProvider value={system}>
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <ReactQueryProvider>
+            <RouterProvider router={router} />
+            <Toaster />
+          </ReactQueryProvider>
+        </ThemeProvider>
+      </ChakraProvider>
+    </Provider>
   </StrictMode>,
 );
