@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from './api';
 
 export interface Chapter {
   id: number;
@@ -7,10 +7,6 @@ export interface Chapter {
   orderPosition: number;
   topicIds: number[];
 }
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
 
 export const getChapters = async (): Promise<Chapter[]> => {
   const response = await api.get('/chapters');

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from './api';
 
 export interface Material {
   id: number;
@@ -7,10 +7,6 @@ export interface Material {
   orderPosition: number;
   contentBlocksIds: number[];
 }
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
 
 export const getMaterials = async (): Promise<Material[]> => {
   const response = await api.get('/materials');
