@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import Layout from '@/app/layouts/AuthLayout/AuthLayout';
 import { register } from '@/shared/api/auth';
+import { toaster } from '@/components/ui/toaster';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -26,9 +27,16 @@ const Register = () => {
         secondName,
         roles: ['student'],
       });
+      toaster.success({
+        title: 'Реєстрація успішна',
+        type: 'info',
+      });
       navigate('/login');
     } catch (error) {
-      console.log(error);
+      toaster.error({
+        title: `Помилка при реєстрації ${error}`,
+        type: 'erorr',
+      });
     } finally {
       setIsLoading(false);
     }

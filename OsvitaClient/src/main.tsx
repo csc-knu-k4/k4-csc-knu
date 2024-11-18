@@ -8,6 +8,7 @@ import config from './app/theme/theme';
 import { ReactQueryProvider } from './app/providers/ReactQueryProvider';
 import { Provider } from 'react-redux';
 import store from './processes/store';
+import { Toaster } from './components/ui/toaster';
 
 const system = createSystem(defaultConfig, config);
 
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <ReactQueryProvider>
             <RouterProvider router={router} />
+            <Toaster />
           </ReactQueryProvider>
         </ThemeProvider>
       </ChakraProvider>

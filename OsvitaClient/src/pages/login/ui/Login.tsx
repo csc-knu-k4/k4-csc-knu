@@ -5,7 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-
+import { toaster } from '@/components/ui/toaster';
 import Layout from '@/app/layouts/AuthLayout/AuthLayout';
 import { login } from '@/shared/api/auth';
 
@@ -21,10 +21,16 @@ const Login = () => {
     setIsLoading(true);
     try {
       await login({ email, password }, dispatch);
-      console.log('Зашов');
+      toaster.success({
+        title: 'Вхід успішний',
+        type: 'info',
+      });
       navigate('/admin');
     } catch (error) {
-      console.log(error);
+      toaster.error({
+        title: `Помилка при авторизації ${error}`,
+        type: 'erorr',
+      });
     } finally {
       setIsLoading(false);
     }
