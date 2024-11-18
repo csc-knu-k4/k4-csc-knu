@@ -1,8 +1,8 @@
 ﻿using System;
 namespace OsvitaBLL.Models
 {
-	public class ChapterModel
-	{
+    public class ChapterModel
+    {
         public int Id { get; set; }
         public string Title { get; set; }
         public int SubjectId { get; set; }

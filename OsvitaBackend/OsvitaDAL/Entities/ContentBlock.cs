@@ -7,6 +7,7 @@
         public ContentType ContentType { get; set; }
         public int OrderPosition { get; set; }
         public int MaterialId { get; set; }
+
         public Material Material { get; set; }
     }
 }

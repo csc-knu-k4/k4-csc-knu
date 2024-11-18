@@ -4,9 +4,9 @@ using OsvitaDAL.Interfaces;
 
 namespace OsvitaDAL.Repositories
 {
-    public class ChapterRepository : Repository<Chapter>, IChapterRepository
+	public class AssignmentLinkRepository : Repository<AssignmentLink>, IAssignmentLinkRepository
     {
-        public ChapterRepository(OsvitaDbContext context)
+		public AssignmentLinkRepository(OsvitaDbContext context)
         : base(context)
         {
         }

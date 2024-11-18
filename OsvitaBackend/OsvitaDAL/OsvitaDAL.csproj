@@ -26,8 +26,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Entities\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 </Project>

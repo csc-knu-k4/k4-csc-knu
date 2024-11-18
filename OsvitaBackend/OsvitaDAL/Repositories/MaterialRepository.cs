@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OsvitaDAL.Data;
 using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
