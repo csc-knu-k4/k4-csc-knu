@@ -1,14 +1,10 @@
-import axios from 'axios';
+import api from './api';
 
 export interface Subject {
   id: number;
   title: string;
   chaptersIds: number[];
 }
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
 
 export const getSubjects = async (): Promise<Subject[]> => {
   const response = await api.get('/subjects');

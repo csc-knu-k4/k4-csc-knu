@@ -12,6 +12,7 @@ import Login from '@/pages/login/ui/Login';
 import Register from '@/pages/register/ui/Register';
 
 import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,15 +23,17 @@ const router = createBrowserRouter(
 
       <Route path="/register" element={<Register />} />
 
-      <Route path="/admin" element={<BaseLayout />}>
-        <Route path="subjects" element={<Subjects />} />
-        <Route path="chapters" element={<Chapters />} />
-        <Route path="topics" element={<Topics />} />
-        <Route path="materials" element={<Materials />} />
-        <Route path="add-subject" element={<AddSubject />} />
-        <Route path="add-chapter" element={<AddChapter />} />
-        <Route path="add-topic" element={<AddTopic />} />
-        <Route path="add-material" element={<AddMaterial />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/admin" element={<BaseLayout />}>
+          <Route path="subjects" element={<Subjects />} />
+          <Route path="chapters" element={<Chapters />} />
+          <Route path="topics" element={<Topics />} />
+          <Route path="materials" element={<Materials />} />
+          <Route path="add-subject" element={<AddSubject />} />
+          <Route path="add-chapter" element={<AddChapter />} />
+          <Route path="add-topic" element={<AddTopic />} />
+          <Route path="add-material" element={<AddMaterial />} />
+        </Route>
       </Route>
     </>,
   ),

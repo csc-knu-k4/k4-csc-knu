@@ -18,7 +18,7 @@ const Header = () => {
         px="2.5rem"
         bgColor="orange"
         borderRadius="0.6rem"
-        onClick={() => navigate('/admin')}
+        onClick={() => navigate('/login')}
       >
         Увійти
       </Button>
