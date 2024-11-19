@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsvitaBLL", "OsvitaBLL\Osvi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsvitaDAL", "OsvitaDAL\OsvitaDAL.csproj", "{5C9A3D63-072E-4417-B51F-13323A3D6CC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Osvita.Tests.Integration", "OsvitaDAL.Tests\Osvita.Tests.Integration.csproj", "{33CB24AE-C1F5-4321-81D8-28E979391F12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{5C9A3D63-072E-4417-B51F-13323A3D6CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C9A3D63-072E-4417-B51F-13323A3D6CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C9A3D63-072E-4417-B51F-13323A3D6CC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33CB24AE-C1F5-4321-81D8-28E979391F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33CB24AE-C1F5-4321-81D8-28E979391F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33CB24AE-C1F5-4321-81D8-28E979391F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33CB24AE-C1F5-4321-81D8-28E979391F12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
