@@ -33,7 +33,7 @@ namespace OsvitaBLL.Configurations
             CreateMap<ContentType, ContentBlockModelType>()
                 .ConvertUsingEnumMapping(opt => opt
                     .MapValue(ContentType.TextBlock, ContentBlockModelType.TextBlock)
-                    .MapValue(ContentType.ImageBlock, ContentBlockModelType.TextBlock)
+                    .MapValue(ContentType.ImageBlock, ContentBlockModelType.ImageBlock)
                 )
                 .ReverseMap();
 
