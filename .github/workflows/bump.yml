@@ -10,6 +10,30 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  build-dotnet:
+    runs-on: ubuntu-latest
+    name: Build .NET
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Install dependencies
+        working-directory: ./OsvitaBackend
+        run: dotnet restore
+
+      - name: Build
+        working-directory: ./OsvitaBackend
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        working-directory: ./OsvitaBackend
+        run: dotnet test --no-restore --verbosity normal
+
   build-node:
     runs-on: ubuntu-latest
     name: Build Node JS
