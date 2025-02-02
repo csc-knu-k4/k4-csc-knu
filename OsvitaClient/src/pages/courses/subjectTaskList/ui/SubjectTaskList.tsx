@@ -12,9 +12,9 @@ const SubjectTaskList = () => {
   return (
     <Flex justifyContent="center" alignItems="center" flexDir="column">
       <Text fontSize="2xl" fontWeight="bold" mb={4} color="orange">
-        Math
+        Математика
       </Text>
-      <Stack width="full" maxW="1300px">
+      <Stack width="full">
         <AccordionRoot collapsible defaultValue={['info']}>
           {items.map((item) => (
             <AccordionItem

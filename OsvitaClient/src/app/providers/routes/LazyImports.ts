@@ -16,3 +16,9 @@ export const SelectSubject = lazy(() => import('@/pages/admin/selectSubject/ui/S
 export const SubjectTaskList = lazy(
   () => import('@/pages/courses/subjectTaskList/ui/SubjectTaskList'),
 );
+export const SubjectTaskMaterial = lazy(
+  () => import('@/pages/courses/subjectTaskMaterial/ui/SubjectTaskMaterial'),
+);
+export const SubjectTaskTest = lazy(
+  () => import('@/pages/courses/subjectTaskTest/ui/SubjectTaskTest'),
+);

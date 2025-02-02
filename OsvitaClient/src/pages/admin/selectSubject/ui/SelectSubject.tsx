@@ -12,7 +12,7 @@ const SelectSubject = () => {
         justifyContent="center"
         alignItems="center"
         gap="3.5rem"
-        mt={9}
+        mt={5}
       >
         {subjectsConfig.map((subject, index) =>
           subject.isActive ? (
