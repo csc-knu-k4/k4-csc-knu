@@ -12,3 +12,7 @@ export const Topics = lazy(() => import('@/pages/admin/topics/ui/Topics'));
 export const Index = lazy(() => import('@/pages/index/ui/Index'));
 export const Login = lazy(() => import('@/pages/login/ui/Login'));
 export const Register = lazy(() => import('@/pages/register/ui/Register'));
+export const SelectSubject = lazy(() => import('@/pages/admin/selectSubject/ui/SelectSubject'));
+export const SubjectTaskList = lazy(
+  () => import('@/pages/courses/subjectTaskList/ui/SubjectTaskList'),
+);

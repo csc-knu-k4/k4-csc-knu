@@ -13,6 +13,8 @@ import {
   Login,
   Register,
   BaseLayout,
+  SelectSubject,
+  SubjectTaskList,
 } from './LazyImports';
 import LazyElement from './LazyElement';
 
@@ -22,6 +24,8 @@ const router = createBrowserRouter(
       <Route path="/" element={<Index />} />
       <Route path="/login" element={LazyElement(Login)} />
       <Route path="/register" element={LazyElement(Register)} />
+      <Route path="/select-subject" element={LazyElement(SelectSubject)} />
+      <Route path="/select-task-list" element={LazyElement(SubjectTaskList)} />
       <Route element={<ProtectedRoute />}>
         <Route path="/admin" element={LazyElement(BaseLayout)}>
           <Route path="subjects" element={LazyElement(Subjects)} />

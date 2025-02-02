@@ -17,10 +17,10 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <ChakraProvider value={system}>
         <ThemeProvider attribute="class" disableTransitionOnChange>
-          <ReactQueryProvider>
-            <RouterProvider router={router} />
-            <Toaster />
-          </ReactQueryProvider>
+            <ReactQueryProvider>
+              <RouterProvider router={router} />
+              <Toaster />
+            </ReactQueryProvider>
         </ThemeProvider>
       </ChakraProvider>
     </Provider>

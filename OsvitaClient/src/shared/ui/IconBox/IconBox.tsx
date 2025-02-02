@@ -4,7 +4,7 @@ import { IconType } from 'react-icons';
 interface IconBoxProps {
   icon: IconType;
   title: string;
-  description: string;
+  description?: string;
 }
 
 const IconBox = ({ icon: Icon, title, description }: IconBoxProps) => (
@@ -28,13 +28,22 @@ const IconBox = ({ icon: Icon, title, description }: IconBoxProps) => (
     >
       <Icon size="2rem" color="white" />
     </Flex>
-    <Flex flexDir="column" mx={5}>
-      <Text fontWeight="bold" mt={4}>
+    <Flex 
+      flexDir="column" 
+      mx={5} 
+      flex={1} 
+      justifyContent={description ? "flex-start" : "center"} 
+      alignItems={description ? "flex-start" : "center"} 
+      mt={description ? 4 : -8}
+    >
+      <Text fontWeight="bold" textAlign="center">
         {title}
       </Text>
-      <Text mt={1} fontSize="sm" lineHeight="1rem">
-        {description}
-      </Text>
+      {description && (
+        <Text mt={1} fontSize="sm" lineHeight="1rem">
+          {description}
+        </Text>
+      )}
     </Flex>
   </Flex>
 );
