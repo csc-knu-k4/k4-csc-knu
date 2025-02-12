@@ -1,5 +1,5 @@
 import { Box, HStack, Text, Highlight, Flex, Input, GridItem, Grid } from '@chakra-ui/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 
 const options = ['A', 'Б', 'В', 'Г', 'Д'];
@@ -52,7 +52,11 @@ const SubjectTaskTest = () => {
         </Text>
         <HStack align="start">
           {options.map((key, index) => (
-            <Highlight key={key} query={key} styles={{ fontWeight: 'semibold', color: 'orange' }}>
+            <Highlight
+              key={`${key}-${index}`}
+              query={key}
+              styles={{ fontWeight: 'semibold', color: 'orange' }}
+            >
               {`${key} ${equations[index]}`}
             </Highlight>
           ))}
@@ -61,8 +65,13 @@ const SubjectTaskTest = () => {
           Позначте відповідь:
         </Text>
         <HStack>
-          {options.map((key) => (
-            <Flex key={key} flexDir="column" justifyContent="center" alignItems="center">
+          {options.map((key, index) => (
+            <Flex
+              key={`${key}-${index}`}
+              flexDir="column"
+              justifyContent="center"
+              alignItems="center"
+            >
               <Text fontWeight="semibold" color="orange">
                 {key}
               </Text>
@@ -120,7 +129,7 @@ const SubjectTaskTest = () => {
           ))}
 
           {tasks.map((_, taskIndex) => (
-            <>
+            <React.Fragment key={taskIndex}>
               <GridItem fontWeight="bold" color="orange" textAlign="center">
                 {taskIndex + 1}
               </GridItem>
@@ -134,7 +143,7 @@ const SubjectTaskTest = () => {
                   />
                 </GridItem>
               ))}
-            </>
+            </React.Fragment>
           ))}
         </Grid>
       </Box>
