@@ -1,8 +1,8 @@
 import { Box, Flex, IconButton } from '@chakra-ui/react';
 import { SidebarButton } from './SidebarButton';
 import { sidebarItems } from './sidebarItems';
-import HatIcon from '@/shared/assets/HatIcon';
 import { IoMdClose } from 'react-icons/io';
+import { SiteLogo } from '@/shared/ui/SiteLogo';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -22,19 +22,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       shadow={{ base: 'lg', md: 'none' }}
     >
       <Flex justifyContent="space-between" alignItems="center" mb="1rem">
-        <Flex
-          gap={2}
-          justifyContent="center"
-          alignItems="center"
-          fontFamily="Oswald"
-          fontSize="xl"
-          bgColor="white"
-          color="orange"
-          cursor="pointer"
-        >
-          <HatIcon />
-          Підготовка до НМТ
-        </Flex>
+        <SiteLogo />
         {onClose && (
           <IconButton
             aria-label="Close Sidebar"
