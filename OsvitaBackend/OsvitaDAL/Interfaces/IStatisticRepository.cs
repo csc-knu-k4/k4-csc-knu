@@ -7,6 +7,7 @@ namespace OsvitaDAL.Interfaces
         Task<Statistic> GetStatisticByIdWithDetailsAsync(int id);
         Task<Statistic> GetStatisticByUserIdAsync(int userId);
         Task<Statistic> GetStatisticByUserIdWithDetailsAsync(int userId);
+        Task<List<ChapterProgressDetail>> GetChapterProgressDetailsByStatisticIdAsync(int id);
     }
 }
 

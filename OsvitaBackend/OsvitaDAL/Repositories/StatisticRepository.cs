@@ -12,6 +12,11 @@ namespace OsvitaDAL.Repositories
         {
         }
 
+        public async Task<List<ChapterProgressDetail>> GetChapterProgressDetailsByStatisticIdAsync(int id)
+        {
+            return await context.ChapterProgressDetails.Where(x => x.StatisticId == id).ToListAsync();
+        }
+
         public async Task<Statistic> GetStatisticByIdWithDetailsAsync(int id)
         {
             return await context.Statistics
