@@ -27,9 +27,9 @@ namespace OsvitaWebApiPL.Controllers
             return NotFound();
         }
 
-        // POST api/users/5/statistic/chapters
-        [HttpPost("{id}/statistic/chapters")]
-        public async Task<ActionResult> PostChapterProgressDetail(int id, [FromBody] TopicProgressDetailModel model)
+        // POST api/users/5/statistic/topics
+        [HttpPost("{id}/statistic/topics")]
+        public async Task<ActionResult> PostTopicProgressDetail(int id, [FromBody] TopicProgressDetailModel model)
         {
             try
             {
@@ -42,9 +42,9 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
-        // PUT api/users/5/statistic/chapters
-        [HttpPut("{id}/statistic/chapters")]
-        public async Task<ActionResult> PutChapterProgressDetail(int id, [FromBody] TopicProgressDetailModel model)
+        // PUT api/users/5/statistic/topics
+        [HttpPut("{id}/statistic/topics")]
+        public async Task<ActionResult> PutTopicProgressDetail(int id, [FromBody] TopicProgressDetailModel model)
         {
             try
             {
