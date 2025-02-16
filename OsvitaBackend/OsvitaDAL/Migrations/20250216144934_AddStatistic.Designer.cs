@@ -12,7 +12,7 @@ using OsvitaDAL.Data;
 namespace OsvitaDAL.Migrations
 {
     [DbContext(typeof(OsvitaDbContext))]
-    [Migration("20250214155644_AddStatistic")]
+    [Migration("20250216144934_AddStatistic")]
     partial class AddStatistic
     {
         /// <inheritdoc />
@@ -129,35 +129,6 @@ namespace OsvitaDAL.Migrations
                     b.ToTable("Chapters");
                 });
 
-            modelBuilder.Entity("OsvitaDAL.Entities.ChapterProgressDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChapterId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CompletedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("StatisticId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChapterId");
-
-                    b.HasIndex("StatisticId");
-
-                    b.ToTable("ChapterProgressDetails");
-                });
-
             modelBuilder.Entity("OsvitaDAL.Entities.ContentBlock", b =>
                 {
                     b.Property<int>("Id")
@@ -228,6 +199,9 @@ namespace OsvitaDAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Statistics");
                 });
 
@@ -273,6 +247,35 @@ namespace OsvitaDAL.Migrations
                     b.ToTable("Topics");
                 });
 
+            modelBuilder.Entity("OsvitaDAL.Entities.TopicProgressDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CompletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("StatisticId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatisticId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("TopicProgressDetails");
+                });
+
             modelBuilder.Entity("OsvitaDAL.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -291,15 +294,7 @@ namespace OsvitaDAL.Migrations
                     b.Property<string>("SecondName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StatisticId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatisticId1")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("StatisticId1");
 
                     b.ToTable("Users");
                 });
@@ -335,25 +330,6 @@ namespace OsvitaDAL.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("OsvitaDAL.Entities.ChapterProgressDetail", b =>
-                {
-                    b.HasOne("OsvitaDAL.Entities.Chapter", "Chapter")
-                        .WithMany()
-                        .HasForeignKey("ChapterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OsvitaDAL.Entities.Statistic", "Statistic")
-                        .WithMany("ChapterProgressDetails")
-                        .HasForeignKey("StatisticId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chapter");
-
-                    b.Navigation("Statistic");
-                });
-
             modelBuilder.Entity("OsvitaDAL.Entities.ContentBlock", b =>
                 {
                     b.HasOne("OsvitaDAL.Entities.Material", "Material")
@@ -376,6 +352,15 @@ namespace OsvitaDAL.Migrations
                     b.Navigation("Topic");
                 });
 
+            modelBuilder.Entity("OsvitaDAL.Entities.Statistic", b =>
+                {
+                    b.HasOne("OsvitaDAL.Entities.User", null)
+                        .WithOne("Statistic")
+                        .HasForeignKey("OsvitaDAL.Entities.Statistic", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OsvitaDAL.Entities.Topic", b =>
                 {
                     b.HasOne("OsvitaDAL.Entities.Chapter", "Chapter")
@@ -387,15 +372,23 @@ namespace OsvitaDAL.Migrations
                     b.Navigation("Chapter");
                 });
 
-            modelBuilder.Entity("OsvitaDAL.Entities.User", b =>
+            modelBuilder.Entity("OsvitaDAL.Entities.TopicProgressDetail", b =>
                 {
                     b.HasOne("OsvitaDAL.Entities.Statistic", "Statistic")
+                        .WithMany("TopicProgressDetails")
+                        .HasForeignKey("StatisticId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OsvitaDAL.Entities.Topic", "Topic")
                         .WithMany()
-                        .HasForeignKey("StatisticId1")
+                        .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Statistic");
+
+                    b.Navigation("Topic");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.Assignment", b =>
@@ -415,7 +408,7 @@ namespace OsvitaDAL.Migrations
 
             modelBuilder.Entity("OsvitaDAL.Entities.Statistic", b =>
                 {
-                    b.Navigation("ChapterProgressDetails");
+                    b.Navigation("TopicProgressDetails");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.Subject", b =>
@@ -426,6 +419,12 @@ namespace OsvitaDAL.Migrations
             modelBuilder.Entity("OsvitaDAL.Entities.Topic", b =>
                 {
                     b.Navigation("Materials");
+                });
+
+            modelBuilder.Entity("OsvitaDAL.Entities.User", b =>
+                {
+                    b.Navigation("Statistic")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

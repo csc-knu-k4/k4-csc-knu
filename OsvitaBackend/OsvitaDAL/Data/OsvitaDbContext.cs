@@ -21,7 +21,7 @@ namespace OsvitaDAL.Data
         public DbSet<AssignmentLink> AssignmentLinks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Statistic> Statistics { get; set; }
-        public DbSet<ChapterProgressDetail> ChapterProgressDetails{ get; set; }
+        public DbSet<TopicProgressDetail> TopicProgressDetails{ get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

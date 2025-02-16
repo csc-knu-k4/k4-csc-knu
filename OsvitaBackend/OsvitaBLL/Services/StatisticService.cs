@@ -27,6 +27,16 @@ namespace OsvitaBLL.Services
             return statistic.Id;
         }
 
+        public async Task<int> AddTopicProgressDetailAsync(TopicProgressDetailModel model, int userId)
+        {
+            var topicProgressDetail = mapper.Map<TopicProgressDetail>(model);
+            var statistic = await statisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
+            statistic.TopicProgressDetails.Add(topicProgressDetail);
+            await statisticRepository.UpdateAsync(statistic);
+            await unitOfWork.SaveChangesAsync();
+            return topicProgressDetail.Id;
+        }
+
         public async Task DeleteAsync(StatisticModel model)
         {
             await statisticRepository.DeleteByIdAsync(model.Id);
@@ -44,7 +54,7 @@ namespace OsvitaBLL.Services
             var statistics = await statisticRepository.GetAllAsync();
             foreach (var statistic in statistics)
             {
-                statistic.ChapterProgressDetails = (await unitOfWork.StatisticRepository.GetChapterProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
+                statistic.TopicProgressDetails = (await unitOfWork.StatisticRepository.GetTopicProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
             }
             var statisticsModels = mapper.Map<IEnumerable<Statistic>, IEnumerable<StatisticModel>>(statistics);
             return statisticsModels;
@@ -53,14 +63,17 @@ namespace OsvitaBLL.Services
         public async Task<StatisticModel> GetByIdAsync(int id)
         {
             var statistic = await statisticRepository.GetByIdAsync(id);
-            statistic.ChapterProgressDetails = (await unitOfWork.StatisticRepository.GetChapterProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
+            statistic.TopicProgressDetails = (await unitOfWork.StatisticRepository.GetTopicProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
             var statisticModel = mapper.Map<Statistic, StatisticModel>(statistic);
             return statisticModel;
         }
 
-        public Task<StatisticModel> GetStatisticByUserIdAsync(int userId)
+        public async Task<StatisticModel> GetStatisticByUserIdAsync(int userId)
         {
-            throw new NotImplementedException();
+            var statistic = await statisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
+            statistic.TopicProgressDetails = (await unitOfWork.StatisticRepository.GetTopicProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
+            var statisticModel = mapper.Map<Statistic, StatisticModel>(statistic);
+            return statisticModel;
         }
 
         public async Task UpdateAsync(StatisticModel model)
@@ -68,6 +81,16 @@ namespace OsvitaBLL.Services
             var statistic = mapper.Map<Statistic>(model);
             await statisticRepository.UpdateAsync(statistic);
             await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateTopicProgressDetailAsync(TopicProgressDetailModel model, int userId)
+        {
+            var statistic = await statisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
+            var oldTopicProgressDetail = statistic.TopicProgressDetails.FirstOrDefault(x => x.TopicId == model.TopicId);
+            oldTopicProgressDetail.IsCompleted = model.IsCompleted;
+            oldTopicProgressDetail.CompletedDate = model.CompletedDate;
+            await unitOfWork.SaveChangesAsync();
+            return oldTopicProgressDetail.Id;
         }
     }
 }

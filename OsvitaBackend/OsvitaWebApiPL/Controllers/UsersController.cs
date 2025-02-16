@@ -1,0 +1,60 @@
+using Microsoft.AspNetCore.Mvc;
+using OsvitaBLL.Interfaces;
+using OsvitaBLL.Models;
+using OsvitaBLL.Services;
+
+namespace OsvitaWebApiPL.Controllers
+{
+    [Route("api/users")]
+    [ApiController]
+    public class UsersController : ControllerBase
+    {
+        private readonly IStatisticService statisticService;
+        public UsersController(IStatisticService statisticService)
+        {
+            this.statisticService = statisticService;
+        }
+
+        // GET api/users/5/statistic/
+        [HttpGet("{id}/statistic")]
+        public async Task<ActionResult<StatisticModel>> GetStatistic(int id)
+        {
+            var statisticModel = await statisticService.GetStatisticByUserIdAsync(id);
+            if (statisticModel is not null)
+            {
+                return Ok(statisticModel);
+            }
+            return NotFound();
+        }
+
+        // POST api/users/5/statistic/chapters
+        [HttpPost("{id}/statistic/chapters")]
+        public async Task<ActionResult> PostChapterProgressDetail(int id, [FromBody] TopicProgressDetailModel model)
+        {
+            try
+            {
+                await statisticService.AddTopicProgressDetailAsync(model, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // PUT api/users/5/statistic/chapters
+        [HttpPut("{id}/statistic/chapters")]
+        public async Task<ActionResult> PutChapterProgressDetail(int id, [FromBody] TopicProgressDetailModel model)
+        {
+            try
+            {
+                await statisticService.UpdateTopicProgressDetailAsync(model, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    }
+}

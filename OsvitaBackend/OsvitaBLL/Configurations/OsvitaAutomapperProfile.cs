@@ -52,11 +52,13 @@ namespace OsvitaBLL.Configurations
                 .ReverseMap();
 
             CreateMap<User, UserModel>()
-                .ForMember(um => um.StatisticModelId, m => m.MapFrom(x => x.StatisticId))
+                .ForMember(um => um.StatisticModelId, m => m.MapFrom(x => x.Statistic.Id))
                 .ReverseMap();
 
             CreateMap<Statistic, StatisticModel>()
-                .ForMember(sm => sm.ChapterProgressDetailIds, s => s.MapFrom(x => x.ChapterProgressDetails.Select(cp => cp.Id)))
+                .ReverseMap();
+
+            CreateMap<TopicProgressDetail, TopicProgressDetailModel>()
                 .ReverseMap();
         }
     }

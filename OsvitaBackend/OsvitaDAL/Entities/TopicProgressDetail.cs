@@ -1,13 +1,13 @@
 ﻿using System;
 namespace OsvitaDAL.Entities
 {
-	public class ChapterProgressDetail : BaseEntity
+	public class TopicProgressDetail : BaseEntity
 	{
 		public int StatisticId { get; set; }
-		public int ChapterId { get; set; }
+		public int TopicId { get; set; }
 		public bool IsCompleted { get; set; }
 		public DateTime CompletedDate { get; set; }
-		public Chapter Chapter { get; set; }
+		public Topic Topic { get; set; }
 		public Statistic Statistic { get; set; }
 	}
 }

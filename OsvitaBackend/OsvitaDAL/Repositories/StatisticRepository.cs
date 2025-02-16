@@ -12,15 +12,15 @@ namespace OsvitaDAL.Repositories
         {
         }
 
-        public async Task<List<ChapterProgressDetail>> GetChapterProgressDetailsByStatisticIdAsync(int id)
+        public async Task<List<TopicProgressDetail>> GetTopicProgressDetailsByStatisticIdAsync(int id)
         {
-            return await context.ChapterProgressDetails.Where(x => x.StatisticId == id).ToListAsync();
+            return await context.TopicProgressDetails.Where(x => x.StatisticId == id).ToListAsync();
         }
 
         public async Task<Statistic> GetStatisticByIdWithDetailsAsync(int id)
         {
             return await context.Statistics
-                .Include(x => x.ChapterProgressDetails)
+                .Include(x => x.TopicProgressDetails)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
@@ -32,7 +32,7 @@ namespace OsvitaDAL.Repositories
         public async Task<Statistic> GetStatisticByUserIdWithDetailsAsync(int userId)
         {
             return await context.Statistics
-                .Include(x => x.ChapterProgressDetails)
+                .Include(x => x.TopicProgressDetails)
                 .SingleOrDefaultAsync(x => x.UserId == userId);
         }
     }

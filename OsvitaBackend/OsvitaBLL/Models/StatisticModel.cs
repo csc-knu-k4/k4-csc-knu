@@ -4,7 +4,7 @@
 	{
         public int Id { get; set; }
         public int UserId { get; set; }
-        public List<int> ChapterProgressDetailIds { get; set; }
+        public List<TopicProgressDetailModel> TopicProgressDetails { get; set; }
     }
 }
 
