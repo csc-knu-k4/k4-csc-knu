@@ -37,18 +37,18 @@ namespace OsvitaBLL.Services
             return topicProgressDetail.Id;
         }
 
-        public async Task<int> AddAssignmentSetProgressDetailAsync(AssignmentSetProgressDetailModel model, int userId)
+        public async Task<int> AddAssignmentSetProgressDetailsAsync(IEnumerable<AssignmentSetProgressDetailModel> models, int userId)
         {
-            var assignmentSetProgressDetail = mapper.Map<AssignmentSetProgressDetail>(model);
+            var assignmentSetProgressDetails = mapper.Map<IEnumerable<AssignmentSetProgressDetail>>(models);
             var statistic = await statisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
             if (statistic.AssignmentSetProgressDetails is null)
             {
                 statistic.AssignmentSetProgressDetails = new List<AssignmentSetProgressDetail>();
             }
-            statistic.AssignmentSetProgressDetails.Add(assignmentSetProgressDetail);
+            statistic.AssignmentSetProgressDetails.AddRange(assignmentSetProgressDetails);
             await statisticRepository.UpdateAsync(statistic);
             await unitOfWork.SaveChangesAsync();
-            return assignmentSetProgressDetail.Id;
+            return statistic.Id;
         }
 
         public async Task DeleteAsync(StatisticModel model)
@@ -108,13 +108,17 @@ namespace OsvitaBLL.Services
             return oldTopicProgressDetail.Id;
         }
 
-        public async Task<int> UpdateAssignmentSetProgressDetailAsync(AssignmentSetProgressDetailModel model, int userId)
+        public async Task<int> UpdateAssignmentSetProgressDetailsAsync(IEnumerable<AssignmentSetProgressDetailModel> models, int userId)
         {
             var statistic = await statisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
-            var oldAssignmentSetProgressDetail = statistic.AssignmentSetProgressDetails.FirstOrDefault(x => x.StatisticId == model.StatisticId && x.AssignmentSetId == model.AssignmentSetId && x.AssignmentId == model.AssignmentId);
-            oldAssignmentSetProgressDetail.AnswerId = model.AnswerId;
+            foreach (var model in models)
+            {
+                var oldAssignmentSetProgressDetail = statistic.AssignmentSetProgressDetails.FirstOrDefault(x => x.StatisticId == model.StatisticId && x.AssignmentSetId == model.AssignmentSetId && x.AssignmentId == model.AssignmentId);
+                oldAssignmentSetProgressDetail.AnswerId = model.AnswerId;
+
+            }
             await unitOfWork.SaveChangesAsync();
-            return oldAssignmentSetProgressDetail.Id;
+            return statistic.Id;
         }
     }
 }
