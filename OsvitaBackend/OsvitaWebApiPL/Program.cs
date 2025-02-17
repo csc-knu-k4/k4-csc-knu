@@ -24,7 +24,7 @@ public class Program
         {
             options.AddPolicy("AllowLocalhost5173", policy =>
             {
-                policy.WithOrigins("http://localhost:5173") 
+                policy.AllowAnyOrigin() 
                     .AllowAnyHeader()                   
                     .AllowAnyMethod();                
             });
@@ -57,6 +57,7 @@ public class Program
         builder.Services.AddTransient<IContentBlockService, ContentBlockService>();
         builder.Services.AddTransient<IAssignmentService, AssignmentService>();
         builder.Services.AddTransient<IUserService, UserService>();
+        builder.Services.AddTransient<IStatisticService, StatisticService>();
 
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));
         builder.Services.AddScoped<IIdentityService, IdentityService>();

@@ -37,6 +37,20 @@ namespace OsvitaBLL.Services
             return topicProgressDetail.Id;
         }
 
+        public async Task<int> AddAssignmentSetProgressDetailAsync(AssignmentSetProgressDetailModel model, int userId)
+        {
+            var assignmentSetProgressDetail = mapper.Map<AssignmentSetProgressDetail>(model);
+            var statistic = await statisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
+            if (statistic.AssignmentSetProgressDetails is null)
+            {
+                statistic.AssignmentSetProgressDetails = new List<AssignmentSetProgressDetail>();
+            }
+            statistic.AssignmentSetProgressDetails.Add(assignmentSetProgressDetail);
+            await statisticRepository.UpdateAsync(statistic);
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSetProgressDetail.Id;
+        }
+
         public async Task DeleteAsync(StatisticModel model)
         {
             await statisticRepository.DeleteByIdAsync(model.Id);
@@ -72,6 +86,7 @@ namespace OsvitaBLL.Services
         {
             var statistic = await statisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
             statistic.TopicProgressDetails = (await unitOfWork.StatisticRepository.GetTopicProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
+            statistic.AssignmentSetProgressDetails = (await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
             var statisticModel = mapper.Map<Statistic, StatisticModel>(statistic);
             return statisticModel;
         }
@@ -91,6 +106,15 @@ namespace OsvitaBLL.Services
             oldTopicProgressDetail.CompletedDate = model.CompletedDate;
             await unitOfWork.SaveChangesAsync();
             return oldTopicProgressDetail.Id;
+        }
+
+        public async Task<int> UpdateAssignmentSetProgressDetailAsync(AssignmentSetProgressDetailModel model, int userId)
+        {
+            var statistic = await statisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
+            var oldAssignmentSetProgressDetail = statistic.AssignmentSetProgressDetails.FirstOrDefault(x => x.StatisticId == model.StatisticId && x.AssignmentSetId == model.AssignmentSetId && x.AssignmentId == model.AssignmentId);
+            oldAssignmentSetProgressDetail.AnswerId = model.AnswerId;
+            await unitOfWork.SaveChangesAsync();
+            return oldAssignmentSetProgressDetail.Id;
         }
     }
 }

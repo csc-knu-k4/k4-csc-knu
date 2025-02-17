@@ -56,5 +56,35 @@ namespace OsvitaWebApiPL.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // POST api/users/5/statistic/assignments
+        [HttpPost("{id}/statistic/assignments")]
+        public async Task<ActionResult> PostAssignmentSetProgressDetail(int id, [FromBody] AssignmentSetProgressDetailModel model)
+        {
+            try
+            {
+                await statisticService.AddAssignmentSetProgressDetailAsync(model, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // PUT api/users/5/statistic/assignments
+        [HttpPut("{id}/statistic/assignments")]
+        public async Task<ActionResult> PutAssignmentSetProgressDetail(int id, [FromBody] AssignmentSetProgressDetailModel model)
+        {
+            try
+            {
+                await statisticService.UpdateAssignmentSetProgressDetailAsync(model, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

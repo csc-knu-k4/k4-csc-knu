@@ -18,6 +18,7 @@ namespace OsvitaBLL.Services
 
         private readonly IUnitOfWork unitOfWork;
         private readonly IAssignmentRepository assignmentRepository;
+        private readonly IAssignmentSetRepository assignmentSetRepository;
         private readonly IAnswerRepository answerRepository;
         private readonly IAssignmentLinkRepository assignmentLinkRepository;
         private readonly IMapper mapper;
@@ -26,6 +27,7 @@ namespace OsvitaBLL.Services
         {
             this.unitOfWork = unitOfWork;
             assignmentRepository = unitOfWork.AssignmentRepository;
+            assignmentSetRepository = unitOfWork.AssignmentSetRepository;
             answerRepository = unitOfWork.AnswerRepository;
             assignmentLinkRepository = unitOfWork.AssignmentLinkRepository;
             this.mapper = mapper;
@@ -120,6 +122,31 @@ namespace OsvitaBLL.Services
                     }
                 }
             }
+        }
+
+        public async Task<int> AddAssignmentSetAsync(AssignmentSetModel model)
+        {
+            var assignmentSet = mapper.Map<AssignmentSetModel, AssignmentSet>(model);
+            await assignmentSetRepository.AddAsync(assignmentSet);
+            await unitOfWork.SaveChangesAsync();
+            var materialIds = (await unitOfWork.MaterialRepository.GetAllAsync()).Where(x => x.TopicId == assignmentSet.ObjectId).Select(x => x.Id);
+            var assignmentsIds = (await assignmentLinkRepository.GetAllAsync()).Where(x => materialIds.Contains(x.ObjectId) && x.ObjectType == ObjectType.Material).Select(x => x.AssignmentId);
+            var assignments = (await assignmentRepository.GetAllWithDetailsAsync()).ToList().Where(x => x.AssignmentType != AssignmentType.ChildAssignment && assignmentsIds.Contains(x.Id));
+            var assignmentLinks = assignments.Select(x => new AssignmentLink { AssignmentId = x.Id, ObjectId = assignmentSet.Id, ObjectType = ObjectType.AssignmentSet });
+            foreach (var assignmentLink in assignmentLinks)
+            {
+                await assignmentLinkRepository.AddAsync(assignmentLink);
+            }
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSet.Id;
+        }
+
+        public async Task<AssignmentSetModel> GetAssignmentSetByIdAsync(int id)
+        {
+            var assignmentSet = await assignmentSetRepository.GetByIdAsync(id);
+            var assignmentSetModel = mapper.Map<AssignmentSet, AssignmentSetModel>(assignmentSet);
+            assignmentSetModel.Assignments = (await GetAssignmentsByObjectIdAsync(assignmentSetModel.Id, assignmentSetModel.ObjectModelType)).ToList();
+            return assignmentSetModel;
         }
 
         private async Task<IEnumerable<AssignmentModel>> GetChildAssignmentsAsync(int parentAssignmentId)

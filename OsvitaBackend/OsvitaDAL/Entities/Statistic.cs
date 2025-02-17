@@ -5,6 +5,7 @@ namespace OsvitaDAL.Entities
 	{
 		public int UserId { get; set; }
 		public List<TopicProgressDetail> TopicProgressDetails { get; set; }
-	}
+        public List<AssignmentSetProgressDetail> AssignmentSetProgressDetails { get; set; }
+    }
 }
 

@@ -2,6 +2,8 @@
 {
     public enum ObjectModelType
     {
-        MaterialModel
+        MaterialModel,
+        TopicModel,
+        AssignmentSetModel
     }
 }
