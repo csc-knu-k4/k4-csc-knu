@@ -59,11 +59,11 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST api/users/5/statistic/assignments
         [HttpPost("{id}/statistic/assignments")]
-        public async Task<ActionResult> PostAssignmentSetProgressDetail(int id, [FromBody] List<AssignmentSetProgressDetailModel> models)
+        public async Task<ActionResult> PostAssignmentSetProgressDetail(int id, [FromBody] AssignmentSetProgressDetailModel model)
         {
             try
             {
-                await statisticService.AddAssignmentSetProgressDetailsAsync(models, id);
+                await statisticService.AddAssignmentSetProgressDetailAsync(model, id);
                 return Ok();
             }
             catch (Exception ex)
@@ -74,11 +74,11 @@ namespace OsvitaWebApiPL.Controllers
 
         // PUT api/users/5/statistic/assignments
         [HttpPut("{id}/statistic/assignments")]
-        public async Task<ActionResult> PutAssignmentSetProgressDetail(int id, [FromBody] List<AssignmentSetProgressDetailModel> models)
+        public async Task<ActionResult> PutAssignmentSetProgressDetail(int id, [FromBody] AssignmentSetProgressDetailModel model)
         {
             try
             {
-                await statisticService.UpdateAssignmentSetProgressDetailsAsync(models, id);
+                await statisticService.UpdateAssignmentSetProgressDetailAsync(model, id);
                 return Ok();
             }
             catch (Exception ex)

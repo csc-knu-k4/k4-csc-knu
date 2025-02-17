@@ -19,7 +19,9 @@ namespace OsvitaDAL.Repositories
 
         public async Task<List<AssignmentSetProgressDetail>> GetAssignmentSetProgressDetailsByStatisticIdAsync(int id)
         {
-            return await context.AssignmentSetProgressDetails.Where(x => x.StatisticId == id).ToListAsync();
+            return await context.AssignmentSetProgressDetails
+                .Include(x => x.AssignmentProgressDetails)
+                .Where(x => x.StatisticId == id).ToListAsync();
         }
 
         public async Task<Statistic> GetStatisticByIdWithDetailsAsync(int id)
@@ -38,7 +40,7 @@ namespace OsvitaDAL.Repositories
         {
             return await context.Statistics
                 .Include(x => x.TopicProgressDetails)
-                .Include(x => x.AssignmentSetProgressDetails)
+                .Include(x => x.AssignmentSetProgressDetails).ThenInclude(x => x.AssignmentProgressDetails)
                 .SingleOrDefaultAsync(x => x.UserId == userId);
         }
     }

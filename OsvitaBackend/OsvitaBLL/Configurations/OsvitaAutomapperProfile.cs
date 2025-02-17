@@ -75,6 +75,9 @@ namespace OsvitaBLL.Configurations
 
             CreateMap<AssignmentSetProgressDetail, AssignmentSetProgressDetailModel>()
                 .ReverseMap();
+
+            CreateMap<AssignmentProgressDetail, AssignmentProgressDetailModel>()
+                .ReverseMap();
         }
     }
 }

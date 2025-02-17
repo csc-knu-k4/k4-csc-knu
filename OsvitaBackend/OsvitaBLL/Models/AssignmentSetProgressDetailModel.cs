@@ -6,8 +6,10 @@ namespace OsvitaBLL.Models
         public int Id { get; set; }
         public int StatisticId { get; set; }
         public int AssignmentSetId { get; set; }
-        public int AssignmentId { get; set; }
-        public int AnswerId { get; set; }
+        public int Score { get; set; }
+        public bool IsCompleted { get; set; }
+        public DateTime CompletedDate { get; set; }
+        public List<AssignmentProgressDetailModel> AssignmentProgressDetails { get; set; }
     }
 }
 
