@@ -8,6 +8,8 @@ namespace OsvitaDAL.Entities
 {
     public enum ObjectType
     {
-        Material
+        Material,
+        Topic,
+        AssignmentSet
     }
 }

@@ -19,9 +19,11 @@ namespace OsvitaDAL.Data
         IMaterialRepository materialRepository;
         IContentBlockRepository contentBlockRepository;
         IAssignmentRepository assignmentRepository;
+        IAssignmentSetRepository assignmentSetRepository;
         IAnswerRepository answerRepository;
         IAssignmentLinkRepository assignmentLinkRepository;
         IUserRepository userRepository;
+        IStatisticRepository statisticRepository;
 
         public ISubjectRepository SubjectRepository
         {
@@ -95,6 +97,18 @@ namespace OsvitaDAL.Data
             }
         }
 
+        public IAssignmentSetRepository AssignmentSetRepository
+        {
+            get
+            {
+                if (assignmentSetRepository is null)
+                {
+                    assignmentSetRepository = new AssignmentSetRepository(context);
+                }
+                return assignmentSetRepository;
+            }
+        }
+
         public IAnswerRepository AnswerRepository
         {
             get
@@ -128,6 +142,18 @@ namespace OsvitaDAL.Data
                     userRepository = new UserRepository(context);
                 }
                 return userRepository;
+            }
+        }
+
+        public IStatisticRepository StatisticRepository
+        {
+            get
+            {
+                if (statisticRepository is null)
+                {
+                    statisticRepository = new StatisticRepository(context);
+                }
+                return statisticRepository;
             }
         }
 

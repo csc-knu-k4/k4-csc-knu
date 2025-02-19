@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.Extensions.EnumMapping;
 using OsvitaBLL.Models;
 using OsvitaDAL.Entities;
@@ -52,7 +51,32 @@ namespace OsvitaBLL.Configurations
                 )
                 .ReverseMap();
 
+            CreateMap<ObjectType, ObjectModelType>()
+                .ConvertUsingEnumMapping(opt => opt
+                    .MapValue(ObjectType.Material, ObjectModelType.MaterialModel)
+                    .MapValue(ObjectType.Topic, ObjectModelType.TopicModel)
+                    .MapValue(ObjectType.AssignmentSet, ObjectModelType.AssignmentSetModel)
+                )
+                .ReverseMap();
+
             CreateMap<User, UserModel>()
+                .ForMember(um => um.StatisticModelId, m => m.MapFrom(x => x.Statistic.Id))
+                .ReverseMap();
+
+            CreateMap<Statistic, StatisticModel>()
+                .ReverseMap();
+
+            CreateMap<TopicProgressDetail, TopicProgressDetailModel>()
+                .ReverseMap();
+
+            CreateMap<AssignmentSet, AssignmentSetModel>()
+                .ForMember(am => am.ObjectModelType, a => a.MapFrom(x => x.ObjectType))
+                .ReverseMap();
+
+            CreateMap<AssignmentSetProgressDetail, AssignmentSetProgressDetailModel>()
+                .ReverseMap();
+
+            CreateMap<AssignmentProgressDetail, AssignmentProgressDetailModel>()
                 .ReverseMap();
         }
     }

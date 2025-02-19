@@ -9,5 +9,7 @@ namespace OsvitaBLL.Interfaces
         Task<int> AddAssignmentAsync(AssignmentModel model);
         Task DeleteAssignmentByIdAsync(int id);
         Task UpdateAssignmentAsync(AssignmentModel model);
+        Task<int> AddAssignmentSetAsync(AssignmentSetModel optionsModel);
+        Task<AssignmentSetModel> GetAssignmentSetByIdAsync(int id);
     }
 }

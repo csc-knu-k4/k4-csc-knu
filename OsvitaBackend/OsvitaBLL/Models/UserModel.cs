@@ -1,5 +1,4 @@
-﻿using System;
-namespace OsvitaBLL.Models
+﻿namespace OsvitaBLL.Models
 {
 	public class UserModel
 	{
@@ -7,6 +6,7 @@ namespace OsvitaBLL.Models
         public string Email { get; set; }
         public string? FirstName { get; set; }
         public string? SecondName { get; set; }
+        public int? StatisticModelId { get; set; }
     }
 }
 

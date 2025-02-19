@@ -17,9 +17,14 @@ namespace OsvitaDAL.Data
         public DbSet<Material> Materials { get; set; }
         public DbSet<ContentBlock> ContentBlocks { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<AssignmentSet> AssignmentSets { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<AssignmentLink> AssignmentLinks { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Statistic> Statistics { get; set; }
+        public DbSet<TopicProgressDetail> TopicProgressDetails{ get; set; }
+        public DbSet<AssignmentProgressDetail> AssignmentProgressDetails { get; set; }
+        public DbSet<AssignmentSetProgressDetail> AssignmentSetProgressDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

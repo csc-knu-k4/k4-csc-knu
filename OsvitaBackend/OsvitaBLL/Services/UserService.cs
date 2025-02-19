@@ -22,6 +22,7 @@ namespace OsvitaBLL.Services
         public async Task<int> AddAsync(UserModel model)
         {
             var user = mapper.Map<User>(model);
+            user.Statistic = new Statistic();
             await userRepository.AddAsync(user);
             await unitOfWork.SaveChangesAsync();
             return user.Id;

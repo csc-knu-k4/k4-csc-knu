@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
-using OsvitaBLL.Services;
 
 namespace OsvitaWebApiPL.Controllers
 {
@@ -79,6 +78,36 @@ namespace OsvitaWebApiPL.Controllers
             {
                 await assignmentService.DeleteAssignmentByIdAsync(id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/sets/5
+        [HttpGet("sets/{id}")]
+        public async Task<ActionResult<int>> GetAssignmentSet(int id)
+        {
+            try
+            {
+                var assignmentSetModel = await assignmentService.GetAssignmentSetByIdAsync(id);
+                return Ok(assignmentSetModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POST api/sets
+        [HttpPost("sets")]
+        public async Task<ActionResult<int>> AddAssignmentSet([FromBody] AssignmentSetModel model)
+        {
+            try
+            {
+                var id = await assignmentService.AddAssignmentSetAsync(model);
+                return Ok(id);
             }
             catch (Exception ex)
             {

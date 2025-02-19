@@ -9,9 +9,11 @@ namespace OsvitaDAL.Interfaces
 		IMaterialRepository MaterialRepository { get; }
 		IContentBlockRepository ContentBlockRepository { get; }
 		IAssignmentRepository AssignmentRepository { get; }
-		IAnswerRepository AnswerRepository { get; }
+        IAssignmentSetRepository AssignmentSetRepository { get; }
+        IAnswerRepository AnswerRepository { get; }
 		IAssignmentLinkRepository AssignmentLinkRepository { get; }
         IUserRepository UserRepository { get; }
+        IStatisticRepository StatisticRepository { get; }
         Task SaveChangesAsync();
     }
 }

@@ -6,6 +6,7 @@ namespace OsvitaDAL.Entities
 		public string Email { get; set; }
 		public string? FirstName { get; set; }
 		public string? SecondName { get; set; }
+		public Statistic Statistic { get; set; }
 	}
 }
 

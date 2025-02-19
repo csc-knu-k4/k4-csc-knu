@@ -103,7 +103,7 @@ namespace OsvitaWebApiPL.Controllers
 
         // GET api/materials/5/assignments
         [HttpGet("{id}/assignments")]
-        public async Task<ActionResult<IEnumerable<ContentBlockModel>>> GetTestsBlocks(int id)
+        public async Task<ActionResult<IEnumerable<ContentBlockModel>>> GetAssignments(int id)
         {
             var assignmentsModels = await assignmentService.GetAssignmentsByObjectIdAsync(id, ObjectModelType.MaterialModel);
             if (assignmentsModels is not null)

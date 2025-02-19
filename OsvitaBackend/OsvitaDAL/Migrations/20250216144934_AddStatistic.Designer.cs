@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OsvitaDAL.Data;
 
@@ -11,9 +12,11 @@ using OsvitaDAL.Data;
 namespace OsvitaDAL.Migrations
 {
     [DbContext(typeof(OsvitaDbContext))]
-    partial class OsvitaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250216144934_AddStatistic")]
+    partial class AddStatistic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,86 +102,6 @@ namespace OsvitaDAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AssignmentLinks");
-                });
-
-            modelBuilder.Entity("OsvitaDAL.Entities.AssignmentProgressDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AnswerValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("AssignmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AssignmentSetProgressDetailId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssignmentSetProgressDetailId");
-
-                    b.ToTable("AssignmentProgressDetails");
-                });
-
-            modelBuilder.Entity("OsvitaDAL.Entities.AssignmentSet", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ObjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ObjectType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AssignmentSets");
-                });
-
-            modelBuilder.Entity("OsvitaDAL.Entities.AssignmentSetProgressDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AssignmentSetId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CompletedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatisticId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StatisticId");
-
-                    b.ToTable("AssignmentSetProgressDetails");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.Chapter", b =>
@@ -396,24 +319,6 @@ namespace OsvitaDAL.Migrations
                     b.Navigation("ParentAssignment");
                 });
 
-            modelBuilder.Entity("OsvitaDAL.Entities.AssignmentProgressDetail", b =>
-                {
-                    b.HasOne("OsvitaDAL.Entities.AssignmentSetProgressDetail", null)
-                        .WithMany("AssignmentProgressDetails")
-                        .HasForeignKey("AssignmentSetProgressDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OsvitaDAL.Entities.AssignmentSetProgressDetail", b =>
-                {
-                    b.HasOne("OsvitaDAL.Entities.Statistic", null)
-                        .WithMany("AssignmentSetProgressDetails")
-                        .HasForeignKey("StatisticId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("OsvitaDAL.Entities.Chapter", b =>
                 {
                     b.HasOne("OsvitaDAL.Entities.Subject", "Subject")
@@ -491,11 +396,6 @@ namespace OsvitaDAL.Migrations
                     b.Navigation("Answers");
                 });
 
-            modelBuilder.Entity("OsvitaDAL.Entities.AssignmentSetProgressDetail", b =>
-                {
-                    b.Navigation("AssignmentProgressDetails");
-                });
-
             modelBuilder.Entity("OsvitaDAL.Entities.Chapter", b =>
                 {
                     b.Navigation("Topics");
@@ -508,8 +408,6 @@ namespace OsvitaDAL.Migrations
 
             modelBuilder.Entity("OsvitaDAL.Entities.Statistic", b =>
                 {
-                    b.Navigation("AssignmentSetProgressDetails");
-
                     b.Navigation("TopicProgressDetails");
                 });
 
