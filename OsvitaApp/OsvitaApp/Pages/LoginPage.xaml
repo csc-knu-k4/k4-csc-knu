@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OsvitaApp.Pages.LoginPage"
+             xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
+             xmlns:textInput="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Toolkit.Buttons;assembly=Syncfusion.Maui.Toolkit"
+             Title="LoginPage"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             Shell.FlyoutBehavior="Flyout"
+             BackgroundColor="{x:StaticResource White}"
+             xmlns:effectsView="clr-namespace:Syncfusion.Maui.Toolkit.EffectsView;assembly=Syncfusion.Maui.Toolkit">
+    <Grid>
+        <Ellipse Fill="{x:StaticResource CircleColorBig}"
+                 WidthRequest="248"
+                 HeightRequest="248"
+                 HorizontalOptions="End"
+                 VerticalOptions="Start"
+                 TranslationX="120"
+                 TranslationY="-129"
+                 ZIndex="-100" />
+        <Ellipse Fill="{x:StaticResource CircleColorBig}"
+                 WidthRequest="204"
+                 HeightRequest="204"
+                 HorizontalOptions="Start"
+                 VerticalOptions="End"
+                 TranslationX="-28"
+                 TranslationY="116"
+                 ZIndex="-100" />
+        <Ellipse Fill="{x:StaticResource CircleColorSmall}"
+                 WidthRequest="90"
+                 HeightRequest="90"
+                 HorizontalOptions="Start"
+                 VerticalOptions="End"
+                 TranslationX="-39"
+                 TranslationY="-50"
+                 ZIndex="-100" />
+        <VerticalStackLayout VerticalOptions="Center"
+                             HorizontalOptions="Fill"
+                             Margin="20"
+                             Spacing="25">
+
+            <!--ВХІД-->
+            <Label Text="Вхід"
+                   Style="{x:StaticResource Title3}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   TextColor="{x:StaticResource Primary}" />
+
+            <effectsView:SfEffectsView TouchDownEffects="Ripple">
+                <effectsView:SfEffectsView.Clip>
+                    <RoundRectangleGeometry CornerRadius="25"
+                                            Rect="0,0,334,50" />
+
+                </effectsView:SfEffectsView.Clip>
+                <controls:ContinueWithGoogle />
+            </effectsView:SfEffectsView>
+            <!--Продовжити з гугл-->
+            
+
+
+            <!--Роздільник Або-->
+            <Grid>
+                <Line Fill="{x:StaticResource CircleColorBig}"
+                      BackgroundColor="{x:StaticResource CircleColorBig}"
+                      HeightRequest="1" />
+
+                <Label Text="або"
+                       Style="{x:StaticResource Caption1}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       TextColor="{x:StaticResource CircleColorBig}"
+                       BackgroundColor="White"
+                       WidthRequest="70"
+                       HorizontalTextAlignment="Center" />
+            </Grid>
+
+            <Grid>
+                <Label Text="Електронна пошта"
+                       Style="{x:StaticResource CredentialsEntryText}" />
+                <textInput:SfTextInputLayout Stroke="Transparent"
+                                      ContainerType="None"
+                                      Padding="0"
+                                      Margin="0"
+                                      ReserveSpaceForAssistiveLabels="False"
+                                      ShowHint="True"
+                                      IsHintAlwaysFloated="True">
+                    <Entry Placeholder="Введіть електронну пошту"
+                           PlaceholderColor="{x:StaticResource TextGray}" />
+                </textInput:SfTextInputLayout>
+                <Line Style="{x:StaticResource CredentialsEntryLine}" />
+            </Grid>
+
+            <Grid>
+                <Label Text="Пароль"
+                       Style="{x:StaticResource CredentialsEntryText}" />
+                <textInput:SfTextInputLayout Stroke="Transparent"
+                                      ContainerType="None"
+                                      Padding="0"
+                                      Margin="0"
+                                      ReserveSpaceForAssistiveLabels="False"
+                                      ShowHint="True"
+                                      IsHintAlwaysFloated="True">
+                    <Entry Placeholder="Введіть пароль"
+                           PlaceholderColor="{x:StaticResource TextGray}" />
+                </textInput:SfTextInputLayout>
+                <Line Style="{x:StaticResource CredentialsEntryLine}" />
+            </Grid>
+
+            <Grid ColumnDefinitions="0.1*, 0.4*, 0.5*">
+
+                <CheckBox Grid.Column="0" />
+                <Label Grid.Column="1"
+                       Text="Запам’ятати мене"
+                       TextColor="{x:StaticResource TextGray}"
+                       FontSize="15"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center" />
+
+                <Label Grid.Column="2"
+                       Text="Забули пароль?"
+                       TextColor="{x:StaticResource Primary}"
+                       FontSize="15"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="End"/>
+
+            </Grid>
+
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>

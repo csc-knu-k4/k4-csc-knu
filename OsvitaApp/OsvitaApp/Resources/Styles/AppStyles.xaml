@@ -103,6 +103,9 @@
                 Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
                 Size="{StaticResource size240}" />
 
+    <FileImageSource x:Key="GoogleIcon"
+                     File="google.png" />
+
     <Style TargetType="Label">
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
@@ -151,7 +154,7 @@
                 Value="1.38" />
         <!-- 18 -->
         <Setter Property="FontFamily"
-                Value="{OnPlatform WinUI=SegoeSemibold, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=''}" />
+                Value="{OnPlatform WinUI=Inter, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=Inter}" />
         <Setter Property="FontAttributes"
                 Value="{OnPlatform Default=None, Android=Bold}" />
     </Style>
@@ -171,7 +174,7 @@
                 Value="1.33" />
         <!-- 20 -->
         <Setter Property="FontFamily"
-                Value="{OnPlatform WinUI=SegoeSemibold, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=''}" />
+                Value="{OnPlatform WinUI=Inter, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=Inter}" />
         <Setter Property="FontAttributes"
                 Value="{OnPlatform Default=None, Android=Bold}" />
     </Style>
@@ -191,21 +194,21 @@
                 Value="1.29" />
         <!-- 22 -->
         <Setter Property="FontFamily"
-                Value="{OnPlatform WinUI=SegoeSemibold, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=''}" />
+                Value="{OnPlatform WinUI=Inter, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=Inter}" />
         <Setter Property="FontAttributes"
                 Value="{OnPlatform Default=None, Android=Bold}" />
     </Style>
     <Style x:Key="Title3"
            TargetType="Label">
+        <Setter Property="FontAttributes"
+                Value="Bold" />
         <Setter Property="FontSize"
                 Value="20" />
         <Setter Property="LineHeight"
                 Value="1.25" />
         <!-- 25 -->
         <Setter Property="FontFamily"
-                Value="{OnPlatform WinUI=SegoeSemibold, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=''}" />
-        <Setter Property="FontAttributes"
-                Value="{OnPlatform Default=None, Android=Bold}" />
+                Value="{OnPlatform WinUI=Inter, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=Inter}" />
     </Style>
     <Style x:Key="Title2"
            TargetType="Label">
@@ -215,7 +218,7 @@
                 Value="1.27" />
         <!-- 28 -->
         <Setter Property="FontFamily"
-                Value="{OnPlatform WinUI=SegoeSemibold, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=''}" />
+                Value="{OnPlatform WinUI=Inter, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=Inter}" />
         <Setter Property="FontAttributes"
                 Value="{OnPlatform Android=Bold, Default=None}" />
     </Style>
