@@ -203,12 +203,10 @@
         <Setter Property="FontAttributes"
                 Value="Bold" />
         <Setter Property="FontSize"
-                Value="20" />
-        <Setter Property="LineHeight"
-                Value="1.25" />
+                Value="24" />
         <!-- 25 -->
         <Setter Property="FontFamily"
-                Value="{OnPlatform WinUI=Inter, iOS=.SFUI-SemiBold, MacCatalyst=.SFUI-SemiBold, Default=Inter}" />
+                Value="Inter" />
     </Style>
     <Style x:Key="Title2"
            TargetType="Label">

@@ -10,5 +10,6 @@ namespace OsvitaApp.Pages
             InitializeComponent();
             BindingContext = model;
         }
+
     }
 }

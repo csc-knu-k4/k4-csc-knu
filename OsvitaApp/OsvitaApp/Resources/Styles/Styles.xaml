@@ -2,8 +2,9 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                    xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit">
-
+                    xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
+                    xmlns:buttons="clr-namespace:Syncfusion.Maui.Toolkit.Buttons;assembly=Syncfusion.Maui.Toolkit"
+                    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color"
@@ -671,6 +672,34 @@
                 Value="Fill" />
         <Setter Property="VerticalOptions"
                 Value="End" />
+
+    </Style>
+
+    <Style TargetType="buttons:SfButton"
+           x:Key="SfButtonStyle">
+        <Setter Property="EnableRippleEffect"
+                Value="False" />
+    </Style>
+
+    <Style TargetType="buttons:SfButton"
+           x:Key="BigPrimaryButton"
+           BasedOn="{x:StaticResource SfButtonStyle}">
+
+        <Setter Property="Background"
+                Value="{x:StaticResource Primary}" />
+        <Setter Property="TextColor"
+                Value="{x:StaticResource LightOnDarkBackground}" />
+        
+        <Setter Property="CornerRadius"
+                Value="25" />
+        <Setter Property="HeightRequest"
+                Value="50" />
+        <Setter Property="FontSize"
+                Value="24" />
+        <Setter Property="HorizontalTextAlignment"
+                Value="Center" />
+        <Setter Property="VerticalTextAlignment"
+                Value="Center" />
 
     </Style>
 

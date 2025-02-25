@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="OsvitaApp.Pages.LoginPage"
              xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
              xmlns:vm="clr-namespace:OsvitaApp.PageModels"
              xmlns:textInput="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Toolkit.Buttons;assembly=Syncfusion.Maui.Toolkit"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:effectsView="clr-namespace:Syncfusion.Maui.Toolkit.EffectsView;assembly=Syncfusion.Maui.Toolkit"
-             Title="LoginPage"
+             x:Class="OsvitaApp.Pages.RegistrationPage"
+             Title="RegistrationPage"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Flyout"
              BackgroundColor="{x:StaticResource White}"
-             x:DataType="vm:LoginPageVM">
+             x:DataType="vm:RegistrationPageVM">
     <Grid>
         <Ellipse Fill="{x:StaticResource CircleColorBig}"
                  WidthRequest="248"
@@ -39,13 +39,14 @@
                  TranslationX="-39"
                  TranslationY="-50"
                  ZIndex="-100" />
+
         <VerticalStackLayout VerticalOptions="Center"
                              HorizontalOptions="Fill"
                              Margin="20"
                              Spacing="25">
 
-            <!--ВХІД-->
-            <Label Text="Вхід"
+            <!--Реєстрація-->
+            <Label Text="Реєстрація"
                    Style="{x:StaticResource Title3}"
                    VerticalOptions="Center"
                    HorizontalOptions="Center"
@@ -102,46 +103,59 @@
                 <Line Style="{x:StaticResource CredentialsEntryLine}" />
             </Grid>
 
-            <Grid ColumnDefinitions="0.1*, 0.4*, 0.5*">
-
-                <CheckBox Grid.Column="0" />
-                <Label Grid.Column="1"
-                       Text="Запам’ятати мене"
-                       TextColor="{x:StaticResource TextGray}"
-                       FontSize="15"
-                       HorizontalTextAlignment="Center"
-                       VerticalTextAlignment="Center" />
-
-                <Label Grid.Column="2"
-                       Text="Забули пароль?"
-                       TextColor="{x:StaticResource Primary}"
-                       FontSize="15"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="End" />
-
+            <Grid>
+                <Label Text="Ім'я"
+                       Style="{x:StaticResource CredentialsEntryText}" />
+                <textInput:SfTextInputLayout Stroke="Transparent"
+                                             ContainerType="None"
+                                             Padding="0"
+                                             Margin="0"
+                                             ReserveSpaceForAssistiveLabels="False"
+                                             ShowHint="True"
+                                             IsHintAlwaysFloated="True">
+                    <Entry Placeholder="Введіть ім’я"
+                           PlaceholderColor="{x:StaticResource TextGray}" />
+                </textInput:SfTextInputLayout>
+                <Line Style="{x:StaticResource CredentialsEntryLine}" />
             </Grid>
 
-            <controls:RippleButton Text="Увійти"
+            <Grid>
+                <Label Text="Прізвище"
+                       Style="{x:StaticResource CredentialsEntryText}" />
+                <textInput:SfTextInputLayout Stroke="Transparent"
+                                             ContainerType="None"
+                                             Padding="0"
+                                             Margin="0"
+                                             ReserveSpaceForAssistiveLabels="False"
+                                             ShowHint="True"
+                                             IsHintAlwaysFloated="True">
+                    <Entry Placeholder="Введіть прізвище"
+                           PlaceholderColor="{x:StaticResource TextGray}" />
+                </textInput:SfTextInputLayout>
+                <Line Style="{x:StaticResource CredentialsEntryLine}" />
+            </Grid>
+
+            <controls:RippleButton Text="Зареєструватись"
                                    Style="{x:StaticResource BigPrimaryButton}" />
 
             <Label HorizontalOptions="Center">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="Не маєте акаунту? "
+                        <Span Text="Вже маєте акаунт? "
                               FontSize="16"
                               TextColor="{x:StaticResource TextGray}" />
-                        <Span Text="Створити акаунт"
+                        <Span Text="Увійти"
                               FontSize="16"
                               TextColor="{x:StaticResource Primary}" />
                     </FormattedString>
                 </Label.FormattedText>
 
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CreateAccountCommand}" />
+                    <TapGestureRecognizer Command="{Binding LogInCommand}" />
                 </Label.GestureRecognizers>
             </Label>
 
         </VerticalStackLayout>
-    </Grid>
 
+    </Grid>
 </ContentPage>

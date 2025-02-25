@@ -19,10 +19,10 @@
             };
             window.Width = 390;
             window.Height = 844;
-            window.MinimumWidth = 390;
-            window.MaximumHeight = 844;
-            window.MaximumWidth = 390;
-            window.MinimumHeight = 844;
+            //window.MinimumWidth = 390;
+            //window.MaximumHeight = 844;
+            //window.MaximumWidth = 390;
+            //window.MinimumHeight = 844;
             return window;
         }
     }

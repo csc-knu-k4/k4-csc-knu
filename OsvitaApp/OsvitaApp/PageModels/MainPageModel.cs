@@ -114,9 +114,11 @@ namespace OsvitaApp.PageModels
         }
 
         [RelayCommand]
-        private void NavigatedTo() =>
+        private Task NavigatedTo()
+        {
             _isNavigatedTo = true;
-
+             return Shell.Current.GoToAsync("/login", true);
+        }
         [RelayCommand]
         private void NavigatedFrom() =>
             _isNavigatedTo = false;
@@ -124,17 +126,19 @@ namespace OsvitaApp.PageModels
         [RelayCommand]
         private async Task Appearing()
         {
-            if (!_dataLoaded)
-            {
-                await InitData(_seedDataService);
-                _dataLoaded = true;
-                await Refresh();
-            }
-            // This means we are being navigated to
-            else if (!_isNavigatedTo)
-            {
-                await Refresh();
-            }
+            //if (!_dataLoaded)
+            //{
+            //    await InitData(_seedDataService);
+            //    _dataLoaded = true;
+            //    await Refresh();
+            //}
+            //// This means we are being navigated to
+            //else if (!_isNavigatedTo)
+            //{
+            //    await Refresh();
+            //}
+            await Task.Delay(100);
+           
         }
 
         [RelayCommand]

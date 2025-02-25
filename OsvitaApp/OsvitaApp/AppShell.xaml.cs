@@ -12,6 +12,7 @@ namespace OsvitaApp
             Application.Current!.UserAppTheme = AppTheme.Light;
             var currentTheme = Application.Current!.UserAppTheme;
             ThemeSegmentedControl.SelectedIndex = currentTheme == AppTheme.Light ? 0 : 1;
+            this.GoToAsync("//main");
         }
         public static async Task DisplaySnackbarAsync(string message)
         {

@@ -2,10 +2,10 @@ using System.Diagnostics;
 
 namespace OsvitaApp.Pages;
 
-public partial class LoginPage : ContentPage
+public partial class RegistrationPage : ContentPage
 {
-    private readonly LoginPageVM _vm;
-    public LoginPage(LoginPageVM vm)
+    private readonly RegistrationPageVM _vm;
+    public RegistrationPage(RegistrationPageVM vm)
     {
         _vm = vm;
         this.BindingContext = _vm;
@@ -17,4 +17,6 @@ public partial class LoginPage : ContentPage
         base.OnNavigatedTo(args);
         Debug.WriteLine(Shell.Current.Navigation.NavigationStack.Count());
     }
+
+
 }

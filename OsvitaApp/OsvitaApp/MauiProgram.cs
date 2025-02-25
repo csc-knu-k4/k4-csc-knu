@@ -11,7 +11,7 @@ namespace OsvitaApp
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .UseMauiCommunityToolkit()
+                .UseMauiCommunityToolkit(options => options.SetShouldEnableSnackbarOnWindows(true))
                 .ConfigureSyncfusionToolkit()
                 .ConfigureMauiHandlers(handlers =>
                 {
@@ -41,9 +41,9 @@ namespace OsvitaApp
             builder.Services.AddSingleton<ManageMetaPageModel>();
 
             builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
-            builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
+            builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");   
             builder.Services.AddTransientWithShellRoute<LoginPage, LoginPageVM>("login");
-
+            builder.Services.AddTransientWithShellRoute<RegistrationPage, RegistrationPageVM>("registration");
             return builder.Build();
         }
     }
