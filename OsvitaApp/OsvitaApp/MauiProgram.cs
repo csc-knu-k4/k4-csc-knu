@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using OsvitaApp.Interfaces;
 using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace OsvitaApp
@@ -39,11 +40,17 @@ namespace OsvitaApp
             builder.Services.AddSingleton<MainPageModel>();
             builder.Services.AddSingleton<ProjectListPageModel>();
             builder.Services.AddSingleton<ManageMetaPageModel>();
+            builder.Services.AddSingleton<ApiService>();
+            builder.Services.AddSingleton<IAccountService, AccountService>();
+            builder.Services.AddSingleton<ISubjectsService, SubjectsService>();
+
+
 
             builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
             builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");   
             builder.Services.AddTransientWithShellRoute<LoginPage, LoginPageVM>("login");
             builder.Services.AddTransientWithShellRoute<RegistrationPage, RegistrationPageVM>("registration");
+            builder.Services.AddTransientWithShellRoute<SubjectsPage, SubjectsPageVM>("subjects");
             return builder.Build();
         }
     }

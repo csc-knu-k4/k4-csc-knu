@@ -106,6 +106,9 @@
     <FileImageSource x:Key="GoogleIcon"
                      File="google.png" />
 
+    <FileImageSource x:Key="Logo"
+                     File="logo.png" />
+
     <Style TargetType="Label">
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
@@ -249,13 +252,6 @@
         <!-- 70 -->
         <Setter Property="FontAttributes"
                 Value="{OnPlatform WinUI=None, Default=Bold}" />
-    </Style>
-
-    <Style TargetType="Border">
-        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
-        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}"/>
-        <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="Padding" Value="{OnIdiom 15, Desktop=20}"/>
     </Style>
 
     <Style TargetType="Border" x:Key="CardStyle">

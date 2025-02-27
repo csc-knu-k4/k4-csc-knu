@@ -17,8 +17,8 @@
                     BackgroundColor = Colors.White,
                 }
             };
-            window.Width = 390;
-            window.Height = 844;
+            window.Width = 406;
+            window.Height = 884;
             //window.MinimumWidth = 390;
             //window.MaximumHeight = 844;
             //window.MaximumWidth = 390;

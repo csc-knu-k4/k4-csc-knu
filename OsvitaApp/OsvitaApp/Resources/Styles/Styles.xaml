@@ -703,4 +703,15 @@
 
     </Style>
 
+    <Style TargetType="Border"
+           x:Key="BackgroundBorderStyle">
+        <Setter Property="BackgroundColor"
+                Value="{x:StaticResource White}" />
+        <Setter Property="StrokeShape"
+                Value="RoundRectangle 15" />
+        <Setter Property="Padding"
+                Value="0" />
+
+    </Style>
+
 </ResourceDictionary>

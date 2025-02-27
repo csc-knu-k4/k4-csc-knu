@@ -81,7 +81,8 @@
                                              ShowHint="True"
                                              IsHintAlwaysFloated="True">
                     <Entry Placeholder="Введіть електронну пошту"
-                           PlaceholderColor="{x:StaticResource TextGray}" />
+                           PlaceholderColor="{x:StaticResource TextGray}"
+                           Text="{Binding Email}"/>
                 </textInput:SfTextInputLayout>
                 <Line Style="{x:StaticResource CredentialsEntryLine}" />
             </Grid>
@@ -97,7 +98,9 @@
                                              ShowHint="True"
                                              IsHintAlwaysFloated="True">
                     <Entry Placeholder="Введіть пароль"
-                           PlaceholderColor="{x:StaticResource TextGray}" />
+                           PlaceholderColor="{x:StaticResource TextGray}"
+                           Text="{Binding Password}"
+                           IsPassword="True"/>
                 </textInput:SfTextInputLayout>
                 <Line Style="{x:StaticResource CredentialsEntryLine}" />
             </Grid>
@@ -122,7 +125,8 @@
             </Grid>
 
             <controls:RippleButton Text="Увійти"
-                                   Style="{x:StaticResource BigPrimaryButton}" />
+                                   Style="{x:StaticResource BigPrimaryButton}"
+                                   Command="{Binding LoginCommand}"/>
 
             <Label HorizontalOptions="Center">
                 <Label.FormattedText>

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OsvitaApp.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,20 @@ namespace OsvitaApp.PageModels
 {
     public partial class LoginPageVM : ObservableObject
     {
+        #region Properties
 
+        private readonly IAccountService _authService;
+
+        [ObservableProperty] private string _email = "admin@gmail.com";
+        [ObservableProperty] private string _password = "Qwerty_1";
+
+
+        #endregion
 
         #region ctor
-        public LoginPageVM()
+        public LoginPageVM(IAccountService authService)
         {
-
+            _authService = authService;
         }
         #endregion
 
@@ -24,7 +33,15 @@ namespace OsvitaApp.PageModels
         [RelayCommand]
         public async Task Login()
         {
-            await Task.Delay(1000);
+            var authResult = await _authService.LoginAsync(Email, Password);
+            if(authResult.IsSuccess)
+            {
+                await Shell.Current.GoToAsync("///subjects", true);
+            }
+            else
+            {
+                await AppShell.DisplaySnackbarAsync(authResult.ErrorMessage);
+            }
         }
 
         [RelayCommand]

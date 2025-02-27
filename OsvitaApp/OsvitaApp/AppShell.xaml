@@ -5,8 +5,7 @@
        xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
        xmlns:pages="clr-namespace:OsvitaApp.Pages"
        Shell.FlyoutBehavior="Flyout"
-       Title="OsvitaApp"
-         >
+       Title="OsvitaApp">
 
     <!--<ShellContent Title="Login"
                   Icon="{StaticResource IconDashboard}"
@@ -18,10 +17,17 @@
                   ContentTemplate="{DataTemplate pages:LoginPage}"
                   Route="login" />
 
+    <ShellContent Title="Subjects"
+                  Icon="{StaticResource IconDashboard}"
+                  ContentTemplate="{DataTemplate pages:SubjectsPage}"
+                  Route="subjects" />
+
     <ShellContent Title="Registration"
                   Icon="{StaticResource IconDashboard}"
                   ContentTemplate="{DataTemplate pages:RegistrationPage}"
                   Route="registration" />
+
+    
 
     <!--<ShellContent Title="Projects"
                   Icon="{StaticResource IconProjects}"
