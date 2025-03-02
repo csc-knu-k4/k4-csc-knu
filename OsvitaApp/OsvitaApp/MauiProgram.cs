@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using OsvitaApp.Interfaces;
+using OsvitaApp.Mappers;
 using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace OsvitaApp
@@ -30,6 +31,8 @@ namespace OsvitaApp
     		builder.Logging.AddDebug();
     		builder.Services.AddLogging(configure => configure.AddDebug());
 #endif
+
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddSingleton<ProjectRepository>();
             builder.Services.AddSingleton<TaskRepository>();

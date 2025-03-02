@@ -11,7 +11,7 @@ namespace OsvitaApp.Services
     public class ApiService
     {
         private readonly HttpClient _httpClient;
-        private const string BaseUrl = "http://localhost:5134/";
+        private const string BaseUrl = "http://192.168.31.195:5134/";
 
         public ApiService()
         {

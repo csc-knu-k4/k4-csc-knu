@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
              xmlns:vm="clr-namespace:OsvitaApp.PageModels"
+             xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
              xmlns:textInput="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Toolkit.Buttons;assembly=Syncfusion.Maui.Toolkit"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -34,65 +35,28 @@
             <controls:TopPanel Grid.Row="0" />
 
             <Border Grid.Row="1"
-                    Style="{x:StaticResource BackgroundBorderStyle}"
-                    Padding="20, 20,20, 20">
+                    Style="{x:StaticResource BackgroundBorderStyle}">
 
-                <Grid>
-                    <Grid.RowDefinitions>
+                <FlexLayout Wrap="Wrap"
+                            JustifyContent="Center"
+                            AlignItems="Center"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Start"
+                            BindableLayout.ItemsSource="{Binding Subjects}"
+                            Padding="10, 10, 10, 10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="om:SubjectObservableModel">
+                            <controls:SubjectCard>
+                                <controls:SubjectCard.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SubjectsPageVM}}, Path=SubjectTappedCommand}" CommandParameter="{Binding .}"/>
+                                </controls:SubjectCard.GestureRecognizers>
+                            
+                            
+                            </controls:SubjectCard>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
 
-                        <RowDefinition Height="200" />
-
-                    </Grid.RowDefinitions>
-
-                    <Border Grid.Row="0"
-                            Style="{x:StaticResource BackgroundBorderStyle}"
-                            Stroke="#5C6CFF"
-                            StrokeThickness="1"
-                            Padding="0">
-
-                        <Border.Shadow>
-                            <Shadow Brush="#5C6CFF"
-                                    Offset="0,0"
-                                    Radius="5"
-                                    Opacity="0.5" />
-                        </Border.Shadow>
-
-                        <Grid>
-                            <Border HeightRequest="70"
-                                    WidthRequest="100"
-                                    Padding="0"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Start"
-                                    BackgroundColor="{x:StaticResource Primary}"
-                                    Stroke="#DA5D15"
-                                    StrokeThickness="2"
-                                    StrokeShape="RoundRectangle 10 0 0 10">
-                                <Border.Background>
-                                    <!--<LinearGradientBrush StartPoint="0,0"
-                                                         EndPoint="0,1">
-                                        <GradientStop Color="#FF6D1900"
-                                                      Offset="0.0" />
-                                        <GradientStop Color="{x:StaticResource Primary}"
-                                                      Offset="0.2" />
-                                        <GradientStop Color="{x:StaticResource Primary}"
-                                                      Offset="0.8" />
-                                        <GradientStop Color="#FF6D1800"
-                                                      Offset="1.0" />
-                                    </LinearGradientBrush>-->
-
-                                    <RadialGradientBrush>
-                                        <GradientStop Color="{x:StaticResource Primary}"
-                                                      Offset="0.2" />
-                                        <GradientStop Color="#DA5D15"
-                                                      Offset="1.0" />
-                                    </RadialGradientBrush>
-                                </Border.Background>
-                            </Border>
-
-                        </Grid>
-                    </Border>
-
-                </Grid>
+                </FlexLayout>
 
             </Border>
 
