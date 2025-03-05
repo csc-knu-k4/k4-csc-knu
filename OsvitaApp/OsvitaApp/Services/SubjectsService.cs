@@ -24,9 +24,9 @@ namespace OsvitaApp.Services
             return await _apiService.GetAsync<List<SubjectModel>>(_serviceEndpoint);
         }
 
-        public async Task<(bool IsSuccess, List<SubjectModel> Data, string ErrorMessage)> GetChaptersAsync(int subjectID)
+        public async Task<(bool IsSuccess, List<ChapterModel> Data, string ErrorMessage)> GetChaptersAsync(int subjectID)
         {
-            return await _apiService.GetAsync<List<SubjectModel>>(_serviceEndpoint + $"/{subjectID}/chapters");
+            return await _apiService.GetAsync<List<ChapterModel>>(_serviceEndpoint + $"/{subjectID}/chapters");
         }
     }
 }
