@@ -15,27 +15,32 @@ using System.Threading.Tasks;
 
 namespace OsvitaApp.PageModels
 {
-    public partial class SubjectsPageVM : ObservableObject
+    public partial class ChaptersPageVM : ObservableObject
     {
         private readonly ISubjectsService _subjectsService;
+        private readonly IChaptersService _chaptersService;
         private readonly IMapper _mapper;
         private readonly ChaptersPageDto _chaptersPageDto;
-        [ObservableProperty] private ObservableCollection<SubjectObservableModel> _subjects;
 
-        public SubjectsPageVM(ISubjectsService subjectsService, IMapper mapper, ChaptersPageDto chaptersPageDto)
+
+        [ObservableProperty] private ObservableCollection<ChapterObservableModel> _chapters;
+
+        public ChaptersPageVM(ISubjectsService subjectsService, IChaptersService chaptersService, IMapper mapper, ChaptersPageDto chaptersPageDto)
         {
             _subjectsService = subjectsService;
+            _chaptersService = chaptersService;
             _mapper = mapper;
             _chaptersPageDto = chaptersPageDto;
         }
 
+
         [RelayCommand]
         private async Task NavigatedTo()
         {
-            var res = await _subjectsService.GetSubjectsAsync();
+            var res = await _subjectsService.GetChaptersAsync(_chaptersPageDto.Subject.Id);
             if(res.IsSuccess)
             {
-                Subjects = _mapper.Map<List<SubjectObservableModel>>(res.Data).ToObservableCollection();
+                
             }
             else
             {
@@ -43,11 +48,7 @@ namespace OsvitaApp.PageModels
             }
         }
 
-        [RelayCommand]
-        private async Task SubjectTapped(SubjectObservableModel subject)
-        {
-            _chaptersPageDto.Subject = subject;
-            await Shell.Current.GoToAsync($"///chapters");
-        }
+
+
     }
 }

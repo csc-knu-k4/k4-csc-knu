@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
+             xmlns:vm="clr-namespace:OsvitaApp.PageModels"
+             xmlns:textInput="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Toolkit.Buttons;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:effectsView="clr-namespace:Syncfusion.Maui.Toolkit.EffectsView;assembly=Syncfusion.Maui.Toolkit"
+             x:Class="OsvitaApp.Pages.ChaptersPage"
+             Title="ChaptersPage"
+             x:DataType="vm:ChaptersPageVM"
+             BackgroundColor="{x:StaticResource LightBackground}">
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior EventName="NavigatedTo"
+                                    Command="{Binding NavigatedToCommand}" />
+
+    </ContentPage.Behaviors>
+
+    <ScrollView>
+
+        <Grid Padding="20,60,20,20"
+              RowSpacing="20">
+            <Grid.RowDefinitions>
+
+                <RowDefinition Height="64" />
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+
+            <controls:TopPanel Grid.Row="0" />
+
+            <Border Grid.Row="1"
+                    Style="{x:StaticResource BackgroundBorderStyle}">
+
+
+
+            </Border>
+
+        </Grid>
+
+    </ScrollView>
+</ContentPage>

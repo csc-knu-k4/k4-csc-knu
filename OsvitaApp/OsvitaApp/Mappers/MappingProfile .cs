@@ -14,6 +14,7 @@ namespace OsvitaApp.Mappers
         public MappingProfile()
         {
             CreateMap<SubjectModel, SubjectObservableModel>().ReverseMap();
+            CreateMap<ChapterModel, ChapterObservableModel>().ReverseMap();
         }
     }
 }

@@ -35,6 +35,13 @@ namespace OsvitaApp.Services
             return await HandleResponse<T>(response);
         }
 
+        // GET: Отримання даних
+        public async Task<(bool IsSuccess, T Data, string ErrorMessage)> GetAsync<T>(string endpoint, object payload)
+        {
+            var response = await _httpClient.GetAsync(endpoint);
+            return await HandleResponse<T>(response);
+        }
+
         // POST: Створення ресурсу
         public async Task<(bool IsSuccess, T Data, string ErrorMessage)> PostAsync<T>(string endpoint, object payload)
         {

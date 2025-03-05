@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using OsvitaApp.Interfaces;
 using OsvitaApp.Mappers;
+using OsvitaApp.Models.Dto;
 using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace OsvitaApp
@@ -46,6 +47,7 @@ namespace OsvitaApp
             builder.Services.AddSingleton<ApiService>();
             builder.Services.AddSingleton<IAccountService, AccountService>();
             builder.Services.AddSingleton<ISubjectsService, SubjectsService>();
+            builder.Services.AddSingleton<IChaptersService, ChaptersService>();
 
 
 
@@ -54,6 +56,9 @@ namespace OsvitaApp
             builder.Services.AddTransientWithShellRoute<LoginPage, LoginPageVM>("login");
             builder.Services.AddTransientWithShellRoute<RegistrationPage, RegistrationPageVM>("registration");
             builder.Services.AddTransientWithShellRoute<SubjectsPage, SubjectsPageVM>("subjects");
+            builder.Services.AddTransientWithShellRoute<ChaptersPage, ChaptersPageVM>("chapters");
+
+            builder.Services.AddSingleton<ChaptersPageDto>();
             return builder.Build();
         }
     }

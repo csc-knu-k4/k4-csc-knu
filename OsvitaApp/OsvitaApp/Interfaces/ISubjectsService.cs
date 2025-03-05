@@ -9,6 +9,7 @@ namespace OsvitaApp.Interfaces
 {
     public interface ISubjectsService
     {
+        Task<(bool IsSuccess, List<ChapterModel> Data, string ErrorMessage)> GetChaptersAsync(int subjectID);
         Task<(bool IsSuccess, List<SubjectModel> Data, string ErrorMessage)> GetSubjectsAsync();
     }
 }

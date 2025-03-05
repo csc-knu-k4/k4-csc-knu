@@ -11,7 +11,7 @@ namespace OsvitaApp.Models.ObservableModels
     {
         [ObservableProperty] public int _id;
         [ObservableProperty] public string _title;
-        [ObservableProperty] public List<int> _chaptersId;
+        [ObservableProperty] public List<int> _chaptersIds;
         [ObservableProperty] public bool _isEnabled;
     }
 }
