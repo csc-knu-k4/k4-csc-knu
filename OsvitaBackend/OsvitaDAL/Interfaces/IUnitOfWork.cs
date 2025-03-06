@@ -14,6 +14,7 @@ namespace OsvitaDAL.Interfaces
 		IAssignmentLinkRepository AssignmentLinkRepository { get; }
         IUserRepository UserRepository { get; }
         IStatisticRepository StatisticRepository { get; }
+		IEducationPlanRepository EducationPlanRepository { get; }
         Task SaveChangesAsync();
     }
 }

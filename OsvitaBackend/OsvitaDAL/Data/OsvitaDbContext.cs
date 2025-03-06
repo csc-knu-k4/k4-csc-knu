@@ -25,6 +25,8 @@ namespace OsvitaDAL.Data
         public DbSet<TopicProgressDetail> TopicProgressDetails{ get; set; }
         public DbSet<AssignmentProgressDetail> AssignmentProgressDetails { get; set; }
         public DbSet<AssignmentSetProgressDetail> AssignmentSetProgressDetails { get; set; }
+        public DbSet<EducationPlan> EducationPlans { get; set; }
+        public DbSet<TopicPlanDetail> TopicPlanDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
