@@ -12,6 +12,20 @@ namespace OsvitaDAL.Repositories
         {
         }
 
+        public async Task<TopicPlanDetail> DeleteTopicPlanDetailByUserIdAndTopicIdAsync(int userId, int topicId)
+        {
+            var educationPlan =  await context.EducationPlans
+                .Include(x => x.TopicPlanDetails)
+                .SingleOrDefaultAsync(x => x.UserId == userId);
+            var topicPlanDetail = educationPlan.TopicPlanDetails.Find(x => x.TopicId == topicId);
+
+            if (topicPlanDetail is not null)
+            {
+                context.TopicPlanDetails.Remove(topicPlanDetail);
+            }
+            return topicPlanDetail;
+        }
+
         public async Task<EducationPlan> GetEducationPlanByIdWithDetailsAsync(int id)
         {
             return await context.EducationPlans

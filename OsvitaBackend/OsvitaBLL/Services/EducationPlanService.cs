@@ -50,6 +50,12 @@ namespace OsvitaBLL.Services
             await unitOfWork.SaveChangesAsync();
         }
 
+        public async Task DeleteTopicPlanDetailByUserIdAndTopicIdAsync(int userId, int topicId)
+        {
+            var topicPlanDetail = educationPlanRepository.DeleteTopicPlanDetailByUserIdAndTopicIdAsync(userId, topicId);
+            await unitOfWork.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<EducationPlanModel>> GetAllAsync()
         {
             var educationPlans = await educationPlanRepository.GetAllAsync();
@@ -77,6 +83,15 @@ namespace OsvitaBLL.Services
             return educationPlanModel;
         }
 
+        public async Task<TopicPlanDetailModel> GetTopicPlanDetailByUserIdAndTopicIdAsync(int userId, int topicId)
+        {
+            var educationPlan = await educationPlanRepository.GetEducationPlanByUserIdWithDetailsAsync(userId);
+            educationPlan.TopicPlanDetails = (await unitOfWork.EducationPlanRepository.GetTopicPlanDetailsByEducationPlanIdAsync(educationPlan.Id)).ToList();
+            var topicPlanDetail = educationPlan.TopicPlanDetails.SingleOrDefault(x => x.TopicId == topicId);
+            var topicPlanDetailModel = mapper.Map<TopicPlanDetail, TopicPlanDetailModel>(topicPlanDetail);
+            return topicPlanDetailModel;
+        }
+
         public async Task UpdateAsync(EducationPlanModel model)
         {
             var educationPlan = mapper.Map<EducationPlan>(model);
@@ -84,9 +99,14 @@ namespace OsvitaBLL.Services
             await unitOfWork.SaveChangesAsync();
         }
 
-        public Task<int> UpdateTopicPlanDetailAsync(TopicPlanDetailModel model, int userId)
+        public async Task<int> UpdateTopicPlanDetailAsync(TopicPlanDetailModel model, int userId, int topicId)
         {
-            throw new NotImplementedException();
+            var educationPlan = await educationPlanRepository.GetEducationPlanByUserIdWithDetailsAsync(userId);
+            educationPlan.TopicPlanDetails = (await unitOfWork.EducationPlanRepository.GetTopicPlanDetailsByEducationPlanIdAsync(educationPlan.Id)).ToList();
+            var oldTopicPlanDetail = educationPlan.TopicPlanDetails.SingleOrDefault(x => x.TopicId == topicId);
+            // changes here
+            await unitOfWork.SaveChangesAsync();
+            return oldTopicPlanDetail.Id;
         }
     }
 }
