@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
-using OsvitaBLL.Services;
+using OsvitaWebApiPL.Interfaces;
 
 namespace OsvitaWebApiPL.Controllers
 {
@@ -10,9 +10,13 @@ namespace OsvitaWebApiPL.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IStatisticService statisticService;
-        public UsersController(IStatisticService statisticService)
+        private readonly IUserService userService;
+        private readonly IIdentityService identityService;
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService)
         {
             this.statisticService = statisticService;
+            this.userService = userService;
+            this.identityService = identityService;
         }
 
         // GET api/users/5/statistic/
@@ -80,6 +84,22 @@ namespace OsvitaWebApiPL.Controllers
             {
                 await statisticService.UpdateAssignmentSetProgressDetailAsync(model, id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserModel>> Get(int id)
+        {
+            try
+            {
+                var userModel = await userService.GetByIdAsync(id);
+                userModel.Roles = await identityService.GetUserRoles(userModel.Email);
+                return Ok(userModel);
             }
             catch (Exception ex)
             {
