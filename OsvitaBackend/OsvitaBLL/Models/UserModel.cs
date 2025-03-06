@@ -8,6 +8,7 @@
         public string? SecondName { get; set; }
         public int? StatisticModelId { get; set; }
         public List<int> EducationClassesIds { get; set; }
+        public List<string> Roles { get; set; }
     }
 }
 

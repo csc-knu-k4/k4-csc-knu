@@ -35,6 +35,7 @@ namespace OsvitaDAL.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            base.OnConfiguring(optionsBuilder);
             //optionsBuilder.UseSqlServer(@"Server=localhost;Database=OsvitaDB;TrustServerCertificate=True;Trusted_Connection=True;");
         }
 

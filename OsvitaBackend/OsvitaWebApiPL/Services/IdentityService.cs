@@ -53,6 +53,13 @@ namespace OsvitaWebApiPL.Services
             return await CreateToken(user);
         }
 
+        public async Task<List<string>> GetUserRoles(string email)
+        {
+            var user = await userManager.FindByNameAsync(email);
+            var roles = (await userManager.GetRolesAsync(user)).ToList();
+            return roles;
+        }
+
         private async Task<bool> ValidateUser(UserLoginDTO userLoginDto)
         {
             var user = await userManager.FindByNameAsync(userLoginDto.Email);
