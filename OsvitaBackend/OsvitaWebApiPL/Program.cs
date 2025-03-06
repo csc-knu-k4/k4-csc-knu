@@ -57,6 +57,7 @@ public class Program
         builder.Services.AddTransient<IContentBlockService, ContentBlockService>();
         builder.Services.AddTransient<IAssignmentService, AssignmentService>();
         builder.Services.AddTransient<IUserService, UserService>();
+        builder.Services.AddTransient<IEducationClassService, EducationClassService>();
         builder.Services.AddTransient<IStatisticService, StatisticService>();
 
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));

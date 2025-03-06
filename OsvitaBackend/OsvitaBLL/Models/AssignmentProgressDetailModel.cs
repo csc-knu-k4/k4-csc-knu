@@ -8,6 +8,7 @@ namespace OsvitaBLL.Models
         public string AnswerValue { get; set; }
         public bool IsCorrect { get; set; }
         public int Points { get; set; }
+        public int MaxPoints { get; set; }
     }
 }
 
