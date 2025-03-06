@@ -78,6 +78,10 @@ namespace OsvitaBLL.Configurations
 
             CreateMap<AssignmentProgressDetail, AssignmentProgressDetailModel>()
                 .ReverseMap();
+
+            CreateMap<EducationClass, EducationClassModel>()
+                .ForMember(ecm => ecm.StudentsIds, ec => ec.MapFrom(x => x.Students.Select(s => s.Id)))
+                .ReverseMap();
         }
     }
 }

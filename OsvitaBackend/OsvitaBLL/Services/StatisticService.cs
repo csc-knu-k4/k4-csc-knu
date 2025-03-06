@@ -3,6 +3,7 @@ using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
+using OsvitaDAL.Repositories;
 
 namespace OsvitaBLL.Services
 {
@@ -62,6 +63,7 @@ namespace OsvitaBLL.Services
             assignmentSetProgressDetail.Score = 0;
             if (model.IsCompleted)
             {
+                await FillEmptyAssignmentProgressDetailAsync(assignmentSetProgressDetail);
                 assignmentSetProgressDetail.Score = assignmentSetProgressDetail.AssignmentProgressDetails.Where(x => x.IsCorrect).Sum(x => x.Points);
             }
             statistic.AssignmentSetProgressDetails.Add(assignmentSetProgressDetail);
@@ -97,6 +99,7 @@ namespace OsvitaBLL.Services
         {
             var statistic = await statisticRepository.GetByIdAsync(id);
             statistic.TopicProgressDetails = (await unitOfWork.StatisticRepository.GetTopicProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
+            statistic.AssignmentSetProgressDetails = (await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
             var statisticModel = mapper.Map<Statistic, StatisticModel>(statistic);
             return statisticModel;
         }
@@ -107,6 +110,17 @@ namespace OsvitaBLL.Services
             statistic.TopicProgressDetails = (await unitOfWork.StatisticRepository.GetTopicProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
             statistic.AssignmentSetProgressDetails = (await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id)).ToList();
             var statisticModel = mapper.Map<Statistic, StatisticModel>(statistic);
+            foreach (var assignmentSetProgressDetail in statisticModel.AssignmentSetProgressDetails)
+            {
+                assignmentSetProgressDetail.MaxScore = 0;
+                foreach (var assignmentProgressDetail in assignmentSetProgressDetail.AssignmentProgressDetails)
+                {
+                    var assignment = await assignmentRepository.GetByIdWithDetailsAsync(assignmentProgressDetail.AssignmentId);
+                    var maxPoints = GetMaxPointsByAssignmentType(assignment.AssignmentType);
+                    assignmentProgressDetail.MaxPoints = maxPoints;
+                    assignmentSetProgressDetail.MaxScore += maxPoints;
+                }
+            }
             return statisticModel;
         }
 
@@ -165,11 +179,75 @@ namespace OsvitaBLL.Services
                 oldAssignmentSetProgressDetail.CompletedDate = model.CompletedDate;
                 if (oldAssignmentSetProgressDetail.IsCompleted)
                 {
+                    await FillEmptyAssignmentProgressDetailAsync(oldAssignmentSetProgressDetail);
                     oldAssignmentSetProgressDetail.Score = oldAssignmentSetProgressDetail.AssignmentProgressDetails.Where(x => x.IsCorrect).Sum(x => x.Points);
                 }
             }
             await unitOfWork.SaveChangesAsync();
             return oldAssignmentSetProgressDetail.Id;
+        }
+
+        private async Task FillEmptyAssignmentProgressDetailAsync(AssignmentSetProgressDetail assignmentSetProgressDetail)
+        {
+            var assignmentsIds = (await unitOfWork.AssignmentLinkRepository.GetAllAsync()).Where(x => x.ObjectId == assignmentSetProgressDetail.AssignmentSetId && x.ObjectType == ObjectType.AssignmentSet).Select(x => x.AssignmentId).ToList();
+            var assignments = (await assignmentRepository.GetAllWithDetailsAsync()).ToList().Where(x => x.AssignmentType != AssignmentType.ChildAssignment && assignmentsIds.Contains(x.Id)).ToList();
+            foreach (var assignment in assignments)
+            {
+                if (assignment.AssignmentType == AssignmentType.MatchComplianceAssignment)
+                {
+                    var childAssignments = (await assignmentRepository.GetAllWithDetailsAsync()).Where(x => x.ParentAssignmentId == assignment.Id);
+                    foreach (var childAssignment in childAssignments)
+                    {
+                        var assignmentProgressDetail = new AssignmentProgressDetail
+                        {
+                            AssignmentSetProgressDetailId = assignmentSetProgressDetail.Id,
+                            AssignmentId = childAssignment.Id,
+                            AnswerValue = string.Empty,
+                            IsCorrect = false,
+                            Points = 0
+                        };
+                        assignmentSetProgressDetail.AssignmentProgressDetails.Add(assignmentProgressDetail);
+                    }
+                }
+                else
+                {
+                    if (!assignmentSetProgressDetail.AssignmentProgressDetails.Select(x => x.AssignmentId).Contains(assignment.Id))
+                    {
+                        var assignmentProgressDetail = new AssignmentProgressDetail
+                        {
+                            AssignmentSetProgressDetailId = assignmentSetProgressDetail.Id,
+                            AssignmentId = assignment.Id,
+                            AnswerValue = string.Empty,
+                            IsCorrect = false,
+                            Points = 0
+                        };
+                        assignmentSetProgressDetail.AssignmentProgressDetails.Add(assignmentProgressDetail);
+                    }
+                }
+            }
+        }
+
+        private int GetMaxPointsByAssignmentType(AssignmentType assignmentType)
+        {
+            var result = 0;
+            switch (assignmentType)
+            {
+                case AssignmentType.OneAnswerAsssignment:
+                    result = 1;
+                    break;
+                case AssignmentType.OpenAnswerAssignment:
+                    result = 2;
+                    break;
+                case AssignmentType.ChildAssignment:
+                    result = 1;
+                    break;
+                case AssignmentType.MatchComplianceAssignment:
+                    result = 4;
+                    break;
+                default:
+                    break;
+            }
+            return result;
         }
     }
 }
