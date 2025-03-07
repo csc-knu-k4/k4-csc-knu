@@ -27,6 +27,25 @@ namespace OsvitaDAL.Repositories
                 .Include(x => x.Teacher)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task AddEducationClassInvitationAsync(EducationClassInvitation educationClassInvitation)
+        {
+            await context.EducationClassInvitations.AddAsync(educationClassInvitation);
+        }
+
+        public async Task<EducationClassInvitation> GetEducationClassInvitationByGuidAsync(string guid)
+        {
+            return await context.EducationClassInvitations.FirstOrDefaultAsync(x => x.Guid == guid);
+        }
+
+        public async Task DeleteEducationClassInvitationByGuidAsync(string guid)
+        {
+            var educationClassInvitation = await context.EducationClassInvitations.FirstOrDefaultAsync(x => x.Guid == guid);
+            if (educationClassInvitation is not null)
+            {
+                context.EducationClassInvitations.Remove(educationClassInvitation);
+            }
+        }
     }
 }
 

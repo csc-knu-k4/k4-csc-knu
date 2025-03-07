@@ -9,6 +9,8 @@ namespace OsvitaWebApiPL
         public const string JwtSection = "Jwt";
         public const string JwtIssuer = "Issuer";
         public const string JwtKey = "Key";
+        public const string MailSettings = "MailSettings";
+        public const string HostSection = "HostSection";
     }
 }
 

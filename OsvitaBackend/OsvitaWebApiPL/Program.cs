@@ -59,8 +59,11 @@ public class Program
         builder.Services.AddTransient<IUserService, UserService>();
         builder.Services.AddTransient<IEducationClassService, EducationClassService>();
         builder.Services.AddTransient<IStatisticService, StatisticService>();
+        builder.Services.AddTransient<IEmailService, EmailService>();
 
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));
+        builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(SettingStrings.MailSettings));
+        builder.Services.Configure<HostSettings>(builder.Configuration.GetSection(SettingStrings.HostSection));
         builder.Services.AddScoped<IIdentityService, IdentityService>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

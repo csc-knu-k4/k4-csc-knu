@@ -56,7 +56,7 @@ namespace OsvitaBLL.Services
 
         public async Task<UserModel> GetByIdAsync(int id)
         {
-            var user = await userRepository.GetByIdAsync(id);
+            var user = await userRepository.GetByIdWithDetailsAsync(id);
             var userModel = mapper.Map<User, UserModel>(user);
             return userModel;
         }

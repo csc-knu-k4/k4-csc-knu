@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaBLL.Services;
+using OsvitaWebApiPL.Models;
 
 namespace OsvitaWebApiPL.Controllers
 {
@@ -88,11 +89,41 @@ namespace OsvitaWebApiPL.Controllers
 
         // DELETE api/classes/5/students
         [HttpDelete("{id}/students/{studentId}")]
-        public async Task<ActionResult> Delete(int id, int studentId)
+        public async Task<ActionResult> DeleteStudent(int id, int studentId)
         {
             try
             {
                 await educationClassService.DeleteStudentByIdAsync(studentId, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POST api/classes/5/students
+        [HttpPost("{id}/students")]
+        public async Task<ActionResult> PostStudent(int id, [FromBody] StudentDTO model)
+        {
+            try
+            {
+                await educationClassService.InviteStudentByEmailAsync(model.Email, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/classes/5/students/5/confirmation/guid
+        [HttpGet("{id}/students/{userId}/confirmations/{guid}")]
+        public async Task<ActionResult> ConfirmStudent(int id, int userId, string guid)
+        {
+            try
+            {
+                await educationClassService.ConfirmStudentAsync(userId, id, guid);
                 return Ok();
             }
             catch (Exception ex)
