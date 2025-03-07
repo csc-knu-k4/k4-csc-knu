@@ -1,7 +1,7 @@
 import { Grid, GridItem, useBreakpointValue } from '@chakra-ui/react';
 import { Sidebar } from '@/shared/ui/Sidebar';
 import { Toolbar } from '@/features/Toolbar';
-import { ContentArea } from './ContentArea';
+import { ContentArea } from '../ContentArea';
 import { useState } from 'react';
 
 export default function BaseLayout() {

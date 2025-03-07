@@ -28,15 +28,15 @@ const IconBox = ({ icon: Icon, title, description }: IconBoxProps) => (
     >
       <Icon size="2rem" color="white" />
     </Flex>
-    <Flex 
-      flexDir="column" 
-      mx={5} 
-      flex={1} 
-      justifyContent={description ? "flex-start" : "center"} 
-      alignItems={description ? "flex-start" : "center"} 
-      mt={description ? 4 : -8}
+    <Flex
+      flexDir="column"
+      mx={5}
+      flex={1}
+      justifyContent={description ? 'flex-start' : 'center'}
+      alignItems={description ? 'flex-start' : 'center'}
+      mt={description ? 4 : -14}
     >
-      <Text fontWeight="bold" textAlign="center">
+      <Text fontSize="2xl" fontWeight="bold" textAlign="center">
         {title}
       </Text>
       {description && (

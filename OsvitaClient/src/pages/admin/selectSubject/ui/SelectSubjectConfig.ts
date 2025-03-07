@@ -2,16 +2,20 @@ import { Subjects } from '@/shared/enums/Subjects';
 
 export const subjectsConfig = [
   {
-    title: Subjects.HISTORY,
+    title: Subjects.MATH,
     isActive: true,
+  },
+  {
+    title: Subjects.HISTORY,
+    isActive: false,
   },
   {
     title: Subjects.UKLANG,
-    isActive: true,
+    isActive: false,
   },
   {
     title: Subjects.ENGLANG,
-    isActive: true,
+    isActive: false,
   },
   {
     title: Subjects.CHEMISTRY,

@@ -4,7 +4,7 @@ import { UserAvatar } from '@/shared/ui/Avatar';
 import { GiHamburgerMenu } from 'react-icons/gi';
 
 interface ToolbarProps {
-  onMenuToggle: () => void;
+  onMenuToggle?: () => void;
 }
 
 export function Toolbar({ onMenuToggle }: ToolbarProps) {

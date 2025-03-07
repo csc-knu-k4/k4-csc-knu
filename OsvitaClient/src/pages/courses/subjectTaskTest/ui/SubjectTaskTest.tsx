@@ -46,7 +46,7 @@ const SubjectTaskTest = () => {
 
   return (
     <Flex flexDir="column" gap={5}>
-      <Box p={5} maxW="full" borderWidth={1} borderRadius="xl" boxShadow="sm">
+      <Box p={5} maxW="100%" borderWidth={1} borderRadius="xl" boxShadow="sm">
         <Text fontSize="lg" mb={3}>
           Яке з наступних рівнянь є прикладом асоціативної властивості додавання?
         </Text>
@@ -85,7 +85,7 @@ const SubjectTaskTest = () => {
           ))}
         </HStack>
       </Box>
-      <Box p={5} maxW="full" borderWidth={1} borderRadius="xl" boxShadow="sm">
+      <Box p={5} maxW="100%" borderWidth={1} borderRadius="xl" boxShadow="sm">
         <Text fontSize="lg" mb={3}>
           Яке з наступних рівнянь є прикладом асоціативної властивості додавання?
         </Text>

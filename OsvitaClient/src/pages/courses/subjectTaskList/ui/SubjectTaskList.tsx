@@ -80,6 +80,36 @@ const items = [
       { text: 'Тригонометричні рівняння', testLink: '/test4', materialLink: '/material4' },
     ],
   },
+  {
+    value: '3',
+    title:
+      'Лінійні, квадратні, раціональні, ірраціональні, показникові, логарифмічні, тригонометричні рівняння і нерівності',
+    tasks: [
+      { text: 'Лінійні рівняння', testLink: '/test3' },
+      { text: 'Квадратні рівняння', materialLink: '/material3' },
+      { text: 'Тригонометричні рівняння', testLink: '/test4', materialLink: '/material4' },
+    ],
+  },
+  {
+    value: '4',
+    title:
+      'Лінійні, квадратні, раціональні, ірраціональні, показникові, логарифмічні, тригонометричні рівняння і нерівності',
+    tasks: [
+      { text: 'Лінійні рівняння', testLink: '/test3' },
+      { text: 'Квадратні рівняння', materialLink: '/material3' },
+      { text: 'Тригонометричні рівняння', testLink: '/test4', materialLink: '/material4' },
+    ],
+  },
+  {
+    value: '5',
+    title:
+      'Лінійні, квадратні, раціональні, ірраціональні, показникові, логарифмічні, тригонометричні рівняння і нерівності',
+    tasks: [
+      { text: 'Лінійні рівняння', testLink: '/test3' },
+      { text: 'Квадратні рівняння', materialLink: '/material3' },
+      { text: 'Тригонометричні рівняння', testLink: '/test4', materialLink: '/material4' },
+    ],
+  },
 ];
 
 export default SubjectTaskList;
