@@ -61,6 +61,7 @@ namespace OsvitaBLL.Configurations
 
             CreateMap<User, UserModel>()
                 .ForMember(um => um.StatisticModelId, m => m.MapFrom(x => x.Statistic.Id))
+                .ForMember(um => um.EducationClassesIds, m => m.MapFrom(x => x.EducationClasses.Select(ec => ec.Id)))
                 .ReverseMap();
 
             CreateMap<Statistic, StatisticModel>()
