@@ -17,6 +17,7 @@ namespace OsvitaDAL.Repositories
             return await context.EducationClasses
                 .Include(x => x.Students)
                 .Include(x => x.Teacher)
+                .Include(x => x.EducationClassPlan)
                 .ToListAsync();
         }
 
@@ -25,6 +26,7 @@ namespace OsvitaDAL.Repositories
             return await context.EducationClasses
                 .Include(x => x.Students)
                 .Include(x => x.Teacher)
+                .Include(x => x.EducationClassPlan)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 

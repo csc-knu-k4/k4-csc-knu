@@ -29,6 +29,7 @@ namespace OsvitaBLL.Services
         public async Task<int> AddAsync(EducationClassModel model)
         {
             var educationClass = mapper.Map<EducationClass>(model);
+            educationClass.EducationClassPlan = new EducationClassPlan();
             await educationClassRepository.AddAsync(educationClass);
             await unitOfWork.SaveChangesAsync();
             return educationClass.Id;

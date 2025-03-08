@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using OsvitaBLL.Configurations;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Services;
@@ -59,6 +58,7 @@ public class Program
         builder.Services.AddTransient<IUserService, UserService>();
         builder.Services.AddTransient<IEducationClassService, EducationClassService>();
         builder.Services.AddTransient<IStatisticService, StatisticService>();
+        builder.Services.AddTransient<IEducationClassPlanService, EducationClassPlanService>();
         builder.Services.AddTransient<IEmailService, EmailService>();
 
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));

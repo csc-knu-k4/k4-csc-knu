@@ -82,6 +82,13 @@ namespace OsvitaBLL.Configurations
 
             CreateMap<EducationClass, EducationClassModel>()
                 .ForMember(ecm => ecm.StudentsIds, ec => ec.MapFrom(x => x.Students.Select(s => s.Id)))
+                .ForMember(ecm => ecm.EducationClassPlanId, ec => ec.MapFrom(x => x.EducationClassPlan.Id))
+                .ReverseMap();
+
+            CreateMap<AssignmentSetPlanDetail, AssignmentSetPlanDetailModel>()
+                .ReverseMap();
+
+            CreateMap<EducationClassPlan, EducationClassPlanModel>()
                 .ReverseMap();
         }
     }
