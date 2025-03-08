@@ -1,7 +1,6 @@
 ﻿using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaBLL.Models.ReportModels;
-using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
 using QuestPDF.Fluent;
 namespace OsvitaBLL.Services
