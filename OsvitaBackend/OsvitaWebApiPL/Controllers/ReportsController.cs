@@ -1,0 +1,42 @@
+using Microsoft.AspNetCore.Mvc;
+using OsvitaBLL.Interfaces;
+using OsvitaWebApiPL.Models;
+
+namespace OsvitaWebApiPL.Controllers
+{
+    [Route("api/reports")]
+    [ApiController]
+    public class ReportsController : ControllerBase
+    {
+        private readonly IStatisticReportService statisticReportService;
+        private readonly string mimeTypePdf = "application/pdf";
+        private readonly string reportSuffix = "report.pdf";
+        public ReportsController(IStatisticReportService statisticReportService)
+        {
+            this.statisticReportService = statisticReportService;
+        }
+
+        [HttpGet("userassignments")]
+        public async Task<ActionResult> GetUserAssignmentsReport(int userId, int assignmentSetProgressDetailId)
+        {
+            var report = await statisticReportService.GenerateAssignmetSetsReportAsync(userId, assignmentSetProgressDetailId);
+            if (report is not null)
+            {
+                return File(report, mimeTypePdf, $"statistic_{reportSuffix}");
+            }
+            return NotFound();
+        }
+
+        [HttpGet("classassignments")]
+        public async Task<ActionResult> GetEducationClassAssignmentsReport(int userId, int assignmentSetId)
+        {
+            var report = await statisticReportService.GenerateEducationClassAssignmetSetsReportAsync(userId, assignmentSetId);
+            if (report is not null)
+            {
+                return File(report, mimeTypePdf, $"statistic_{reportSuffix}");
+            }
+            return NotFound();
+        }
+
+    }
+}
