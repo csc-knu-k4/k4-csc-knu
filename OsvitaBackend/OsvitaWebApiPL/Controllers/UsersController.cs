@@ -10,13 +10,15 @@ namespace OsvitaWebApiPL.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IStatisticService statisticService;
+        private readonly IStatisticReportService statisticReportService;
         private readonly IUserService userService;
         private readonly IIdentityService identityService;
-        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService)
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IStatisticReportService statisticReportService)
         {
             this.statisticService = statisticService;
             this.userService = userService;
             this.identityService = identityService;
+            this.statisticReportService = statisticReportService;
         }
 
         // GET api/users/5/statistic/

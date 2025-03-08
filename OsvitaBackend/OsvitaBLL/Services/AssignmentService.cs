@@ -3,13 +3,6 @@ using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
-using OsvitaDAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OsvitaBLL.Services
 {
@@ -56,7 +49,7 @@ namespace OsvitaBLL.Services
             {
                 assignmentModel.ChildAssignments = (await GetChildAssignmentsAsync(assignmentModel.Id)).ToList();
             }
-            return assignmentsModels;
+            return assignmentsModels.OrderBy(x => x.AssignmentModelType).ThenBy(x => x.Id);
         }
 
         public async Task<IEnumerable<AssignmentModel>> GetAssignmentsByObjectIdAsync(int objectId, ObjectModelType objectModelType)
@@ -69,7 +62,7 @@ namespace OsvitaBLL.Services
             {
                 assignmentModel.ChildAssignments = (await GetChildAssignmentsAsync(assignmentModel.Id)).ToList();
             }
-            return assignmentsModels;
+            return assignmentsModels.OrderBy(x => x.AssignmentModelType).ThenBy(x => x.Id);
         }
 
         public async Task<AssignmentModel> GetAssignmentByIdAsync(int id)
@@ -145,7 +138,7 @@ namespace OsvitaBLL.Services
         {
             var assignmentSet = await assignmentSetRepository.GetByIdAsync(id);
             var assignmentSetModel = mapper.Map<AssignmentSet, AssignmentSetModel>(assignmentSet);
-            assignmentSetModel.Assignments = (await GetAssignmentsByObjectIdAsync(assignmentSetModel.Id, assignmentSetModel.ObjectModelType)).ToList();
+            assignmentSetModel.Assignments = (await GetAssignmentsByObjectIdAsync(assignmentSetModel.Id, assignmentSetModel.ObjectModelType)).OrderBy(x => x.AssignmentModelType).ThenBy(x => x.Id).ToList();
             return assignmentSetModel;
         }
 

@@ -198,15 +198,18 @@ namespace OsvitaBLL.Services
                     var childAssignments = (await assignmentRepository.GetAllWithDetailsAsync()).Where(x => x.ParentAssignmentId == assignment.Id);
                     foreach (var childAssignment in childAssignments)
                     {
-                        var assignmentProgressDetail = new AssignmentProgressDetail
+                        if (!assignmentSetProgressDetail.AssignmentProgressDetails.Select(x => x.AssignmentId).Contains(childAssignment.Id))
                         {
-                            AssignmentSetProgressDetailId = assignmentSetProgressDetail.Id,
-                            AssignmentId = childAssignment.Id,
-                            AnswerValue = string.Empty,
-                            IsCorrect = false,
-                            Points = 0
-                        };
-                        assignmentSetProgressDetail.AssignmentProgressDetails.Add(assignmentProgressDetail);
+                            var assignmentProgressDetail = new AssignmentProgressDetail
+                            {
+                                AssignmentSetProgressDetailId = assignmentSetProgressDetail.Id,
+                                AssignmentId = childAssignment.Id,
+                                AnswerValue = string.Empty,
+                                IsCorrect = false,
+                                Points = 0
+                            };
+                            assignmentSetProgressDetail.AssignmentProgressDetails.Add(assignmentProgressDetail);
+                        }
                     }
                 }
                 else
