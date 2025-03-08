@@ -7,6 +7,7 @@ namespace OsvitaDAL.Entities
 		public int TeacherId { get; set; }
         public User Teacher { get; set; }
         public List<User> Students { get; set; }
-	}
+        public EducationClassPlan EducationClassPlan { get; set; }
+    }
 }
 

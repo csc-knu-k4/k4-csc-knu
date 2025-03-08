@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
-using OsvitaBLL.Services;
 using OsvitaWebApiPL.Models;
 
 namespace OsvitaWebApiPL.Controllers
@@ -11,9 +10,11 @@ namespace OsvitaWebApiPL.Controllers
     public class EducationClassesController : ControllerBase
     {
         private readonly IEducationClassService educationClassService;
-        public EducationClassesController(IEducationClassService educationClassService)
+        private readonly IEducationClassPlanService educationClassPlanService;
+        public EducationClassesController(IEducationClassService educationClassService, IEducationClassPlanService educationClassPlanService)
         {
             this.educationClassService = educationClassService;
+            this.educationClassPlanService = educationClassPlanService;
         }
 
         // GET: api/classes
@@ -40,15 +41,42 @@ namespace OsvitaWebApiPL.Controllers
             return NotFound();
         }
 
+        // GET api/classes/5/educationplan
+        [HttpGet("{id}/educationplan")]
+        public async Task<ActionResult<EducationClassPlanModel>> GetEducationClassPlan(int id)
+        {
+            var educationClassPlanModel = await educationClassPlanService.GetEducationPlanByEducationClassIdAsync(id);
+            if (educationClassPlanModel is not null)
+            {
+                return Ok(educationClassPlanModel);
+            }
+            return NotFound();
+        }
+
         // POST api/classes
         [HttpPost]
-        public async Task<ActionResult<ChapterModel>> Post([FromBody] EducationClassModel model)
+        public async Task<ActionResult<EducationClassModel>> Post([FromBody] EducationClassModel model)
         {
             try
             {
                 var id = await educationClassService.AddAsync(model);
-                var chapterModel = await educationClassService.GetByIdAsync(id);
-                return Ok(chapterModel);
+                var educationClassModel = await educationClassService.GetByIdAsync(id);
+                return Ok(educationClassModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POST api/classes/5/educationplan/assignments
+        [HttpPost("{id}/educationplan/assignments")]
+        public async Task<ActionResult> PostAssignmentSetProgressDetail(int id, [FromBody] AssignmentSetPlanDetailModel model)
+        {
+            try
+            {
+                await educationClassPlanService.AddAssignmentSetPlanDetailAsync(model, id);
+                return Ok();
             }
             catch (Exception ex)
             {

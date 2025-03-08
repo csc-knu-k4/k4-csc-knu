@@ -33,6 +33,8 @@ namespace OsvitaDAL.Data
         public DbSet<AssignmentProgressDetail> AssignmentProgressDetails { get; set; }
         public DbSet<AssignmentSetProgressDetail> AssignmentSetProgressDetails { get; set; }
         public DbSet<EducationClassInvitation> EducationClassInvitations { get; set; }
+        public DbSet<EducationClassPlan> EducationClassPlans { get; set; }
+        public DbSet<AssignmentSetPlanDetail> AssignmentSetPlanDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
