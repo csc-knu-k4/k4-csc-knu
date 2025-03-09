@@ -51,6 +51,12 @@ namespace OsvitaDAL.Data
                 .WithMany(e => e.Students);
             modelBuilder.Entity<EducationClass>()
                 .HasOne(e => e.Teacher);
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.EducationPlan);
+            modelBuilder.Entity<EducationPlan>()
+                .HasMany(x => x.TopicPlanDetails);
+            modelBuilder.Entity<TopicPlanDetail>()
+                .HasOne(x => x.EducationPlan);
         }
     }
 }
