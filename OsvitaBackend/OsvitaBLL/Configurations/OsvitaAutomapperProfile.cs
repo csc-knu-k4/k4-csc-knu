@@ -61,6 +61,7 @@ namespace OsvitaBLL.Configurations
 
             CreateMap<User, UserModel>()
                 .ForMember(um => um.StatisticModelId, m => m.MapFrom(x => x.Statistic.Id))
+                .ForMember(um => um.EducationClassesIds, m => m.MapFrom(x => x.EducationClasses.Select(ec => ec.Id)))
                 .ReverseMap();
 
             CreateMap<Statistic, StatisticModel>()
@@ -77,6 +78,17 @@ namespace OsvitaBLL.Configurations
                 .ReverseMap();
 
             CreateMap<AssignmentProgressDetail, AssignmentProgressDetailModel>()
+                .ReverseMap();
+
+            CreateMap<EducationClass, EducationClassModel>()
+                .ForMember(ecm => ecm.StudentsIds, ec => ec.MapFrom(x => x.Students.Select(s => s.Id)))
+                .ForMember(ecm => ecm.EducationClassPlanId, ec => ec.MapFrom(x => x.EducationClassPlan.Id))
+                .ReverseMap();
+
+            CreateMap<AssignmentSetPlanDetail, AssignmentSetPlanDetailModel>()
+                .ReverseMap();
+
+            CreateMap<EducationClassPlan, EducationClassPlanModel>()
                 .ReverseMap();
         }
     }

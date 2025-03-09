@@ -24,7 +24,8 @@ namespace OsvitaDAL.Data
         IAssignmentLinkRepository assignmentLinkRepository;
         IUserRepository userRepository;
         IStatisticRepository statisticRepository;
-        IEducationPlanRepository educationPlanRepository;
+        IEducationClassRepository educationClassRepository;
+        IEducationClassPlanRepository educationClassPlanRepository;
 
         public ISubjectRepository SubjectRepository
         {
@@ -158,15 +159,27 @@ namespace OsvitaDAL.Data
             }
         }
 
-        public IEducationPlanRepository EducationPlanRepository
+        public IEducationClassRepository EducationClassRepository
         {
             get
             {
-                if (educationPlanRepository is null)
+                if (educationClassRepository is null)
                 {
-                    educationPlanRepository = new EducationPlanRepository(context);
+                    educationClassRepository = new EducationClassRepository(context);
                 }
-                return educationPlanRepository;
+                return educationClassRepository;
+            }
+        }
+
+        public IEducationClassPlanRepository EducationClassPlanRepository
+        {
+            get
+            {
+                if (educationClassPlanRepository is null)
+                {
+                    educationClassPlanRepository = new EducationClassPlanRepository(context);
+                }
+                return educationClassPlanRepository;
             }
         }
 
