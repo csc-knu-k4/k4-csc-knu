@@ -138,7 +138,7 @@ namespace OsvitaBLL.Services
         {
             var assignmentSet = await assignmentSetRepository.GetByIdAsync(id);
             var assignmentSetModel = mapper.Map<AssignmentSet, AssignmentSetModel>(assignmentSet);
-            assignmentSetModel.Assignments = (await GetAssignmentsByObjectIdAsync(assignmentSetModel.Id, assignmentSetModel.ObjectModelType)).OrderBy(x => x.AssignmentModelType).ThenBy(x => x.Id).ToList();
+            assignmentSetModel.Assignments = (await GetAssignmentsByObjectIdAsync(assignmentSetModel.Id, ObjectModelType.AssignmentSetModel)).OrderBy(x => x.AssignmentModelType).ThenBy(x => x.Id).ToList();
             return assignmentSetModel;
         }
 

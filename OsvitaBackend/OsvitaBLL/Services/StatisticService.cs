@@ -245,7 +245,7 @@ namespace OsvitaBLL.Services
                     result = 1;
                     break;
                 case AssignmentType.MatchComplianceAssignment:
-                    result = 4;
+                    result = 3;
                     break;
                 default:
                     break;
