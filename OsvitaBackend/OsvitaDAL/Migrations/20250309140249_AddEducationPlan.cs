@@ -21,12 +21,6 @@ namespace OsvitaDAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EducationPlans", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EducationPlans_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,12 +48,6 @@ namespace OsvitaDAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EducationPlans_UserId",
-                table: "EducationPlans",
-                column: "UserId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TopicPlanDetails_EducationPlanId",

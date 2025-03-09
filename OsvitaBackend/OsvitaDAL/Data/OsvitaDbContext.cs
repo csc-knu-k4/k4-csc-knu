@@ -35,6 +35,8 @@ namespace OsvitaDAL.Data
         public DbSet<EducationClassInvitation> EducationClassInvitations { get; set; }
         public DbSet<EducationClassPlan> EducationClassPlans { get; set; }
         public DbSet<AssignmentSetPlanDetail> AssignmentSetPlanDetails { get; set; }
+        public DbSet<EducationPlan> EducationPlans { get; set; }
+        public DbSet<TopicPlanDetail> TopicPlanDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

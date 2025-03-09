@@ -17,7 +17,7 @@ namespace OsvitaDAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -341,6 +341,22 @@ namespace OsvitaDAL.Migrations
                     b.ToTable("EducationClassPlans");
                 });
 
+            modelBuilder.Entity("OsvitaDAL.Entities.EducationPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EducationPlans");
+                });
+
             modelBuilder.Entity("OsvitaDAL.Entities.Material", b =>
                 {
                     b.Property<int>("Id")
@@ -425,6 +441,29 @@ namespace OsvitaDAL.Migrations
                     b.HasIndex("ChapterId");
 
                     b.ToTable("Topics");
+                });
+
+            modelBuilder.Entity("OsvitaDAL.Entities.TopicPlanDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EducationPlanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EducationPlanId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("TopicPlanDetails");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.TopicProgressDetail", b =>
@@ -612,6 +651,25 @@ namespace OsvitaDAL.Migrations
                     b.Navigation("Chapter");
                 });
 
+            modelBuilder.Entity("OsvitaDAL.Entities.TopicPlanDetail", b =>
+                {
+                    b.HasOne("OsvitaDAL.Entities.EducationPlan", "EducationPlan")
+                        .WithMany("TopicPlanDetails")
+                        .HasForeignKey("EducationPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OsvitaDAL.Entities.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EducationPlan");
+
+                    b.Navigation("Topic");
+                });
+
             modelBuilder.Entity("OsvitaDAL.Entities.TopicProgressDetail", b =>
                 {
                     b.HasOne("OsvitaDAL.Entities.Statistic", "Statistic")
@@ -655,6 +713,11 @@ namespace OsvitaDAL.Migrations
             modelBuilder.Entity("OsvitaDAL.Entities.EducationClassPlan", b =>
                 {
                     b.Navigation("AssignmentSetPlanDetails");
+                });
+
+            modelBuilder.Entity("OsvitaDAL.Entities.EducationPlan", b =>
+                {
+                    b.Navigation("TopicPlanDetails");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.Material", b =>
