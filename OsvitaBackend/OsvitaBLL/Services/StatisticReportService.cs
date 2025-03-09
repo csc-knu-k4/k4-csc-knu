@@ -93,7 +93,7 @@ namespace OsvitaBLL.Services
             int assignmentNumber = 1;
             foreach (var assignment in assignments)
             {
-                if (assignment.AssignmentModelType == AssignmentModelType.OneAnswerAsssignment || assignment.AssignmentModelType == AssignmentModelType.OneAnswerAsssignment)
+                if (assignment.AssignmentModelType == AssignmentModelType.OneAnswerAsssignment || assignment.AssignmentModelType == AssignmentModelType.OpenAnswerAssignment)
                 {
                     var assignmentProgress = assignmentProgresses.FirstOrDefault(x => x.AssignmentId == assignment.Id);
                     var assignmentReportModel = new AssignmentReportModel

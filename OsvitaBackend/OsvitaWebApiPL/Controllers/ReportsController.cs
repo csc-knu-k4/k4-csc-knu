@@ -28,9 +28,9 @@ namespace OsvitaWebApiPL.Controllers
         }
 
         [HttpGet("classassignments")]
-        public async Task<ActionResult> GetEducationClassAssignmentsReport(int userId, int assignmentSetId)
+        public async Task<ActionResult> GetEducationClassAssignmentsReport(int educationClassId, int assignmentSetId)
         {
-            var report = await statisticReportService.GenerateEducationClassAssignmetSetsReportAsync(userId, assignmentSetId);
+            var report = await statisticReportService.GenerateEducationClassAssignmetSetsReportAsync(educationClassId, assignmentSetId);
             if (report is not null)
             {
                 return File(report, mimeTypePdf, $"statistic_{reportSuffix}");
