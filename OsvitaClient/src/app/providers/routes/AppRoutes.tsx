@@ -13,6 +13,13 @@ import {
   Login,
   Register,
   BaseLayout,
+  SelectSubject,
+  SubjectTaskList,
+  SubjectTaskMaterial,
+  SubjectTaskTest,
+  CourseLayout,
+  AddTests,
+  Tests,
 } from './LazyImports';
 import LazyElement from './LazyElement';
 
@@ -28,10 +35,18 @@ const router = createBrowserRouter(
           <Route path="chapters" element={LazyElement(Chapters)} />
           <Route path="topics" element={LazyElement(Topics)} />
           <Route path="materials" element={LazyElement(Materials)} />
+          <Route path="tests" element={LazyElement(Tests)} />
           <Route path="add-subject" element={LazyElement(AddSubject)} />
           <Route path="add-chapter" element={LazyElement(AddChapter)} />
           <Route path="add-topic" element={LazyElement(AddTopic)} />
           <Route path="add-material" element={LazyElement(AddMaterial)} />
+          <Route path="add-tests" element={LazyElement(AddTests)} />
+        </Route>
+        <Route path="/course" element={LazyElement(CourseLayout)}>
+          <Route index element={LazyElement(SelectSubject)} />
+          <Route path="select-course-list" element={LazyElement(SubjectTaskList)} />
+          <Route path="subject-material" element={LazyElement(SubjectTaskMaterial)} />
+          <Route path="subject-test" element={LazyElement(SubjectTaskTest)} />
         </Route>
       </Route>
     </>,

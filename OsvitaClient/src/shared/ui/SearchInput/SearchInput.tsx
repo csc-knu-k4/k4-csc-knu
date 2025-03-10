@@ -8,7 +8,7 @@ export function SearchInput() {
       <Input
         color="orange"
         placeholder="Пошук"
-        w="20rem"
+        maxW="20rem"
         h="2.25rem"
         borderRadius="6.25rem"
         border="0.03rem solid"

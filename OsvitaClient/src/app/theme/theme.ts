@@ -29,7 +29,7 @@ const config = defineConfig({
         },
       },
       fonts: {
-        body: { value: 'Inter, sans-serif' },
+        body: { value: 'Inter, sans-serif',},
         heading: { value: 'Inter, sans-serif' },
       },
     },
