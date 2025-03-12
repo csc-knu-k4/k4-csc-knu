@@ -23,6 +23,7 @@ namespace OsvitaBLL.Services
         {
             var user = mapper.Map<User>(model);
             user.Statistic = new Statistic();
+            user.EducationPlan = new EducationPlan();
             await userRepository.AddAsync(user);
             await unitOfWork.SaveChangesAsync();
             return user.Id;

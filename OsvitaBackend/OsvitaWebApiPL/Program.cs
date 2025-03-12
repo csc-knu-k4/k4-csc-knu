@@ -64,6 +64,7 @@ public class Program
         builder.Services.AddTransient<IEducationClassPlanService, EducationClassPlanService>();
         builder.Services.AddTransient<IEmailService, EmailService>();
         builder.Services.AddTransient<IStatisticReportService, StatisticReportService>();
+        builder.Services.AddTransient<IEducationPlanService, EducationPlanService>();
 
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));
         builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(SettingStrings.MailSettings));

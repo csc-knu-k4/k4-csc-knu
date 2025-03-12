@@ -26,6 +26,7 @@ namespace OsvitaDAL.Data
         IStatisticRepository statisticRepository;
         IEducationClassRepository educationClassRepository;
         IEducationClassPlanRepository educationClassPlanRepository;
+        IEducationPlanRepository educationPlanRepository;
 
         public ISubjectRepository SubjectRepository
         {
@@ -180,6 +181,18 @@ namespace OsvitaDAL.Data
                     educationClassPlanRepository = new EducationClassPlanRepository(context);
                 }
                 return educationClassPlanRepository;
+            }
+        }
+
+        public IEducationPlanRepository EducationPlanRepository
+        {
+            get
+            {
+                if (educationPlanRepository is null)
+                {
+                    educationPlanRepository = new EducationPlanRepository(context);
+                }
+                return educationPlanRepository;
             }
         }
 

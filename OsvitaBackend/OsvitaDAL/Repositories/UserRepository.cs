@@ -18,6 +18,7 @@ namespace OsvitaDAL.Repositories
             return await context.Users
                 .Include(x => x.Statistic)
                 .Include(x => x.EducationClasses)
+                .Include(x => x.EducationPlan)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
     }

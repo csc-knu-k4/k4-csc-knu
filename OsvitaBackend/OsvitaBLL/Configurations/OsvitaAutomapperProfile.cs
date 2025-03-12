@@ -90,6 +90,10 @@ namespace OsvitaBLL.Configurations
 
             CreateMap<EducationClassPlan, EducationClassPlanModel>()
                 .ReverseMap();
+
+            CreateMap<EducationPlan, EducationPlanModel>() .ReverseMap();
+
+            CreateMap<TopicPlanDetail, TopicPlanDetailModel>() .ReverseMap();
         }
     }
 }
