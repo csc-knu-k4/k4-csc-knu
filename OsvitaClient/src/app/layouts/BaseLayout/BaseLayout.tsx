@@ -1,25 +1,36 @@
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Grid, GridItem, useBreakpointValue } from '@chakra-ui/react';
 import { Sidebar } from '@/shared/ui/Sidebar';
 import { Toolbar } from '@/features/Toolbar';
-import { ContentArea } from './ContentArea';
+import { ContentArea } from '../ContentArea';
+import { useState } from 'react';
 
 export default function BaseLayout() {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   return (
     <Grid
-      templateAreas={`"sidebar toolbar" "sidebar content"`}
-      templateColumns="16rem 1fr"
+      templateAreas={isMobile ? `"toolbar" "content"` : `"sidebar toolbar" "sidebar content"`}
+      templateColumns={isMobile ? '1fr' : '16rem 1fr'}
       templateRows="auto 1fr"
       gap="1.5rem"
       h="100vh"
       padding="1.25rem 1.5rem"
       overflow="hidden"
     >
-      <GridItem area="sidebar">
-        <Sidebar />
-      </GridItem>
+      {!isMobile || isSidebarOpen ? (
+        <GridItem
+          area="sidebar"
+          zIndex={10}
+          position={isMobile ? 'absolute' : 'relative'}
+          w={isMobile ? '16rem' : 'auto'}
+        >
+          <Sidebar onClose={() => setSidebarOpen(false)} />
+        </GridItem>
+      ) : null}
 
       <GridItem area="toolbar">
-        <Toolbar />
+        <Toolbar onMenuToggle={() => setSidebarOpen(!isSidebarOpen)} />
       </GridItem>
 
       <GridItem area="content">
