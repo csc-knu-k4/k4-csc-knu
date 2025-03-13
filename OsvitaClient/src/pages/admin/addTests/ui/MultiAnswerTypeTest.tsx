@@ -1,5 +1,6 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/field';
+import { toaster } from '@/components/ui/toaster';
 import { addAssignments, Assignment } from '@/shared/api/testsApi';
 import { Button, Flex, Input, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
@@ -50,7 +51,10 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
       answers.some((a) => !a) ||
       validatedTopicId === null
     ) {
-      alert('Будь ласка, заповніть усі поля.');
+      toaster.create({
+        title: `Будь ласка, заповніть усі поля.`,
+        type: 'warning',
+      });
       return;
     }
 
@@ -110,10 +114,15 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
 
     try {
       await addAssignments(test);
-      alert('Тест успішно додано!');
+      toaster.create({
+        title: `Тест успішно додано!`,
+        type: 'success',
+      });
     } catch (error) {
-      console.error(error);
-      alert('Помилка при додаванні тесту.');
+      toaster.create({
+        title: `Помилка при додаванні тесту ${error}`,
+        type: 'warning',
+      });
     }
   };
 
