@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using OsvitaBLL.Configurations;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Services;
@@ -9,6 +8,7 @@ using OsvitaWebApiPL.Configurations;
 using OsvitaWebApiPL.Identity;
 using OsvitaWebApiPL.Interfaces;
 using OsvitaWebApiPL.Services;
+using QuestPDF.Infrastructure;
 
 namespace OsvitaWebApiPL;
 
@@ -28,7 +28,9 @@ public class Program
                     .AllowAnyHeader()                   
                     .AllowAnyMethod();                
             });
-        }); 
+        });
+
+        QuestPDF.Settings.License = LicenseType.Community;
 
         builder.Services.AddControllers();
 
@@ -38,7 +40,7 @@ public class Program
                 option.EnableSensitiveDataLogging();
             }
         );;
-
+        
         builder.Services.AddDbContext<OsvitaIdentityDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString(SettingStrings.IdentityOsvitaDbConnection))
         );
@@ -57,9 +59,16 @@ public class Program
         builder.Services.AddTransient<IContentBlockService, ContentBlockService>();
         builder.Services.AddTransient<IAssignmentService, AssignmentService>();
         builder.Services.AddTransient<IUserService, UserService>();
+        builder.Services.AddTransient<IEducationClassService, EducationClassService>();
         builder.Services.AddTransient<IStatisticService, StatisticService>();
+        builder.Services.AddTransient<IEducationClassPlanService, EducationClassPlanService>();
+        builder.Services.AddTransient<IEmailService, EmailService>();
+        builder.Services.AddTransient<IStatisticReportService, StatisticReportService>();
+        builder.Services.AddTransient<IEducationPlanService, EducationPlanService>();
 
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));
+        builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(SettingStrings.MailSettings));
+        builder.Services.Configure<HostSettings>(builder.Configuration.GetSection(SettingStrings.HostSection));
         builder.Services.AddScoped<IIdentityService, IdentityService>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

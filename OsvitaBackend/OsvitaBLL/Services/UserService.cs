@@ -23,6 +23,7 @@ namespace OsvitaBLL.Services
         {
             var user = mapper.Map<User>(model);
             user.Statistic = new Statistic();
+            user.EducationPlan = new EducationPlan();
             await userRepository.AddAsync(user);
             await unitOfWork.SaveChangesAsync();
             return user.Id;
@@ -56,7 +57,7 @@ namespace OsvitaBLL.Services
 
         public async Task<UserModel> GetByIdAsync(int id)
         {
-            var user = await userRepository.GetByIdAsync(id);
+            var user = await userRepository.GetByIdWithDetailsAsync(id);
             var userModel = mapper.Map<User, UserModel>(user);
             return userModel;
         }
