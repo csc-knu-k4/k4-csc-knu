@@ -13,14 +13,11 @@ import { Topic } from '@/entities/topics';
 import { getTopics } from '@/shared/api/topicsApi';
 import SingleAnswerTypeTest from './SingleAnswerTypeTest';
 import OpenAnswerTypeTest from './OpenAnswerTypeTest';
-
-const MAX_OPTIONS = 5;
-const MIN_OPTIONS = 2;
+import MultiAnswerTypeTest from './MultiAnswerTypeTest';
 
 const AddTests = () => {
-  const [topicId, setTopicId] = useState<number | null>(null);
+  const [topicId, setTopicId] = useState<number>(0);
   const [testType, setTestType] = useState<string | null>(null);
-  const [options, setOptions] = useState<string[]>(['', '']);
 
   const { data: topicsData, isLoading: topicsLoading } = useQuery<Topic[]>(['topics'], getTopics);
   const topics = createListCollection({
@@ -28,24 +25,6 @@ const AddTests = () => {
       ? topicsData.map((topic) => ({ label: topic.title, value: topic.id.toString() }))
       : [],
   });
-
-  const handleAddOption = () => {
-    if (options.length < MAX_OPTIONS) {
-      setOptions([...options, '']);
-    }
-  };
-
-  const handleRemoveOption = (index: number) => {
-    if (options.length > MIN_OPTIONS) {
-      setOptions(options.filter((_, i) => i !== index));
-    }
-  };
-
-  const handleOptionChange = (index: number, value: string) => {
-    const newOptions = [...options];
-    newOptions[index] = value;
-    setOptions(newOptions);
-  };
 
   if (topicsLoading) {
     return <Text>Завантаження даних...</Text>;
@@ -95,22 +74,11 @@ const AddTests = () => {
         </Field>
       </Flex>
 
-      {testType === '0' && (
-        <SingleAnswerTypeTest
-          options={options}
-          handleOptionChange={handleOptionChange}
-          handleRemoveOption={handleRemoveOption}
-          handleAddOption={handleAddOption}
-        />
-      )}
+      {testType === '0' && <SingleAnswerTypeTest topicId={topicId} />}
 
       {testType === '1' && <OpenAnswerTypeTest />}
 
-      {testType === '2' && (
-        <>
-          <Text>Встановлення відповідності</Text>
-        </>
-      )}
+      {testType === '2' && <MultiAnswerTypeTest />}
     </>
   );
 };
