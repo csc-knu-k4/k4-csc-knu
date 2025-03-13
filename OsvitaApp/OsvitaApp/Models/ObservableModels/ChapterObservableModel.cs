@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,8 @@ namespace OsvitaApp.Models.ObservableModels
         public string Title { get; set; }
         public int SubjectId { get; set; }
         public int OrderPosition { get; set; }
-        public List<int> TopicsIds { get; set; }
+        [ObservableProperty] public bool _isExpanded;
+        [ObservableProperty] public ObservableCollection<TopicObservableModel> _topics;
 
     }
 }

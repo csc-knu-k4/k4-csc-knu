@@ -40,7 +40,7 @@ namespace OsvitaApp.PageModels
             var res = await _subjectsService.GetChaptersAsync(_chaptersPageDto.Subject.Id);
             if(res.IsSuccess)
             {
-                
+                Chapters = res.Data.Select(_mapper.Map<ChapterObservableModel>).ToObservableCollection();
             }
             else
             {
@@ -48,7 +48,22 @@ namespace OsvitaApp.PageModels
             }
         }
 
-
-
+        [RelayCommand]
+        private async Task ChapterExpanded(ChapterObservableModel chapter)
+        {
+            chapter.IsExpanded = !chapter.IsExpanded;
+            if(!chapter.Topics?.Any() ?? true && chapter.IsExpanded)
+            {
+                var res = await _chaptersService.GetTopicsAsync(chapter.Id);
+                if(res.IsSuccess)
+                {
+                    chapter.Topics = res.Data.Select(_mapper.Map<TopicObservableModel>).ToObservableCollection();
+                }
+                else
+                {
+                    await AppShell.DisplaySnackbarAsync(res.ErrorMessage);
+                }
+            }
+        }
     }
 }

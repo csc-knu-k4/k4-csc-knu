@@ -112,6 +112,12 @@
     <FileImageSource x:Key="MathIcon"
                      File="mathicon.png" />
 
+    <FileImageSource x:Key="ArrowUp"
+                     File="arrowup.png" />
+
+    <FileImageSource x:Key="ArrowDown"
+                     File="arrowdown.png" />
+
     <Style TargetType="Label">
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
