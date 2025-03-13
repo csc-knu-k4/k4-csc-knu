@@ -38,14 +38,14 @@ const AddTests = () => {
         <Text mb="2rem" fontSize="2xl" fontWeight="medium">
           Додати тест
         </Text>
-        <Field label="Тема" required mb={3} color="orange">
+        <Field label="Матеріал" required mb={3} color="orange">
           <SelectRoot
             width="30.5rem"
             collection={materials}
             onValueChange={(selected) => setMaterialId(Number(selected?.value))}
           >
             <SelectTrigger>
-              <SelectValueText placeholder="Вкажіть тему" />
+              <SelectValueText placeholder="Вкажіть матеріал" />
             </SelectTrigger>
             <SelectContent>
               {materials.items.map((material) => (

@@ -133,7 +133,14 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
             Запитання
           </Text>
           {questions.map((question, index) => (
-            <Flex key={index} flexDir="row" gap={2} mb={3}>
+            <Flex
+              key={index}
+              flexDir="row"
+              gap={2}
+              mb={3}
+              justifyContent="center"
+              alignItems="center"
+            >
               <Text fontWeight="bold" color="orange" w="0.75rem">
                 {index + 1}
               </Text>
@@ -151,7 +158,14 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
             Варіанти відповіді
           </Text>
           {answers.map((answer, index) => (
-            <Flex key={index} flexDir="row" gap={2} mb={3}>
+            <Flex
+              key={index}
+              flexDir="row"
+              gap={2}
+              mb={3}
+              justifyContent="center"
+              alignItems="center"
+            >
               <Text fontWeight="bold" color="orange" w="0.75rem">
                 {String.fromCharCode(1040 + index)}
               </Text>
