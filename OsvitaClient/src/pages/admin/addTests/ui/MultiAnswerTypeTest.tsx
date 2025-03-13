@@ -5,7 +5,11 @@ const questions = ['Запитання 1', 'Запитання 2', 'Запита
 const answers = ['Відповідь А', 'Відповідь Б', 'Відповідь В', 'Відповідь Г', 'Відповідь Д'];
 const answerLabels = ['A', 'Б', 'В', 'Г', 'Д'];
 
-const MultiAnswerTypeTest = () => {
+interface MultiTypeTestProps {
+  materialId: number;
+}
+
+const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
   return (
     <Flex flexDir="column" justifyContent="center" alignItems="flex-start">
       <Flex flexDir="row" gap={8}>

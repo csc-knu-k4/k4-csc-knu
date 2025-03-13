@@ -4,11 +4,11 @@ import { Button, Input } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { toaster } from '@/components/ui/toaster';
 
-interface SingleAnswerTypeTestProps {
+interface OpenAnswerTypeTestProps {
   materialId: number;
 }
 
-const OpenAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId }) => {
+const OpenAnswerTypeTest: React.FC<OpenAnswerTypeTestProps> = ({ materialId }) => {
   const [question, setQuestion] = useState<string>('');
   const [answer, setAnswer] = useState<string>('');
   const [validatedMaterialId, setValidatedMaterialId] = useState<number | null>(null);

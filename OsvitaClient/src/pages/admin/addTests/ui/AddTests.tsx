@@ -80,7 +80,7 @@ const AddTests = () => {
 
       {testType === '1' && <OpenAnswerTypeTest materialId={materialId} />}
 
-      {testType === '2' && <MultiAnswerTypeTest />}
+      {testType === '2' && <MultiAnswerTypeTest materialId={materialId} />}
     </>
   );
 };
