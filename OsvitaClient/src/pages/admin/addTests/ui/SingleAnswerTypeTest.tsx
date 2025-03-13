@@ -9,21 +9,21 @@ const MIN_OPTIONS = 2;
 const OPTION_LABELS = ['А', 'Б', 'В', 'Г', 'Д'];
 
 interface SingleAnswerTypeTestProps {
-  topicId: number;
+  materialId: number;
 }
 
-const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ topicId }) => {
+const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId }) => {
   const [question, setQuestion] = useState<string>('');
   const [options, setOptions] = useState<string[]>(['', '']);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number | null>(null);
-  const [validatedTopicId, setValidatedTopicId] = useState<number | null>(null);
+  const [validatedMaterialId, setValidatedMaterialId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (topicId !== null) {
-      setValidatedTopicId(topicId);
-      console.log(topicId);
+    if (materialId !== null) {
+      setValidatedMaterialId(materialId);
+      console.log(materialId);
     }
-  }, [topicId]);
+  }, [materialId]);
 
   const handleOptionChange = (index: number, value: string) => {
     const newOptions = [...options];
@@ -44,14 +44,14 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ topicId }) 
   };
 
   const handleSubmit = async () => {
-    if (!question || options.some((opt) => opt === '') || validatedTopicId === null) {
+    if (!question || options.some((opt) => opt === '') || validatedMaterialId === null) {
       alert('Будь ласка, заповніть усі поля.');
       return;
     }
 
     const test: Assignment = {
       id: 0,
-      objectId: validatedTopicId,
+      objectId: validatedMaterialId,
       problemDescription: question,
       explanation: '',
       assignmentModelType: 0,

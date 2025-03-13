@@ -9,24 +9,26 @@ import {
   SelectValueText,
 } from '@/components/ui/select';
 import { useQuery } from 'react-query';
-import { Topic } from '@/entities/topics';
-import { getTopics } from '@/shared/api/topicsApi';
 import SingleAnswerTypeTest from './SingleAnswerTypeTest';
 import OpenAnswerTypeTest from './OpenAnswerTypeTest';
 import MultiAnswerTypeTest from './MultiAnswerTypeTest';
+import { getMaterials, Material } from '@/shared/api/materialsApi';
 
 const AddTests = () => {
-  const [topicId, setTopicId] = useState<number>(0);
+  const [materialId, setMaterialId] = useState<number>(0);
   const [testType, setTestType] = useState<string | null>(null);
 
-  const { data: topicsData, isLoading: topicsLoading } = useQuery<Topic[]>(['topics'], getTopics);
-  const topics = createListCollection({
-    items: topicsData
-      ? topicsData.map((topic) => ({ label: topic.title, value: topic.id.toString() }))
+  const { data: materialsData, isLoading: materialsLoading } = useQuery<Material[]>(
+    ['materials'],
+    getMaterials,
+  );
+  const materials = createListCollection({
+    items: materialsData
+      ? materialsData.map((material) => ({ label: material.title, value: material.id.toString() }))
       : [],
   });
 
-  if (topicsLoading) {
+  if (materialsLoading) {
     return <Text>Завантаження даних...</Text>;
   }
 
@@ -39,16 +41,16 @@ const AddTests = () => {
         <Field label="Тема" required mb={3} color="orange">
           <SelectRoot
             width="30.5rem"
-            collection={topics}
-            onValueChange={(selected) => setTopicId(Number(selected?.value))}
+            collection={materials}
+            onValueChange={(selected) => setMaterialId(Number(selected?.value))}
           >
             <SelectTrigger>
               <SelectValueText placeholder="Вкажіть тему" />
             </SelectTrigger>
             <SelectContent>
-              {topics.items.map((topic) => (
-                <SelectItem item={topic} key={topic.value}>
-                  {topic.label}
+              {materials.items.map((material) => (
+                <SelectItem item={material} key={material.value}>
+                  {material.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -74,7 +76,7 @@ const AddTests = () => {
         </Field>
       </Flex>
 
-      {testType === '0' && <SingleAnswerTypeTest topicId={topicId} />}
+      {testType === '0' && <SingleAnswerTypeTest materialId={materialId} />}
 
       {testType === '1' && <OpenAnswerTypeTest />}
 
