@@ -3,6 +3,7 @@ import { Field } from '@/components/ui/field';
 import { Flex, Input, Text, Button } from '@chakra-ui/react';
 import { addAssignments, Assignment } from '@/shared/api/testsApi';
 import { Checkbox } from '@/components/ui/checkbox';
+import { toaster } from '@/components/ui/toaster';
 
 const MAX_OPTIONS = 5;
 const MIN_OPTIONS = 2;
@@ -21,7 +22,6 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
   useEffect(() => {
     if (materialId !== null) {
       setValidatedMaterialId(materialId);
-      console.log(materialId);
     }
   }, [materialId]);
 
@@ -45,7 +45,10 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
 
   const handleSubmit = async () => {
     if (!question || options.some((opt) => opt === '') || validatedMaterialId === null) {
-      alert('Будь ласка, заповніть усі поля.');
+      toaster.create({
+        title: `Будь ласка, заповніть усі поля.`,
+        type: 'warning',
+      });
       return;
     }
 
@@ -78,10 +81,15 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
 
     try {
       await addAssignments(test);
-      alert('Тест успішно додано!');
+      toaster.create({
+        title: `Тест успішно додано!`,
+        type: 'success',
+      });
     } catch (error) {
-      console.error(error);
-      alert('Помилка при додаванні тесту.');
+      toaster.create({
+        title: `Помилка при додаванні тесту ${error}`,
+        type: 'warning',
+      });
     }
   };
 
@@ -112,21 +120,21 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
           <Checkbox
             checked={correctAnswerIndex === index}
             onCheckedChange={() => setCorrectAnswerIndex(index)}
-            colorScheme="orange"
+            colorPalette="orange"
           />
           {options.length > MIN_OPTIONS && (
-            <Button size="sm" colorScheme="red" onClick={() => handleRemoveOption(index)}>
+            <Button size="sm" colorPalette="orange" onClick={() => handleRemoveOption(index)}>
               Видалити
             </Button>
           )}
         </Flex>
       ))}
       {options.length < MAX_OPTIONS && (
-        <Button size="sm" colorScheme="orange" onClick={handleAddOption}>
+        <Button size="sm" colorPalette="orange" onClick={handleAddOption}>
           Додати варіант
         </Button>
       )}
-      <Button colorScheme="orange" size="sm" ml={3} onClick={handleSubmit}>
+      <Button colorPalette="orange" size="sm" ml={3} onClick={handleSubmit}>
         Зберегти
       </Button>
     </>

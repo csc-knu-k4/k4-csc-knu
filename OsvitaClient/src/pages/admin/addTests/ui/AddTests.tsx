@@ -78,7 +78,7 @@ const AddTests = () => {
 
       {testType === '0' && <SingleAnswerTypeTest materialId={materialId} />}
 
-      {testType === '1' && <OpenAnswerTypeTest />}
+      {testType === '1' && <OpenAnswerTypeTest materialId={materialId} />}
 
       {testType === '2' && <MultiAnswerTypeTest />}
     </>
