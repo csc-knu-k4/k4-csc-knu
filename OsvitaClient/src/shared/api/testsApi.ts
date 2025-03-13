@@ -7,10 +7,14 @@ export interface Assignment {
   explanation: string;
   assignmentModelType: number;
   parentAssignmentId: number;
-  answers: [
-    { id: number; value: string; isCorrect: boolean; points: number; assignmentId: number },
-  ];
-  childAssignments: [];
+  answers: {
+    id: number;
+    value: string;
+    isCorrect: boolean;
+    points: number;
+    assignmentId: number;
+  }[];
+  childAssignments: Assignment[];
 }
 
 export const getAssignments = async (): Promise<Assignment[]> => {
