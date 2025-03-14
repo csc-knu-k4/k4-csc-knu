@@ -61,44 +61,66 @@ export const ViewTestModal = ({ isOpen, onClose, testId }: ViewTestModalProps) =
               <Text fontSize="md" mb={3}>
                 Встановіть відповідність:
               </Text>
+              <Flex flexDir="column" mb={4}>
+                <Text fontWeight="bold" mb={2}>
+                  Питання:
+                </Text>
+                {test.childAssignments.map((child: Assignment, index: number) => (
+                  <Text key={index} mb={1}>
+                    {index + 1}. {child.problemDescription}
+                  </Text>
+                ))}
+              </Flex>
+              <Flex flexDir="column" mb={4}>
+                <Text fontWeight="bold" mb={2}>
+                  Варіанти відповідей:
+                </Text>
+                {test.childAssignments
+                  .flatMap((c: Assignment) => c.answers)
+                  .map((answer: { value: string }, index: number) => (
+                    <Text key={index} mb={1}>
+                      {String.fromCharCode(1040 + index)}. {answer.value}
+                    </Text>
+                  ))}
+              </Flex>
               <Flex flexDir="column" alignItems="center">
-                <Flex ml={6} flexDir="row" gap={2} mb={2}>
-                  {test.childAssignments
-                    .flatMap((c: Assignment) => c.answers)
-                    .map((answer: { value: string }, index: number) => (
-                      <Text
-                        key={index}
-                        fontWeight="bold"
-                        color="orange"
-                        textAlign="center"
-                        w="2rem"
-                      >
-                        {answer.value}
-                      </Text>
-                    ))}
+                <Flex flexDir="row" gap={4} mb={2}>
+                  <Text w="0.5rem"></Text>
+                  {[...'АБВГД'].map((letter, index) => (
+                    <Text
+                      key={index}
+                      fontWeight="bold"
+                      color="orange"
+                      textAlign="center"
+                      w="1.5rem"
+                    >
+                      {letter}
+                    </Text>
+                  ))}
                 </Flex>
                 {test.childAssignments.map((child: Assignment, rowIndex: number) => (
                   <Flex key={rowIndex} flexDir="row" alignItems="center" gap={4} mb={2}>
-                    <Text fontWeight="bold" color="orange" w="0.5rem" textAlign="left">
-                      {child.problemDescription}
+                    <Text fontWeight="bold" color="orange" w="0.5rem" textAlign="center">
+                      {rowIndex + 1}
                     </Text>
-                    {test.childAssignments
-                      ?.flatMap((c: Assignment) => c.answers)
-                      .map((answer: { value: string }, colIndex: number) => {
-                        const isCorrect = child.answers.some(
-                          (a: { value: string; isCorrect: boolean }) =>
-                            a.value === answer.value && a.isCorrect,
-                        );
-                        return (
-                          <Checkbox
-                            key={colIndex}
-                            size="lg"
-                            checked={isCorrect}
-                            readOnly
-                            colorPalette={isCorrect ? 'green' : 'red'}
-                          />
-                        );
-                      })}
+                    {[...'АБВГД'].map((_, colIndex) => {
+                      const answer = test.childAssignments.flatMap((c: Assignment) => c.answers)[
+                        colIndex
+                      ];
+                      const isCorrect = child.answers.some(
+                        (a: { value: string; isCorrect: boolean }) =>
+                          a.value === answer.value && a.isCorrect,
+                      );
+                      return (
+                        <Checkbox
+                          key={colIndex}
+                          size="lg"
+                          checked={isCorrect}
+                          readOnly
+                          colorPalette={isCorrect ? 'green' : 'red'}
+                        />
+                      );
+                    })}
                   </Flex>
                 ))}
               </Flex>
