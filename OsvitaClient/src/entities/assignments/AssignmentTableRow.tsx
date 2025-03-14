@@ -2,10 +2,9 @@ import { Table } from '@chakra-ui/react';
 import { IoEyeOutline } from 'react-icons/io5';
 import { TbEdit } from 'react-icons/tb';
 import { MdDeleteOutline } from 'react-icons/md';
-import { Assignment } from './types';
 import { ActionButtons } from '@/shared/ui/ActionButtons';
 import { useMutation, useQueryClient } from 'react-query';
-import { deleteAssignment } from '@/shared/api/testsApi';
+import { Assignment, deleteAssignment } from '@/shared/api/testsApi';
 
 interface AssignmentTableRowProps {
   item: Assignment;

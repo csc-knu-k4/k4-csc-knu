@@ -1,6 +1,6 @@
 import { Table, Box } from '@chakra-ui/react';
 import { AssignmentTableRow } from './AssignmentTableRow';
-import { Assignment } from './types';
+import { Assignment } from '@/shared/api/testsApi';
 
 interface AssignmentTableProps {
   items: Assignment[];
@@ -14,7 +14,7 @@ export function AssignmentTable({ items }: AssignmentTableProps) {
       <Table.Root size="lg">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader color="orange">Тема</Table.ColumnHeader>
+            <Table.ColumnHeader color="orange">Умова тесту</Table.ColumnHeader>
             <Table.ColumnHeader textAlign="start" color="orange">
               Дії
             </Table.ColumnHeader>
