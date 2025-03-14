@@ -7,7 +7,7 @@ import {
   DialogRoot,
 } from '@/components/ui/dialog';
 import { useQuery } from 'react-query';
-import { getAssignmentById } from '@/shared/api/testsApi';
+import { Assignment, getAssignmentById } from '@/shared/api/testsApi';
 import { Checkbox } from '@/components/ui/checkbox';
 
 interface ViewTestModalProps {
@@ -56,7 +56,7 @@ export const ViewTestModal = ({ isOpen, onClose, testId }: ViewTestModalProps) =
             </Box>
           )}
 
-          {test.assignmentModelType === 2 && (
+          {test.assignmentModelType === 2 && test.childAssignments && (
             <Box>
               <Text fontSize="md" mb={3}>
                 Встановіть відповідність:
@@ -64,7 +64,7 @@ export const ViewTestModal = ({ isOpen, onClose, testId }: ViewTestModalProps) =
               <Flex flexDir="column" alignItems="center">
                 <Flex ml={6} flexDir="row" gap={2} mb={2}>
                   {test.childAssignments
-                    .flatMap((c: { answers: { value: string }[] }) => c.answers)
+                    .flatMap((c: Assignment) => c.answers)
                     .map((answer: { value: string }, index: number) => (
                       <Text
                         key={index}
@@ -77,37 +77,30 @@ export const ViewTestModal = ({ isOpen, onClose, testId }: ViewTestModalProps) =
                       </Text>
                     ))}
                 </Flex>
-                {test.childAssignments.map(
-                  (
-                    child: {
-                      problemDescription: string;
-                      answers: { value: string; isCorrect: boolean }[];
-                    },
-                    rowIndex: number,
-                  ) => (
-                    <Flex key={rowIndex} flexDir="row" alignItems="center" gap={4} mb={2}>
-                      <Text fontWeight="bold" color="orange" w="0.5rem" textAlign="left">
-                        {child.problemDescription}
-                      </Text>
-                      {test
-                        .childAssignments((c: { answers: { value: string }[] }) => c.answers)
-                        .map((answer: { value: string }, colIndex: number) => {
-                          const isCorrect = child.answers.some(
-                            (a) => a.value === answer.value && a.isCorrect,
-                          );
-                          return (
-                            <Checkbox
-                              key={colIndex}
-                              size="lg"
-                              checked={isCorrect}
-                              readOnly
-                              colorPalette={isCorrect ? 'green' : 'red'}
-                            />
-                          );
-                        })}
-                    </Flex>
-                  ),
-                )}
+                {test.childAssignments.map((child: Assignment, rowIndex: number) => (
+                  <Flex key={rowIndex} flexDir="row" alignItems="center" gap={4} mb={2}>
+                    <Text fontWeight="bold" color="orange" w="0.5rem" textAlign="left">
+                      {child.problemDescription}
+                    </Text>
+                    {test.childAssignments
+                      ?.flatMap((c: Assignment) => c.answers)
+                      .map((answer: { value: string }, colIndex: number) => {
+                        const isCorrect = child.answers.some(
+                          (a: { value: string; isCorrect: boolean }) =>
+                            a.value === answer.value && a.isCorrect,
+                        );
+                        return (
+                          <Checkbox
+                            key={colIndex}
+                            size="lg"
+                            checked={isCorrect}
+                            readOnly
+                            colorPalette={isCorrect ? 'green' : 'red'}
+                          />
+                        );
+                      })}
+                  </Flex>
+                ))}
               </Flex>
             </Box>
           )}
