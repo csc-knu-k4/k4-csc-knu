@@ -11,6 +11,8 @@ namespace OsvitaWebApiPL
         public const string JwtKey = "Key";
         public const string MailSettings = "MailSettings";
         public const string HostSection = "HostSection";
+        public const string ImagesSetting = "ImagesSetting";
+        public const string StaticFilesSection = "StaticFilesSection";
     }
 }
 

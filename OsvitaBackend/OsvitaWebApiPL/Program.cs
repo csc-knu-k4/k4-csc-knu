@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using OsvitaBLL.Configurations;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Services;
@@ -66,10 +67,21 @@ public class Program
         builder.Services.AddTransient<IStatisticReportService, StatisticReportService>();
         builder.Services.AddTransient<IEducationPlanService, EducationPlanService>();
 
+        builder.Services.Configure<StaticFilesSettings>(builder.Configuration.GetSection(SettingStrings.StaticFilesSection));
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));
         builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(SettingStrings.MailSettings));
         builder.Services.Configure<HostSettings>(builder.Configuration.GetSection(SettingStrings.HostSection));
         builder.Services.AddScoped<IIdentityService, IdentityService>();
+
+        if (builder.Configuration[SettingStrings.ImagesSetting] == "local")
+        {
+                    builder.Services.AddTransient<IStaticFileService, FilesystemStaticFileService>(
+                    serviceProvider => new FilesystemStaticFileService(
+                        serviceProvider.GetRequiredService<IOptions<StaticFilesSettings>>(),
+                        serviceProvider.GetService<IWebHostEnvironment>().WebRootPath
+                )
+            );
+        }
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
