@@ -5,6 +5,8 @@ import { MdDeleteOutline } from 'react-icons/md';
 import { ActionButtons } from '@/shared/ui/ActionButtons';
 import { useMutation, useQueryClient } from 'react-query';
 import { Assignment, deleteAssignment } from '@/shared/api/testsApi';
+import { useState } from 'react';
+import { ViewTestModal } from '@/features/assingmentsFeatures';
 
 interface AssignmentTableRowProps {
   item: Assignment;
@@ -12,6 +14,7 @@ interface AssignmentTableRowProps {
 
 export function AssignmentTableRow({ item }: AssignmentTableRowProps) {
   const queryClient = useQueryClient();
+  const [isViewOpen, setViewOpen] = useState(false);
 
   const deleteMutation = useMutation({
     mutationFn: deleteAssignment,
@@ -31,13 +34,15 @@ export function AssignmentTableRow({ item }: AssignmentTableRowProps) {
         <Table.Cell>
           <ActionButtons
             actions={[
-              { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: () => console.log('View') },
+              { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: () => setViewOpen(true) },
               { icon: <TbEdit />, ariaLabel: 'Edit', onClick: () => console.log('Edit') },
               { icon: <MdDeleteOutline />, ariaLabel: 'Delete', onClick: handleDelete },
             ]}
           />
         </Table.Cell>
       </Table.Row>
+
+      <ViewTestModal isOpen={isViewOpen} onClose={() => setViewOpen(false)} testId={item.id} />
     </>
   );
 }
