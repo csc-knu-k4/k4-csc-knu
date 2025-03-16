@@ -3,6 +3,8 @@ using OsvitaBLL.Models;
 using OsvitaBLL.Models.ReportModels;
 using OsvitaDAL.Interfaces;
 using QuestPDF.Fluent;
+using OsvitaDAL.Entities;
+
 namespace OsvitaBLL.Services
 {
     public class StatisticReportService : IStatisticReportService
@@ -65,25 +67,45 @@ namespace OsvitaBLL.Services
 
         private async Task<AssignmentSetReportModel> GetAssignmetSetReportModelAsync(int userId, int assignmentSetProgressDetailId)
         {
+            var assignmentSetReportModel = new AssignmentSetReportModel();
             var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
             var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(statistic.AssignmentSetProgressDetails.FirstOrDefault(x => x.Id == assignmentSetProgressDetailId).AssignmentSetId);
             var assignmentSetProgress = statistic.AssignmentSetProgressDetails.FirstOrDefault(x => x.Id == assignmentSetProgressDetailId);
             if (assignmentSet is not null && assignmentSetProgress is not null && assignmentSetProgress.IsCompleted)
             {
-                var topic = await unitOfWork.TopicRepository.GetByIdAsync(assignmentSet.ObjectId);
-                var assignmentSetReportModel = new AssignmentSetReportModel
+                if (assignmentSet.ObjectType == ObjectType.Topic)
                 {
-                    UserId = userId,
-                    ObjectId = topic.Id,
-                    ObjectName = topic.Title,
-                    CompletedDate = assignmentSetProgress.CompletedDate,
-                    Score = assignmentSetProgress.Score,
-                    MaxScore = assignmentSetProgress.MaxScore,
-                    Assignments = await GetAssignmetReportModelsAsync(assignmentSet.Id, ObjectModelType.AssignmentSetModel, assignmentSetProgress.AssignmentProgressDetails)
-                };
-                return assignmentSetReportModel;
+                    var topic = await unitOfWork.TopicRepository.GetByIdAsync(assignmentSet.ObjectId);
+                    assignmentSetReportModel = new AssignmentSetReportModel
+                    {
+                        UserId = userId,
+                        ObjectId = topic.Id,
+                        ObjectName = topic.Title,
+                        ObjectType = ObjectModelType.TopicModel,
+                        CompletedDate = assignmentSetProgress.CompletedDate,
+                        Score = assignmentSetProgress.Score,
+                        MaxScore = assignmentSetProgress.MaxScore,
+                        Assignments = await GetAssignmetReportModelsAsync(assignmentSet.Id, ObjectModelType.AssignmentSetModel, assignmentSetProgress.AssignmentProgressDetails)
+                    };
+                }
+                if (assignmentSet.ObjectType == ObjectType.Subject)
+                {
+                    var subject = await unitOfWork.SubjectRepository.GetByIdAsync(assignmentSet.ObjectId);
+                    assignmentSetReportModel = new AssignmentSetReportModel
+                    {
+                        UserId = userId,
+                        ObjectId = subject.Id,
+                        ObjectName = subject.Title,
+                        ObjectType = ObjectModelType.SubjectModel,
+                        CompletedDate = assignmentSetProgress.CompletedDate,
+                        Score = assignmentSetProgress.Score,
+                        MaxScore = assignmentSetProgress.MaxScore,
+                        Assignments = await GetAssignmetReportModelsAsync(assignmentSet.Id, ObjectModelType.AssignmentSetModel, assignmentSetProgress.AssignmentProgressDetails)
+                    };
+                }
+
             }
-            return new AssignmentSetReportModel();
+            return assignmentSetReportModel;
         }
 
         private async Task<List<AssignmentReportModel>> GetAssignmetReportModelsAsync(int objectId, ObjectModelType objectModelType, List<AssignmentProgressDetailModel> assignmentProgresses)

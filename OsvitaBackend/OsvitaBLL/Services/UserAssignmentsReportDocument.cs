@@ -50,7 +50,7 @@ namespace OsvitaBLL.Services
                 row.RelativeItem().Column(column =>
                 {
                     column.Item()
-                        .Text($"Тема: {Model.ObjectName}")
+                        .Text($"{ObjectTypeToString(Model.ObjectType)}: {Model.ObjectName}")
                         .FontSize(20).SemiBold();
 
                     column.Item().Text(text =>
@@ -131,7 +131,7 @@ namespace OsvitaBLL.Services
                 foreach (var assignment in Model.Assignments)
                 {
                     table.Cell().Element(CellStyle).AlignRight().Text(assignment.AssignmentNumber);
-                    table.Cell().Element(CellStyle).AlignRight().Text(AssignmentTypetoString(assignment.AssignmentType));
+                    table.Cell().Element(CellStyle).AlignRight().Text(AssignmentTypeToString(assignment.AssignmentType));
                     table.Cell().Element(CellStyle).AlignRight().Text($"{assignment.Points}/{assignment.MaxPoints}");
 
                     static IContainer CellStyle(IContainer container)
@@ -142,7 +142,7 @@ namespace OsvitaBLL.Services
             });
         }
 
-        private string AssignmentTypetoString(AssignmentModelType assignmentModelType)
+        private string AssignmentTypeToString(AssignmentModelType assignmentModelType)
         {
             switch (assignmentModelType)
             {
@@ -154,6 +154,19 @@ namespace OsvitaBLL.Services
                     return "Встановлення відповідності";
                 default:
                     return "Невідомий тип завдання";
+            }
+        }
+
+        private string ObjectTypeToString(ObjectModelType objectModelType)
+        {
+            switch (objectModelType)
+            {
+                case ObjectModelType.TopicModel:
+                    return "Тема";
+                case ObjectModelType.SubjectModel:
+                    return "Предмет";
+                default:
+                    return "";
             }
         }
     }

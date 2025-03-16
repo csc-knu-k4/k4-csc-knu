@@ -4,6 +4,7 @@
     {
         MaterialModel,
         TopicModel,
-        AssignmentSetModel
+        AssignmentSetModel,
+        SubjectModel
     }
 }

@@ -122,13 +122,12 @@ namespace OsvitaBLL.Services
             var assignmentSet = mapper.Map<AssignmentSetModel, AssignmentSet>(model);
             await assignmentSetRepository.AddAsync(assignmentSet);
             await unitOfWork.SaveChangesAsync();
-            var materialIds = (await unitOfWork.MaterialRepository.GetAllAsync()).Where(x => x.TopicId == assignmentSet.ObjectId).Select(x => x.Id);
-            var assignmentsIds = (await assignmentLinkRepository.GetAllAsync()).Where(x => materialIds.Contains(x.ObjectId) && x.ObjectType == ObjectType.Material).Select(x => x.AssignmentId);
-            var assignments = (await assignmentRepository.GetAllWithDetailsAsync()).ToList().Where(x => x.AssignmentType != AssignmentType.ChildAssignment && assignmentsIds.Contains(x.Id));
-            var assignmentLinks = assignments.Select(x => new AssignmentLink { AssignmentId = x.Id, ObjectId = assignmentSet.Id, ObjectType = ObjectType.AssignmentSet });
-            foreach (var assignmentLink in assignmentLinks)
+            if (assignmentSet.ObjectType == ObjectType.Topic)
             {
-                await assignmentLinkRepository.AddAsync(assignmentLink);
+                await GenerateTopicAssignmentSetAsync(assignmentSet);
+            } else if (assignmentSet.ObjectType == ObjectType.Subject)
+            {
+                await GenerateSubjectAssignmentSetAsync(assignmentSet);
             }
             await unitOfWork.SaveChangesAsync();
             return assignmentSet.Id;
@@ -202,6 +201,46 @@ namespace OsvitaBLL.Services
                     await unitOfWork.SaveChangesAsync();
                 }
             }
+        }
+
+        private async Task<int> GenerateTopicAssignmentSetAsync(AssignmentSet assignmentSet)
+        {
+            var materialIds = (await unitOfWork.MaterialRepository.GetAllAsync()).Where(x => x.TopicId == assignmentSet.ObjectId).Select(x => x.Id);
+            var assignmentsIds = (await assignmentLinkRepository.GetAllAsync()).Where(x => materialIds.Contains(x.ObjectId) && x.ObjectType == ObjectType.Material).Select(x => x.AssignmentId);
+            var assignments = (await assignmentRepository.GetAllWithDetailsAsync()).ToList().Where(x => x.AssignmentType != AssignmentType.ChildAssignment && assignmentsIds.Contains(x.Id));
+            var assignmentLinks = assignments.Select(x => new AssignmentLink { AssignmentId = x.Id, ObjectId = assignmentSet.Id, ObjectType = ObjectType.AssignmentSet });
+            foreach (var assignmentLink in assignmentLinks)
+            {
+                await assignmentLinkRepository.AddAsync(assignmentLink);
+            }
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSet.Id;
+        }
+
+        private async Task<int> GenerateSubjectAssignmentSetAsync(AssignmentSet assignmentSet)
+        {
+            var chapterIds = (await unitOfWork.SubjectRepository.GetByIdWithDetailsAsync(assignmentSet.ObjectId)).Chapters.Select(x => x.Id);
+            var topicIds = (await unitOfWork.TopicRepository.GetAllAsync()).Where(x => chapterIds.Contains(x.ChapterId)).Select(x => x.Id);
+            var materialIds = (await unitOfWork.MaterialRepository.GetAllAsync()).Where(x => topicIds.Contains(x.TopicId)).Select(x => x.Id);
+            var assignmentsIds = (await assignmentLinkRepository.GetAllAsync()).Where(x => materialIds.Contains(x.ObjectId) && x.ObjectType == ObjectType.Material).Select(x => x.AssignmentId);
+            var allAssignments = (await assignmentRepository.GetAllWithDetailsAsync()).ToList();
+            var oneAnswerAssignments = allAssignments.Where(x => x.AssignmentType == AssignmentType.OneAnswerAsssignment && assignmentsIds.Contains(x.Id));
+            var openAnswerAssignments = allAssignments.Where(x => x.AssignmentType == AssignmentType.OpenAnswerAssignment && assignmentsIds.Contains(x.Id));
+            var matchComplianceAssignments = allAssignments.ToList().Where(x => x.AssignmentType == AssignmentType.MatchComplianceAssignment && assignmentsIds.Contains(x.Id));
+
+            Random rnd = new Random();
+            var oneAnswerAssignmentsForTest = rnd.GetItems(oneAnswerAssignments.ToArray(), 15);
+            var openAnswerAssignmentsForTest = rnd.GetItems(openAnswerAssignments.ToArray(), 3);
+            var matchComplianceAssignmentsForTest = rnd.GetItems(matchComplianceAssignments.ToArray(), 4);
+            var assignments = oneAnswerAssignments.Concat(openAnswerAssignments).Concat(matchComplianceAssignments);
+
+            var assignmentLinks = assignments.Select(x => new AssignmentLink { AssignmentId = x.Id, ObjectId = assignmentSet.Id, ObjectType = ObjectType.AssignmentSet });
+            foreach (var assignmentLink in assignmentLinks)
+            {
+                await assignmentLinkRepository.AddAsync(assignmentLink);
+            }
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSet.Id;
         }
     }
 }

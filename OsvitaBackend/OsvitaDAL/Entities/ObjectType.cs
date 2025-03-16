@@ -10,6 +10,7 @@ namespace OsvitaDAL.Entities
     {
         Material,
         Topic,
-        AssignmentSet
+        AssignmentSet,
+        Subject
     }
 }
