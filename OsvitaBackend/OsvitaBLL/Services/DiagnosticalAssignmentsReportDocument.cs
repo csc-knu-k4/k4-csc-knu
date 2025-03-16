@@ -8,9 +8,9 @@ using ScottPlot;
 
 namespace OsvitaBLL.Services
 {
-	public class UserAssignmentsReportDocument : IDocument
+	public class DiagnosticalAssignmentsReportDocument : IDocument
 	{
-		public UserAssignmentsReportDocument(List<AssignmentSetReportModel> models)
+		public DiagnosticalAssignmentsReportDocument(List<AssignmentSetReportModel> models)
 		{
             Models = models;
             Model = new AssignmentSetReportModel();
@@ -108,19 +108,19 @@ namespace OsvitaBLL.Services
 
         private void ComposeTable(IContainer container)
         {
+            var topics = Model.Assignments.GroupBy(x => x.TopicName);
             container.Table(table =>
             {
                 table.ColumnsDefinition(columns =>
                 {
                     columns.ConstantColumn(100);
                     columns.RelativeColumn();
-                    columns.ConstantColumn(100);
+                    columns.RelativeColumn(100);
                 });
 
                 table.Header(header =>
                 {
-                    header.Cell().Element(CellStyle).AlignRight().Text("Номер завдання");
-                    header.Cell().Element(CellStyle).AlignRight().Text(GetColumnNameByReportType(Model.ObjectType));
+                    header.Cell().Element(CellStyle).AlignRight().Text("Тема");
                     header.Cell().Element(CellStyle).AlignRight().Text("Результат");
 
                     static IContainer CellStyle(IContainer container)
@@ -129,11 +129,10 @@ namespace OsvitaBLL.Services
                     }
                 });
 
-                foreach (var assignment in Model.Assignments)
+                foreach (var topic in topics)
                 {
-                    table.Cell().Element(CellStyle).AlignRight().Text(assignment.AssignmentNumber);
-                    table.Cell().Element(CellStyle).AlignRight().Text(GetColumnValueByReportType(Model.ObjectType, assignment));
-                    table.Cell().Element(CellStyle).AlignRight().Text($"{assignment.Points}/{assignment.MaxPoints}");
+                    table.Cell().Element(CellStyle).AlignRight().Text(topic.Key);
+                    table.Cell().Element(CellStyle).AlignRight().Text($"{topic.Sum(x => x.Points)}/{topic.Sum(x => x.MaxPoints)}");
 
                     static IContainer CellStyle(IContainer container)
                     {

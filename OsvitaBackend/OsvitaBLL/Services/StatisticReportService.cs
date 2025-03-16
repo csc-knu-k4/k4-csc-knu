@@ -3,6 +3,8 @@ using OsvitaBLL.Models;
 using OsvitaBLL.Models.ReportModels;
 using OsvitaDAL.Interfaces;
 using QuestPDF.Fluent;
+using OsvitaDAL.Entities;
+
 namespace OsvitaBLL.Services
 {
     public class StatisticReportService : IStatisticReportService
@@ -63,27 +65,85 @@ namespace OsvitaBLL.Services
             return report;
         }
 
+        public async Task<byte[]> GenerateDiagnosticalAssignmetSetsReportAsync(int userId, int assignmentSetProgressDetailId)
+        {
+            var models = new List<AssignmentSetReportModel>();
+            if (assignmentSetProgressDetailId > 0)
+            {
+                var model = await GetAssignmetSetReportModelAsync(userId, assignmentSetProgressDetailId);
+                models.Add(model);
+            }
+            else
+            {
+                var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
+                var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).Select(x => x.Id).ToList();
+                foreach (var id in assignmentSetProgressDetailsIds)
+                {
+                    var model = await GetAssignmetSetReportModelAsync(userId, id);
+                    models.Add(model);
+                }
+            }
+            var document = new DiagnosticalAssignmentsReportDocument(models);
+            var report = document.GeneratePdf();
+            return report;
+        }
+
         private async Task<AssignmentSetReportModel> GetAssignmetSetReportModelAsync(int userId, int assignmentSetProgressDetailId)
         {
+            var assignmentSetReportModel = new AssignmentSetReportModel();
             var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
             var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(statistic.AssignmentSetProgressDetails.FirstOrDefault(x => x.Id == assignmentSetProgressDetailId).AssignmentSetId);
             var assignmentSetProgress = statistic.AssignmentSetProgressDetails.FirstOrDefault(x => x.Id == assignmentSetProgressDetailId);
             if (assignmentSet is not null && assignmentSetProgress is not null && assignmentSetProgress.IsCompleted)
             {
-                var topic = await unitOfWork.TopicRepository.GetByIdAsync(assignmentSet.ObjectId);
-                var assignmentSetReportModel = new AssignmentSetReportModel
+                if (assignmentSet.ObjectType == ObjectType.Topic)
                 {
-                    UserId = userId,
-                    ObjectId = topic.Id,
-                    ObjectName = topic.Title,
-                    CompletedDate = assignmentSetProgress.CompletedDate,
-                    Score = assignmentSetProgress.Score,
-                    MaxScore = assignmentSetProgress.MaxScore,
-                    Assignments = await GetAssignmetReportModelsAsync(assignmentSet.Id, ObjectModelType.AssignmentSetModel, assignmentSetProgress.AssignmentProgressDetails)
-                };
-                return assignmentSetReportModel;
+                    var topic = await unitOfWork.TopicRepository.GetByIdAsync(assignmentSet.ObjectId);
+                    assignmentSetReportModel = new AssignmentSetReportModel
+                    {
+                        UserId = userId,
+                        ObjectId = topic.Id,
+                        ObjectName = topic.Title,
+                        ObjectType = ObjectModelType.TopicModel,
+                        CompletedDate = assignmentSetProgress.CompletedDate,
+                        Score = assignmentSetProgress.Score,
+                        MaxScore = assignmentSetProgress.MaxScore,
+                        Assignments = await GetAssignmetReportModelsAsync(assignmentSet.Id, ObjectModelType.AssignmentSetModel, assignmentSetProgress.AssignmentProgressDetails)
+                    };
+                }
+                if (assignmentSet.ObjectType == ObjectType.Subject)
+                {
+                    var subject = await unitOfWork.SubjectRepository.GetByIdAsync(assignmentSet.ObjectId);
+                    assignmentSetReportModel = new AssignmentSetReportModel
+                    {
+                        UserId = userId,
+                        ObjectId = subject.Id,
+                        ObjectName = subject.Title,
+                        ObjectType = ObjectModelType.SubjectModel,
+                        CompletedDate = assignmentSetProgress.CompletedDate,
+                        Score = assignmentSetProgress.Score,
+                        MaxScore = assignmentSetProgress.MaxScore,
+                        Assignments = await GetAssignmetReportModelsAsync(assignmentSet.Id, ObjectModelType.AssignmentSetModel, assignmentSetProgress.AssignmentProgressDetails)
+                    };
+                }
+                if (assignmentSet.ObjectType == ObjectType.Diagnostical)
+                {
+                    var subject = await unitOfWork.SubjectRepository.GetByIdAsync(assignmentSet.ObjectId);
+                    assignmentSetReportModel = new AssignmentSetReportModel
+                    {
+                        UserId = userId,
+                        ObjectId = subject.Id,
+                        ObjectName = subject.Title,
+                        ObjectType = ObjectModelType.DiagnosticalModel,
+                        CompletedDate = assignmentSetProgress.CompletedDate,
+                        Score = assignmentSetProgress.Score,
+                        MaxScore = assignmentSetProgress.MaxScore,
+                        Assignments = await GetAssignmetReportModelsAsync(assignmentSet.Id, ObjectModelType.AssignmentSetModel, assignmentSetProgress.AssignmentProgressDetails)
+                    };
+                }
+
             }
-            return new AssignmentSetReportModel();
+            return assignmentSetReportModel;
         }
 
         private async Task<List<AssignmentReportModel>> GetAssignmetReportModelsAsync(int objectId, ObjectModelType objectModelType, List<AssignmentProgressDetailModel> assignmentProgresses)
@@ -95,12 +155,15 @@ namespace OsvitaBLL.Services
             {
                 if (assignment.AssignmentModelType == AssignmentModelType.OneAnswerAsssignment || assignment.AssignmentModelType == AssignmentModelType.OpenAnswerAssignment)
                 {
+                    var materialId = (await unitOfWork.AssignmentLinkRepository.GetAllAsync()).FirstOrDefault(x => x.AssignmentId == assignment.Id && x.ObjectType == ObjectType.Material).ObjectId;
+                    var topic = (await unitOfWork.MaterialRepository.GetByIdWithDetailsAsync(materialId)).Topic;
                     var assignmentProgress = assignmentProgresses.FirstOrDefault(x => x.AssignmentId == assignment.Id);
                     var assignmentReportModel = new AssignmentReportModel
                     {
                         AssignmentId = assignment.Id,
                         AssignmentNumber = assignmentNumber,
                         AssignmentType = assignment.AssignmentModelType,
+                        TopicName = topic.Title,
                         IsCorrect = assignmentProgress.IsCorrect,
                         Points = assignmentProgress.Points,
                         MaxPoints = assignmentProgress.MaxPoints
@@ -109,6 +172,8 @@ namespace OsvitaBLL.Services
                 }
                 if (assignment.AssignmentModelType == AssignmentModelType.MatchComplianceAssignment)
                 {
+                    var materialId = (await unitOfWork.AssignmentLinkRepository.GetAllAsync()).FirstOrDefault(x => x.AssignmentId == assignment.Id && x.ObjectType == ObjectType.Material).ObjectId;
+                    var topic = (await unitOfWork.MaterialRepository.GetByIdWithDetailsAsync(materialId)).Topic;
                     var assignmentChildProgresses = assignmentProgresses.Where(x => assignment.ChildAssignments.Select(ca => ca.Id).Contains(x.AssignmentId));
                     var isCorrect = assignmentChildProgresses.All(x => x.IsCorrect);
                     var points = assignmentChildProgresses.Where(x => x.IsCorrect).Sum(x => x.Points);
@@ -118,6 +183,7 @@ namespace OsvitaBLL.Services
                         AssignmentId = assignment.Id,
                         AssignmentNumber = assignmentNumber,
                         AssignmentType = assignment.AssignmentModelType,
+                        TopicName = topic.Title,
                         IsCorrect = isCorrect,
                         Points = points,
                         MaxPoints = maxPoints

@@ -27,6 +27,17 @@ namespace OsvitaWebApiPL.Controllers
             return NotFound();
         }
 
+        [HttpGet("userdiagnosticalassignments")]
+        public async Task<ActionResult> GetUserDiagnosticalAssignmentsReport(int userId, int assignmentSetProgressDetailId)
+        {
+            var report = await statisticReportService.GenerateDiagnosticalAssignmetSetsReportAsync(userId, assignmentSetProgressDetailId);
+            if (report is not null)
+            {
+                return File(report, mimeTypePdf, $"statistic_{reportSuffix}");
+            }
+            return NotFound();
+        }
+
         [HttpGet("classassignments")]
         public async Task<ActionResult> GetEducationClassAssignmentsReport(int educationClassId, int assignmentSetId)
         {

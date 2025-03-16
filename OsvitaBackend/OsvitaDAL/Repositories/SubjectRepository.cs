@@ -21,6 +21,15 @@ namespace OsvitaDAL.Repositories
                 .ThenInclude(x => x.Materials)
                 .ToListAsync();
         }
+
+        public async Task<Subject> GetByIdWithDetailsAsync(int id)
+        {
+            return await context.Subjects
+                .Include(x => x.Chapters)
+                .ThenInclude(x => x.Topics)
+                .ThenInclude(x => x.Materials)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }
 
