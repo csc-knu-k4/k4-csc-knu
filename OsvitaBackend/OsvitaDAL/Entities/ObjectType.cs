@@ -11,6 +11,7 @@ namespace OsvitaDAL.Entities
         Material,
         Topic,
         AssignmentSet,
-        Subject
+        Subject,
+        Diagnostical
     }
 }

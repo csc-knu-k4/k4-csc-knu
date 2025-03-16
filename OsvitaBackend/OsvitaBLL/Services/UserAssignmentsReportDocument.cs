@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using OsvitaBLL.Models;
 using OsvitaBLL.Models.ReportModels;
+using OsvitaDAL.Entities;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using ScottPlot;
@@ -113,13 +114,13 @@ namespace OsvitaBLL.Services
                 {
                     columns.ConstantColumn(100);
                     columns.RelativeColumn();
-                    columns.RelativeColumn();
+                    columns.ConstantColumn(100);
                 });
 
                 table.Header(header =>
                 {
                     header.Cell().Element(CellStyle).AlignRight().Text("Номер завдання");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Тип завдання");
+                    header.Cell().Element(CellStyle).AlignRight().Text(GetColumnNameByReportType(Model.ObjectType));
                     header.Cell().Element(CellStyle).AlignRight().Text("Результат");
 
                     static IContainer CellStyle(IContainer container)
@@ -131,12 +132,12 @@ namespace OsvitaBLL.Services
                 foreach (var assignment in Model.Assignments)
                 {
                     table.Cell().Element(CellStyle).AlignRight().Text(assignment.AssignmentNumber);
-                    table.Cell().Element(CellStyle).AlignRight().Text(AssignmentTypeToString(assignment.AssignmentType));
+                    table.Cell().Element(CellStyle).AlignRight().Text(GetColumnValueByReportType(Model.ObjectType, assignment));
                     table.Cell().Element(CellStyle).AlignRight().Text($"{assignment.Points}/{assignment.MaxPoints}");
 
                     static IContainer CellStyle(IContainer container)
                     {
-                        return container.BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5);
+                        return container.BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).PaddingHorizontal(3);
                     }
                 }
             });
@@ -165,6 +166,38 @@ namespace OsvitaBLL.Services
                     return "Тема";
                 case ObjectModelType.SubjectModel:
                     return "Предмет";
+                case ObjectModelType.DiagnosticalModel:
+                    return "Діагностичний тест";
+                default:
+                    return "";
+            }
+        }
+
+        private string GetColumnNameByReportType(ObjectModelType objectModelType)
+        {
+            switch (objectModelType)
+            {
+                case ObjectModelType.TopicModel:
+                    return "Тип завдання";
+                case ObjectModelType.SubjectModel:
+                    return "Тема";
+                case ObjectModelType.DiagnosticalModel:
+                    return "Тема";
+                default:
+                    return "";
+            }
+        }
+
+        private string GetColumnValueByReportType(ObjectModelType objectModelType, AssignmentReportModel assignmentReportModel)
+        {
+            switch (objectModelType)
+            {
+                case ObjectModelType.TopicModel:
+                    return AssignmentTypeToString(assignmentReportModel.AssignmentType);
+                case ObjectModelType.SubjectModel:
+                    return assignmentReportModel.TopicName;
+                case ObjectModelType.DiagnosticalModel:
+                    return assignmentReportModel.TopicName;
                 default:
                     return "";
             }

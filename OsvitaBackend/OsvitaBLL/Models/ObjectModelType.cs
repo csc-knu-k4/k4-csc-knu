@@ -5,6 +5,7 @@
         MaterialModel,
         TopicModel,
         AssignmentSetModel,
-        SubjectModel
+        SubjectModel,
+        DiagnosticalModel
     }
 }

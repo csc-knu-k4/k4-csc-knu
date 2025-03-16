@@ -103,6 +103,21 @@ namespace OsvitaBLL.Services
                         Assignments = await GetAssignmetReportModelsAsync(assignmentSet.Id, ObjectModelType.AssignmentSetModel, assignmentSetProgress.AssignmentProgressDetails)
                     };
                 }
+                if (assignmentSet.ObjectType == ObjectType.Diagnostical)
+                {
+                    var subject = await unitOfWork.SubjectRepository.GetByIdAsync(assignmentSet.ObjectId);
+                    assignmentSetReportModel = new AssignmentSetReportModel
+                    {
+                        UserId = userId,
+                        ObjectId = subject.Id,
+                        ObjectName = subject.Title,
+                        ObjectType = ObjectModelType.DiagnosticalModel,
+                        CompletedDate = assignmentSetProgress.CompletedDate,
+                        Score = assignmentSetProgress.Score,
+                        MaxScore = assignmentSetProgress.MaxScore,
+                        Assignments = await GetAssignmetReportModelsAsync(assignmentSet.Id, ObjectModelType.AssignmentSetModel, assignmentSetProgress.AssignmentProgressDetails)
+                    };
+                }
 
             }
             return assignmentSetReportModel;
@@ -117,12 +132,15 @@ namespace OsvitaBLL.Services
             {
                 if (assignment.AssignmentModelType == AssignmentModelType.OneAnswerAsssignment || assignment.AssignmentModelType == AssignmentModelType.OpenAnswerAssignment)
                 {
+                    var materialId = (await unitOfWork.AssignmentLinkRepository.GetAllAsync()).FirstOrDefault(x => x.AssignmentId == assignment.Id && x.ObjectType == ObjectType.Material).ObjectId;
+                    var topic = (await unitOfWork.MaterialRepository.GetByIdWithDetailsAsync(materialId)).Topic;
                     var assignmentProgress = assignmentProgresses.FirstOrDefault(x => x.AssignmentId == assignment.Id);
                     var assignmentReportModel = new AssignmentReportModel
                     {
                         AssignmentId = assignment.Id,
                         AssignmentNumber = assignmentNumber,
                         AssignmentType = assignment.AssignmentModelType,
+                        TopicName = topic.Title,
                         IsCorrect = assignmentProgress.IsCorrect,
                         Points = assignmentProgress.Points,
                         MaxPoints = assignmentProgress.MaxPoints
@@ -131,6 +149,8 @@ namespace OsvitaBLL.Services
                 }
                 if (assignment.AssignmentModelType == AssignmentModelType.MatchComplianceAssignment)
                 {
+                    var materialId = (await unitOfWork.AssignmentLinkRepository.GetAllAsync()).FirstOrDefault(x => x.AssignmentId == assignment.Id && x.ObjectType == ObjectType.Material).ObjectId;
+                    var topic = (await unitOfWork.MaterialRepository.GetByIdWithDetailsAsync(materialId)).Topic;
                     var assignmentChildProgresses = assignmentProgresses.Where(x => assignment.ChildAssignments.Select(ca => ca.Id).Contains(x.AssignmentId));
                     var isCorrect = assignmentChildProgresses.All(x => x.IsCorrect);
                     var points = assignmentChildProgresses.Where(x => x.IsCorrect).Sum(x => x.Points);
@@ -140,6 +160,7 @@ namespace OsvitaBLL.Services
                         AssignmentId = assignment.Id,
                         AssignmentNumber = assignmentNumber,
                         AssignmentType = assignment.AssignmentModelType,
+                        TopicName = topic.Title,
                         IsCorrect = isCorrect,
                         Points = points,
                         MaxPoints = maxPoints

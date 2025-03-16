@@ -54,7 +54,7 @@ namespace OsvitaBLL.Services
                 row.RelativeItem().Column(column =>
                 {
                     column.Item()
-                        .Text($"Тема: {Model.AssignmetSetReportModels.First().ObjectName}")
+                        .Text($"{ObjectTypeToString(Model.AssignmetSetReportModels.First().ObjectType)}: {Model.AssignmetSetReportModels.First().ObjectName}")
                         .FontSize(20).SemiBold();
                 });
             });
@@ -141,6 +141,21 @@ namespace OsvitaBLL.Services
             else
             {
                 return QuestPDF.Helpers.Colors.Red.Medium.Hex;
+            }
+        }
+
+        private string ObjectTypeToString(ObjectModelType objectModelType)
+        {
+            switch (objectModelType)
+            {
+                case ObjectModelType.TopicModel:
+                    return "Тема";
+                case ObjectModelType.SubjectModel:
+                    return "Предмет";
+                case ObjectModelType.DiagnosticalModel:
+                    return "Діагностичний тест";
+                default:
+                    return "";
             }
         }
     }
