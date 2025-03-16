@@ -65,6 +65,29 @@ namespace OsvitaBLL.Services
             return report;
         }
 
+        public async Task<byte[]> GenerateDiagnosticalAssignmetSetsReportAsync(int userId, int assignmentSetProgressDetailId)
+        {
+            var models = new List<AssignmentSetReportModel>();
+            if (assignmentSetProgressDetailId > 0)
+            {
+                var model = await GetAssignmetSetReportModelAsync(userId, assignmentSetProgressDetailId);
+                models.Add(model);
+            }
+            else
+            {
+                var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
+                var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).Select(x => x.Id).ToList();
+                foreach (var id in assignmentSetProgressDetailsIds)
+                {
+                    var model = await GetAssignmetSetReportModelAsync(userId, id);
+                    models.Add(model);
+                }
+            }
+            var document = new DiagnosticalAssignmentsReportDocument(models);
+            var report = document.GeneratePdf();
+            return report;
+        }
+
         private async Task<AssignmentSetReportModel> GetAssignmetSetReportModelAsync(int userId, int assignmentSetProgressDetailId)
         {
             var assignmentSetReportModel = new AssignmentSetReportModel();
