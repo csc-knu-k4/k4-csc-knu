@@ -3,6 +3,7 @@
     public class Assignment : BaseEntity
     {
         public string ProblemDescription { get; set; }
+        public string? ProblemDescriptionImage { get; set; }
         public string Explanation { get; set; }
         public AssignmentType AssignmentType { get; set; }
         public int? ParentAssignmentId { get; set; }

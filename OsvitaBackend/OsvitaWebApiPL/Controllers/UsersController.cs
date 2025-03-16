@@ -114,7 +114,7 @@ namespace OsvitaWebApiPL.Controllers
         }
 
         // GET api/users/5/Educationplan/topics
-        [HttpGet("{id}/Educationplan/topics")]
+        [HttpGet("{id}/educationplan/topics")]
         public async Task<ActionResult<EducationPlanModel>> GetEducationPlan(int id)
         {
             var educationPlanModel = await educationPlanService.GetEducationPlanByUserIdAsync(id);
@@ -126,7 +126,7 @@ namespace OsvitaWebApiPL.Controllers
         }
 
         //GET api/users/5/Educationplan/topics/4
-        [HttpGet("{id}/Educationplan/topics/{topicId}")]
+        [HttpGet("{id}/educationplan/topics/{topicId}")]
         public async Task<ActionResult<TopicPlanDetailModel>> GetTopicPlanDetail(int id, int topicId)
         {
             var topicPlanDetailModel = await educationPlanService.GetTopicPlanDetailAsync(id, topicId);
@@ -138,7 +138,7 @@ namespace OsvitaWebApiPL.Controllers
         }
 
         // POST api/users/5/Educationplan/topics
-        [HttpPost("{id}/Educationplan/topics")]
+        [HttpPost("{id}/educationplan/topics")]
         public async Task<ActionResult> PostTopicPlanDetail(int id, [FromBody] TopicPlanDetailModel model)
         {
             try
@@ -153,7 +153,7 @@ namespace OsvitaWebApiPL.Controllers
         }
 
         // DELETE api/users/5/Educationplan/topics/3
-        [HttpDelete("{id}/Educationplan/topics/{topicId}")]
+        [HttpDelete("{id}/educationplan/topics/{topicId}")]
         public async Task<ActionResult> DeleteTopicPlanDetail(int id, int topicId)
         {
             try
@@ -168,7 +168,7 @@ namespace OsvitaWebApiPL.Controllers
         }
 
         // PUT: api/users/5/Educationplan/topics/3
-        [HttpPut("{id}/Educationplan/topic/{topicId}")]
+        [HttpPut("{id}/educationplan/topic/{topicId}")]
         public async Task<ActionResult> PutTopicPlanDetail(int id, int topicId, [FromBody] TopicPlanDetailModel model)
         {
             try
