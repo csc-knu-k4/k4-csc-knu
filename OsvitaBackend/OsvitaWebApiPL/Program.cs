@@ -66,11 +66,13 @@ public class Program
         builder.Services.AddTransient<IEmailService, EmailService>();
         builder.Services.AddTransient<IStatisticReportService, StatisticReportService>();
         builder.Services.AddTransient<IEducationPlanService, EducationPlanService>();
+        builder.Services.AddTransient<IAIService, OpenAIService>();
 
         builder.Services.Configure<StaticFilesSettings>(builder.Configuration.GetSection(SettingStrings.StaticFilesSection));
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));
         builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(SettingStrings.MailSettings));
         builder.Services.Configure<HostSettings>(builder.Configuration.GetSection(SettingStrings.HostSection));
+        builder.Services.Configure<OpenAISettings>(builder.Configuration.GetSection(SettingStrings.OpenAISettings));
         builder.Services.AddScoped<IIdentityService, IdentityService>();
 
         if (builder.Configuration[SettingStrings.ImagesSetting] == "local")

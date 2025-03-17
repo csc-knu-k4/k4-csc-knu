@@ -10,14 +10,14 @@ namespace OsvitaBLL.Services
 {
 	public class DiagnosticalAssignmentsReportDocument : IDocument
 	{
-		public DiagnosticalAssignmentsReportDocument(List<AssignmentSetReportModel> models)
+		public DiagnosticalAssignmentsReportDocument(List<DiagnosticalAssignmentSetReportModel> models)
 		{
             Models = models;
-            Model = new AssignmentSetReportModel();
+            Model = new DiagnosticalAssignmentSetReportModel();
         }
 
-        public List<AssignmentSetReportModel> Models { get; }
-        public AssignmentSetReportModel Model { get; set; }
+        public List<DiagnosticalAssignmentSetReportModel> Models { get; }
+        public DiagnosticalAssignmentSetReportModel Model { get; set; }
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
         public DocumentSettings GetSettings() => DocumentSettings.Default;
 
@@ -51,19 +51,19 @@ namespace OsvitaBLL.Services
                 row.RelativeItem().Column(column =>
                 {
                     column.Item()
-                        .Text($"{ObjectTypeToString(Model.ObjectType)}: {Model.ObjectName}")
+                        .Text($"{ObjectTypeToString(Model.AssignmentSetReportModel.ObjectType)}: {Model.AssignmentSetReportModel.ObjectName}")
                         .FontSize(20).SemiBold();
 
                     column.Item().Text(text =>
                     {
                         text.Span("Дата проходження: ").SemiBold();
-                        text.Span($"{Model.CompletedDate.ToString(new CultureInfo("uk-UA"))}");
+                        text.Span($"{Model.AssignmentSetReportModel.CompletedDate.ToString(new CultureInfo("uk-UA"))}");
                     });
 
                     column.Item().Text(text =>
                     {
                         text.Span("Результат: ").SemiBold();
-                        text.Span($"{Model.Score}/{Model.MaxScore}");
+                        text.Span($"{Model.AssignmentSetReportModel.Score}/{Model.AssignmentSetReportModel.MaxScore}");
                     });
                 });
 
@@ -79,8 +79,8 @@ namespace OsvitaBLL.Services
 
                             var slices = new PieSlice[]
                             {
-                                new() { Value = Model.Score, FillColor = new ScottPlot.Color(QuestPDF.Helpers.Colors.Green.Medium.Hex) },
-                                new() { Value = Model.MaxScore - Model.Score, FillColor = new ScottPlot.Color(QuestPDF.Helpers.Colors.Red.Medium.Hex) },
+                                new() { Value = Model.AssignmentSetReportModel.Score, FillColor = new ScottPlot.Color(QuestPDF.Helpers.Colors.Green.Medium.Hex) },
+                                new() { Value = Model.AssignmentSetReportModel.MaxScore - Model.AssignmentSetReportModel.Score, FillColor = new ScottPlot.Color(QuestPDF.Helpers.Colors.Red.Medium.Hex) },
                             };
 
                             var pie = plot.Add.Pie(slices);
@@ -103,19 +103,23 @@ namespace OsvitaBLL.Services
                 column.Spacing(5);
 
                 column.Item().Element(ComposeTable);
+
+                if (!string.IsNullOrWhiteSpace(Model.RecomendationText))
+                {
+                    column.Item().PaddingTop(25).Element(ComposeRecomendations);
+                }
             });
         }
 
         private void ComposeTable(IContainer container)
         {
-            var topics = Model.Assignments.GroupBy(x => x.TopicName);
+            var topics = Model.AssignmentSetReportModel.Assignments.GroupBy(x => x.TopicName);
             container.Table(table =>
             {
                 table.ColumnsDefinition(columns =>
                 {
                     columns.ConstantColumn(100);
                     columns.RelativeColumn();
-                    columns.RelativeColumn(100);
                 });
 
                 table.Header(header =>
@@ -139,6 +143,16 @@ namespace OsvitaBLL.Services
                         return container.BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).PaddingHorizontal(3);
                     }
                 }
+            });
+        }
+
+        void ComposeRecomendations(IContainer container)
+        {
+            container.Background(QuestPDF.Helpers.Colors.Grey.Lighten3).Padding(10).Column(column =>
+            {
+                column.Spacing(5);
+                column.Item().Text("Аналіз результатів").FontSize(14);
+                column.Item().Text(Model.RecomendationText);
             });
         }
 
