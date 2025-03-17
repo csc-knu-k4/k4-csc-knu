@@ -9,6 +9,7 @@ namespace OsvitaDAL.Entities
 		public Statistic Statistic { get; set; }
 		public EducationPlan EducationPlan { get; set; }
 		public List<EducationClass> EducationClasses { get; set; }
+		public List<RecomendationMessage> RecomendationMessages { get; set; }
 	}
 }
 

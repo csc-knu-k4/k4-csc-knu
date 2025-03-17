@@ -27,6 +27,7 @@ namespace OsvitaDAL.Data
         IEducationClassRepository educationClassRepository;
         IEducationClassPlanRepository educationClassPlanRepository;
         IEducationPlanRepository educationPlanRepository;
+        IRecomendationMessageRepository recomendationMessageRepository;
 
         public ISubjectRepository SubjectRepository
         {
@@ -193,6 +194,18 @@ namespace OsvitaDAL.Data
                     educationPlanRepository = new EducationPlanRepository(context);
                 }
                 return educationPlanRepository;
+            }
+        }
+
+        public IRecomendationMessageRepository RecomendationMessageRepository
+        {
+            get
+            {
+                if (recomendationMessageRepository is null)
+                {
+                    recomendationMessageRepository = new RecomendationMessageRepository(context);
+                }
+                return recomendationMessageRepository;
             }
         }
 

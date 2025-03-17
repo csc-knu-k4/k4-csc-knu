@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using OpenAI.Chat;
 using OsvitaBLL.Interfaces;
+using OsvitaBLL.Models;
 using OsvitaWebApiPL.Models;
 
 namespace OsvitaWebApiPL.Controllers
@@ -48,6 +50,5 @@ namespace OsvitaWebApiPL.Controllers
             }
             return NotFound();
         }
-
     }
 }

@@ -13,6 +13,7 @@ namespace OsvitaWebApiPL
         public const string HostSection = "HostSection";
         public const string ImagesSetting = "ImagesSetting";
         public const string StaticFilesSection = "StaticFilesSection";
+        public const string OpenAISettings = "OpenAISettings";
     }
 }
 

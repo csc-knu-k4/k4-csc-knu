@@ -1,4 +1,5 @@
-﻿using OsvitaBLL.Interfaces;
+﻿using System.Text;
+using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaBLL.Models.ReportModels;
 using OsvitaDAL.Interfaces;
@@ -12,11 +13,13 @@ namespace OsvitaBLL.Services
         private readonly IStatisticService statisticService;
         private readonly IAssignmentService assignmentService;
         private readonly IUnitOfWork unitOfWork;
-        public StatisticReportService(IStatisticService statisticService, IUnitOfWork unitOfWork, IAssignmentService assignmentService)
+        private readonly IAIService aiService;
+        public StatisticReportService(IStatisticService statisticService, IUnitOfWork unitOfWork, IAssignmentService assignmentService, IAIService aiService)
         {
             this.statisticService = statisticService;
             this.unitOfWork = unitOfWork;
             this.assignmentService = assignmentService;
+            this.aiService = aiService;
         }
 
         public async Task<byte[]> GenerateAssignmetSetsReportAsync(int userId, int assignmentSetProgressDetailId)
@@ -40,6 +43,22 @@ namespace OsvitaBLL.Services
             var document = new UserAssignmentsReportDocument(models);
             var report = document.GeneratePdf();
             return report;
+        }
+
+        public async Task<List<AssignmentSetReportModel>> GetLastAssignmetSetsReportsAsync(int userId, int assignmentSetsCount)
+        {
+            var models = new List<AssignmentSetReportModel>();
+            if (assignmentSetsCount > 0)
+            {
+                var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
+                var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).OrderBy(x => x.CompletedDate).Take(assignmentSetsCount).Select(x => x.Id).ToList();
+                foreach (var id in assignmentSetProgressDetailsIds)
+                {
+                    var model = await GetAssignmetSetReportModelAsync(userId, id);
+                    models.Add(model);
+                }
+            }
+            return models;
         }
 
         public async Task<byte[]> GenerateEducationClassAssignmetSetsReportAsync(int educationClassId, int assignmentSetId)
@@ -67,10 +86,14 @@ namespace OsvitaBLL.Services
 
         public async Task<byte[]> GenerateDiagnosticalAssignmetSetsReportAsync(int userId, int assignmentSetProgressDetailId)
         {
-            var models = new List<AssignmentSetReportModel>();
+            var models = new List<DiagnosticalAssignmentSetReportModel>();
             if (assignmentSetProgressDetailId > 0)
             {
-                var model = await GetAssignmetSetReportModelAsync(userId, assignmentSetProgressDetailId);
+                var assignmentSetReportModel = await GetAssignmetSetReportModelAsync(userId, assignmentSetProgressDetailId);
+                var model = new DiagnosticalAssignmentSetReportModel {
+                    AssignmentSetReportModel = assignmentSetReportModel,
+                    RecomendationText = await aiService.GetRecomendationTextByDiagnosticalAssignmentSetResultAsync(assignmentSetReportModel)
+                };
                 models.Add(model);
             }
             else
@@ -79,7 +102,12 @@ namespace OsvitaBLL.Services
                 var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).Select(x => x.Id).ToList();
                 foreach (var id in assignmentSetProgressDetailsIds)
                 {
-                    var model = await GetAssignmetSetReportModelAsync(userId, id);
+                    var assignmentSetReportModel = await GetAssignmetSetReportModelAsync(userId, id);
+                    var model = new DiagnosticalAssignmentSetReportModel
+                    {
+                        AssignmentSetReportModel = assignmentSetReportModel,
+                        RecomendationText = await aiService.GetRecomendationTextByDiagnosticalAssignmentSetResultAsync(assignmentSetReportModel)
+                    };
                     models.Add(model);
                 }
             }
@@ -164,6 +192,7 @@ namespace OsvitaBLL.Services
                         AssignmentNumber = assignmentNumber,
                         AssignmentType = assignment.AssignmentModelType,
                         TopicName = topic.Title,
+                        TopicId = topic.Id,
                         IsCorrect = assignmentProgress.IsCorrect,
                         Points = assignmentProgress.Points,
                         MaxPoints = assignmentProgress.MaxPoints
@@ -184,6 +213,7 @@ namespace OsvitaBLL.Services
                         AssignmentNumber = assignmentNumber,
                         AssignmentType = assignment.AssignmentModelType,
                         TopicName = topic.Title,
+                        TopicId = topic.Id,
                         IsCorrect = isCorrect,
                         Points = points,
                         MaxPoints = maxPoints
