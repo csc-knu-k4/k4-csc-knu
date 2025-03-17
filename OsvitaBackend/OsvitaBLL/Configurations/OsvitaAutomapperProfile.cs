@@ -94,6 +94,8 @@ namespace OsvitaBLL.Configurations
             CreateMap<EducationPlan, EducationPlanModel>() .ReverseMap();
 
             CreateMap<TopicPlanDetail, TopicPlanDetailModel>() .ReverseMap();
+
+            CreateMap<RecomendationMessage, RecomendationMessageModel>().ReverseMap();
         }
     }
 }

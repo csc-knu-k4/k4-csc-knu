@@ -6,6 +6,7 @@ namespace OsvitaBLL.Interfaces
 	public interface IAIService
 	{
         Task<string> GetRecomendationTextByDiagnosticalAssignmentSetResultAsync(AssignmentSetReportModel assignmentSetReportModel);
+        Task<string> GetRecomendationTextByAssignmentResultsAsync(List<AssignmentReportModel> assignmentReportModels);
     }
 }
 

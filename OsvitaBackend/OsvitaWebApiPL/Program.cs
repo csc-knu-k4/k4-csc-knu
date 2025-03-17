@@ -67,6 +67,7 @@ public class Program
         builder.Services.AddTransient<IStatisticReportService, StatisticReportService>();
         builder.Services.AddTransient<IEducationPlanService, EducationPlanService>();
         builder.Services.AddTransient<IAIService, OpenAIService>();
+        builder.Services.AddTransient<IRecomendationService, RecomendationService>();
 
         builder.Services.Configure<StaticFilesSettings>(builder.Configuration.GetSection(SettingStrings.StaticFilesSection));
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));
@@ -89,6 +90,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         //builder.Services.AddSwaggerGen();
         builder.Services.AddSwaggerDoc();
+
+        builder.Services.AddQuartzJobs();
 
         var app = builder.Build();
 
