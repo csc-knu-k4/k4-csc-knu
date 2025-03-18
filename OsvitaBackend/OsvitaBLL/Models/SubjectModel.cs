@@ -7,7 +7,7 @@ namespace OsvitaBLL.Models
 		public string Title { get; set; }
 
 		public List<int> ChaptersIds { get; set; }
-        public List<ChapterModel> Chapters { get; set; }
+        public List<ChapterModel>? Chapters { get; set; }
     }
 }
 
