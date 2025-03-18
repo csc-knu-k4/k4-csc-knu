@@ -36,11 +36,17 @@ namespace OsvitaDAL.Repositories
                 .FirstOrDefaultAsync(x => x.EducationClassId == educationClassId);
         }
 
-        public async Task<TopicPlanDetail> GetTopicPlanDetailByEducationClassPlanIdAndTopicIdAsync(int educationClassPlanId, int topicId)
+        public async Task<TopicPlanDetail> GetTopicPlanDetailByEducationClassPlanIdAndTopicIdAsync(int id, int topicId)
         {
             return await context.TopicPlanDetails
-                .Where(x => x.EducationClassPlanId == educationClassPlanId)
+                .Where(x => x.EducationClassPlanId == id)
                 .SingleOrDefaultAsync(x => x.TopicId == topicId);
+        }
+
+        public async Task<List<TopicPlanDetail>> GetTopicPlanDetailsByEducationClassPlanIdAsync(int id)
+        {
+            return await context.TopicPlanDetails
+               .Where(x => x.EducationClassPlanId == id).ToListAsync();
         }
     }
 }

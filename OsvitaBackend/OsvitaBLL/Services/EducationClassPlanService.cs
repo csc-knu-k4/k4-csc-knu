@@ -58,6 +58,7 @@ namespace OsvitaBLL.Services
             foreach (var educationClassPlan in educationClassPlans)
             {
                 educationClassPlan.AssignmentSetPlanDetails = (await unitOfWork.EducationClassPlanRepository.GetAssignmentSetPlanDetailsByEducationClassPlanIdAsync(educationClassPlan.Id)).ToList();
+                educationClassPlan.TopicPlanDetails = (await unitOfWork.EducationClassPlanRepository.GetTopicPlanDetailsByEducationClassPlanIdAsync(educationClassPlan.Id)).ToList();
             }
             var educationClassPlansModels = mapper.Map<IEnumerable<EducationClassPlan>, IEnumerable<EducationClassPlanModel>>(educationClassPlans);
             return educationClassPlansModels;
@@ -75,6 +76,7 @@ namespace OsvitaBLL.Services
         {
             var educationClassPlan = await educationClassPlanRepository.GetEducationClassPlanByEducationClassIdWithDetailsAsync(educationClassId);
             educationClassPlan.AssignmentSetPlanDetails = (await unitOfWork.EducationClassPlanRepository.GetAssignmentSetPlanDetailsByEducationClassPlanIdAsync(educationClassPlan.Id)).ToList();
+            educationClassPlan.TopicPlanDetails = (await unitOfWork.EducationClassPlanRepository.GetTopicPlanDetailsByEducationClassPlanIdAsync(educationClassPlan.Id)).ToList();
             var educationClassPlanModel = mapper.Map<EducationClassPlan, EducationClassPlanModel>(educationClassPlan);
             return educationClassPlanModel;
         }
