@@ -68,6 +68,7 @@ public class Program
         builder.Services.AddTransient<IEducationPlanService, EducationPlanService>();
         builder.Services.AddTransient<IAIService, OpenAIService>();
         builder.Services.AddTransient<IRecomendationService, RecomendationService>();
+        builder.Services.AddTransient<IExcelService, ExcelService>();
 
         builder.Services.Configure<StaticFilesSettings>(builder.Configuration.GetSection(SettingStrings.StaticFilesSection));
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingStrings.JwtSection));
