@@ -51,9 +51,10 @@ namespace OsvitaBLL.Services
             }
         }
 
-        public async Task<string> Upload(IFormFile file)
+        public async Task<string> Upload(IFormFile file, bool addCustomGuid = true)
         {
-            var fileName = Guid.NewGuid() + file.FileName;
+            var customPart = addCustomGuid ? Guid.NewGuid().ToString() : string.Empty;
+            var fileName = customPart + file.FileName;
             var relativePath = "/" + fileSettings.Path + "/" + fileName;
             string directoryPath = rootPath + "/" + fileSettings.Path;
             string fullPath = directoryPath + "/" + fileName;
