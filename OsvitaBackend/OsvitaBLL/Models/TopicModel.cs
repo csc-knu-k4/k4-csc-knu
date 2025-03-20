@@ -9,7 +9,7 @@ namespace OsvitaBLL.Models
         public int OrderPosition { get; set; }
 
         public List<int> MaterialsIds { get; set; }
-        public List<MaterialModel> Materials { get; set; }
+        public List<MaterialModel>? Materials { get; set; }
     }
 }
 
