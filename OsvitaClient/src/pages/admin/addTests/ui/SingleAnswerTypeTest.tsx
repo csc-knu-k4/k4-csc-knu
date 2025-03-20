@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Field } from '@/components/ui/field';
 import { Flex, Input, Text, Button } from '@chakra-ui/react';
 import { addAssignments, Assignment } from '@/shared/api/testsApi';
+import { uploadFile } from '@/shared/api/mediaApi';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toaster } from '@/components/ui/toaster';
 
@@ -18,6 +19,10 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
   const [options, setOptions] = useState<string[]>(['', '']);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number | null>(null);
   const [validatedMaterialId, setValidatedMaterialId] = useState<number | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageId, setImageId] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (materialId !== null) {
@@ -43,6 +48,18 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
     }
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setImageFile(null);
+    setImageId(null);
+  };
+
   const handleSubmit = async () => {
     if (!question || options.some((opt) => opt === '') || validatedMaterialId === null) {
       toaster.create({
@@ -52,30 +69,35 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
       return;
     }
 
+    let uploadedImageId = imageId;
+    if (imageFile) {
+      try {
+        uploadedImageId = await uploadFile(imageFile);
+        setImageId(uploadedImageId);
+      } catch {
+        toaster.create({
+          title: `Помилка при завантаженні зображення`,
+          type: 'warning',
+        });
+        return;
+      }
+    }
+
     const test: Assignment = {
       id: 0,
       objectId: validatedMaterialId,
       problemDescription: question,
+      problemDescriptionImage: uploadedImageId || '',
       explanation: '',
       assignmentModelType: 0,
       parentAssignmentId: 0,
-      answers: [
-        ...options.map((value, index) => ({
-          id: 0,
-          value,
-          isCorrect: index === correctAnswerIndex,
-          points: index === correctAnswerIndex ? 1 : 0,
-          assignmentId: 0,
-        })),
-      ] as [
-        {
-          id: number;
-          value: string;
-          isCorrect: boolean;
-          points: number;
-          assignmentId: number;
-        },
-      ],
+      answers: options.map((value, index) => ({
+        id: 0,
+        value,
+        isCorrect: index === correctAnswerIndex,
+        points: index === correctAnswerIndex ? 1 : 0,
+        assignmentId: 0,
+      })),
       childAssignments: [],
     };
 
@@ -103,9 +125,36 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
           onChange={(e) => setQuestion(e.target.value)}
         />
       </Field>
+
+      {/* Поле вибору файлу */}
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
+
+      {/* Відображення доданого файлу */}
+      {imageFile ? (
+        <Flex alignItems="center" mb={3}>
+          <Text fontSize="sm" color="green" mr={3}>
+            {imageFile.name}
+          </Text>
+          <Button size="sm" colorPalette="red" onClick={handleRemoveFile}>
+            Видалити
+          </Button>
+        </Flex>
+      ) : (
+        <Button colorPalette="orange" mb={2} onClick={() => fileInputRef.current?.click()}>
+          Додати фото
+        </Button>
+      )}
+
       <Text color="orange" fontSize="sm" mb={2}>
         Варіанти відповіді
       </Text>
+
       {options.map((option, index) => (
         <Flex key={index} flexDir="row" alignItems="center" gap={3} mb={3}>
           <Text fontWeight="bold" color="orange" w="0.75rem">
@@ -129,11 +178,13 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
           )}
         </Flex>
       ))}
+
       {options.length < MAX_OPTIONS && (
         <Button size="sm" colorPalette="orange" onClick={handleAddOption}>
           Додати варіант
         </Button>
       )}
+
       <Button colorPalette="orange" size="sm" ml={3} onClick={handleSubmit}>
         Зберегти
       </Button>

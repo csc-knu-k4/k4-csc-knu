@@ -6,6 +6,7 @@ export interface Assignment {
   problemDescription: string;
   explanation: string;
   assignmentModelType: number;
+  problemDescriptionImage: string;
   parentAssignmentId: number;
   answers: {
     id: number;
