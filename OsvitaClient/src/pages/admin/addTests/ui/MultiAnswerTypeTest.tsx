@@ -1,9 +1,10 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/field';
 import { toaster } from '@/components/ui/toaster';
+import { uploadFile } from '@/shared/api/mediaApi';
 import { addAssignments, Assignment } from '@/shared/api/testsApi';
 import { Button, Flex, Input, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface MultiTypeTestProps {
   materialId: number;
@@ -15,6 +16,10 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
   const [answers, setAnswers] = useState<string[]>(['', '', '', '', '']);
   const [correctMatches, setCorrectMatches] = useState<number[][]>(Array(3).fill([]));
   const [validatedTopicId, setValidatedTopicId] = useState<number | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageId, setImageId] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (materialId !== null) {
@@ -44,6 +49,18 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
     setCorrectMatches(newMatches);
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setImageFile(null);
+    setImageId(null);
+  };
+
   const handleSubmit = async () => {
     if (
       !problemDescription ||
@@ -58,6 +75,20 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
       return;
     }
 
+    let uploadedImageId = imageId;
+    if (imageFile) {
+      try {
+        uploadedImageId = await uploadFile(imageFile);
+        setImageId(uploadedImageId);
+      } catch {
+        toaster.create({
+          title: `Помилка при завантаженні зображення`,
+          type: 'warning',
+        });
+        return;
+      }
+    }
+
     const usedCorrectIndexes = new Set(correctMatches.flat());
     const lastCorrectIndex = correctMatches[correctMatches.length - 1][0];
     const remainingIncorrectIndexes = answers
@@ -68,6 +99,7 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
       id: 0,
       objectId: validatedTopicId,
       problemDescription,
+      problemDescriptionImage: uploadedImageId || '',
       explanation: '',
       assignmentModelType: 2,
       parentAssignmentId: 0,
@@ -103,6 +135,7 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
           id: 0,
           objectId: validatedTopicId,
           problemDescription: question,
+          problemDescriptionImage: uploadedImageId || '',
           explanation: '',
           assignmentModelType: 3,
           parentAssignmentId: 0,
@@ -136,6 +169,31 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
           onChange={(e) => setProblemDescription(e.target.value)}
         />
       </Field>
+      {/* Поле вибору файлу */}
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
+
+      {/* Відображення доданого файлу */}
+      {imageFile ? (
+        <Flex alignItems="center" mb={3}>
+          <Text fontSize="sm" color="green" mr={3}>
+            {imageFile.name}
+          </Text>
+          <Button size="sm" colorPalette="red" onClick={handleRemoveFile}>
+            Видалити
+          </Button>
+        </Flex>
+      ) : (
+        <Button colorPalette="orange" mb={2} onClick={() => fileInputRef.current?.click()}>
+          Додати фото
+        </Button>
+      )}
+
       <Flex flexDir="row" gap={8}>
         <Flex flexDir="column">
           <Text color="orange" fontSize="sm" mb={2}>

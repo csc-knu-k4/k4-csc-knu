@@ -103,16 +103,7 @@ const OpenAnswerTypeTest: React.FC<OpenAnswerTypeTestProps> = ({ materialId }) =
           onChange={(e) => setQuestion(e.target.value)}
         />
       </Field>
-      <Field label="Відповідь" required mb={3} color="orange">
-        <Input
-          width="30.5rem"
-          placeholder="Введіть відповідь"
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-        />
-      </Field>
 
-      {/* Поле вибору файлу */}
       <input
         type="file"
         accept="image/*"
@@ -120,8 +111,6 @@ const OpenAnswerTypeTest: React.FC<OpenAnswerTypeTestProps> = ({ materialId }) =
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />
-
-      {/* Відображення доданого файлу */}
       {imageFile ? (
         <Flex alignItems="center" mb={3}>
           <Text fontSize="sm" color="green" mr={3}>
@@ -132,10 +121,24 @@ const OpenAnswerTypeTest: React.FC<OpenAnswerTypeTestProps> = ({ materialId }) =
           </Button>
         </Flex>
       ) : (
-        <Button colorPalette="orange" mb={2} onClick={() => fileInputRef.current?.click()}>
+        <Button
+          size="sm"
+          colorPalette="orange"
+          mb={2}
+          onClick={() => fileInputRef.current?.click()}
+        >
           Додати фото
         </Button>
       )}
+
+      <Field label="Відповідь" required mb={3} color="orange">
+        <Input
+          width="30.5rem"
+          placeholder="Введіть відповідь"
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+        />
+      </Field>
 
       <Button colorPalette="orange" size="sm" onClick={handleSubmit}>
         Зберегти
