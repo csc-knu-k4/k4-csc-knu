@@ -1,9 +1,33 @@
 import api from './api';
 
+export interface Material {
+  id: number;
+  title: string;
+  topicId: number;
+  orderPosition: number;
+}
+
+export interface Topic {
+  id: number;
+  title: string;
+  chapterId: number;
+  orderPosition: number;
+  materials: Material[];
+}
+
+export interface Chapter {
+  id: number;
+  title: string;
+  subjectId: number;
+  orderPosition: number;
+  topics: Topic[];
+}
+
 export interface Subject {
   id: number;
   title: string;
   chaptersIds: number[];
+  chapters: Chapter[];
 }
 
 export const getSubjects = async (): Promise<Subject[]> => {

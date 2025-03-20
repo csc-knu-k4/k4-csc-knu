@@ -1,115 +1,96 @@
-import { Flex, Stack, Text, Button } from '@chakra-ui/react';
+import { Flex, Stack, Text, Spinner, Button } from '@chakra-ui/react';
 import {
   AccordionItem,
   AccordionItemContent,
   AccordionItemTrigger,
   AccordionRoot,
 } from '@/components/ui/accordion';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getSubjects, Subject } from '@/shared/api/subjectsApi';
 
 const SubjectTaskList = () => {
+  const { subjectId } = useParams();
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getSubjects()
+      .then((data) => setSubjects(data))
+      .catch((error) => console.error('Помилка завантаження предметів:', error))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const selectedSubject = subjects.find((sub) => sub.id.toString() === subjectId);
+
   return (
-    <Flex justifyContent="center" alignItems="center" flexDir="column">
+    <Flex
+      overflowY="auto"
+      justifyContent="flex-start"
+      alignItems="center"
+      flexDir="column"
+      w="full"
+      p={5}
+      height="calc(100vh - 180px)"
+    >
       <Text fontSize="2xl" fontWeight="bold" mb={4} color="orange">
-        Математика
+        {selectedSubject ? selectedSubject.title : 'Завантаження...'}
       </Text>
-      <Stack width="full">
-        <AccordionRoot collapsible defaultValue={['info']}>
-          {items.map((item) => (
-            <AccordionItem
-              px={4}
-              py={2}
-              key={item.value}
-              value={item.value}
-              boxShadow="0rem 0.13rem 0.31rem 0rem rgba(0, 0, 0, 0.15);"
-              borderRadius="1rem"
-              mb={3}
-            >
-              <AccordionItemTrigger>{item.title}</AccordionItemTrigger>
-              <AccordionItemContent>
-                <Flex direction="column" gap={3} mt={2}>
-                  {item.tasks.map((task, index) => (
-                    <Flex key={index} alignItems="center" gap={3}>
-                      <Checkbox variant="outline" colorPalette="orange" />
-                      <Text flex="1">{task.text}</Text>
-                      {task.testLink && (
-                        <Link to={task.testLink}>
-                          <Button bgColor="orange" w="8rem" h="2.5rem" borderRadius="1rem">
-                            Тест
-                          </Button>
-                        </Link>
-                      )}
-                      {task.materialLink && (
-                        <Link to={task.materialLink}>
-                          <Button bgColor="blue" w="8rem" h="2.5rem" borderRadius="1rem">
-                            Матеріал
-                          </Button>
-                        </Link>
-                      )}
-                    </Flex>
-                  ))}
-                </Flex>
-              </AccordionItemContent>
-            </AccordionItem>
-          ))}
-        </AccordionRoot>
-      </Stack>
+
+      {loading ? (
+        <Spinner size="xl" />
+      ) : (
+        <Stack width="full">
+          {/* Головний акордеон */}
+          <AccordionRoot multiple collapsible>
+            {selectedSubject?.chapters.map((chapter) => (
+              <AccordionItem
+                boxShadow="0rem 0.13rem 0.31rem 0rem rgba(0, 0, 0, 0.15);"
+                px={4}
+                py={2}
+                key={chapter.id}
+                value={`chapter-${chapter.id}`}
+                mb={3}
+                borderRadius="1rem"
+              >
+                <AccordionItemTrigger>{chapter.title}</AccordionItemTrigger>
+                <AccordionItemContent>
+                  <Stack mt={2}>
+                    {/* Вкладений акордеон для тем */}
+                    <AccordionRoot multiple collapsible>
+                      {chapter.topics.map((topic) => (
+                        <AccordionItem key={topic.id} value={`topic-${topic.id}`} mb={2}>
+                          <AccordionItemTrigger>{topic.title}</AccordionItemTrigger>
+                          <AccordionItemContent>
+                            <Stack mt={2}>
+                              {topic.materials.map((material) => (
+                                <Button
+                                  key={material.id}
+                                  w="full"
+                                  variant="outline"
+                                  colorScheme="orange"
+                                  onClick={() =>
+                                    navigate(`/course/subject-material/${material.id}`)
+                                  }
+                                >
+                                  {material.title}
+                                </Button>
+                              ))}
+                            </Stack>
+                          </AccordionItemContent>
+                        </AccordionItem>
+                      ))}
+                    </AccordionRoot>
+                  </Stack>
+                </AccordionItemContent>
+              </AccordionItem>
+            ))}
+          </AccordionRoot>
+        </Stack>
+      )}
     </Flex>
   );
 };
-
-const items = [
-  {
-    value: '1',
-    title:
-      'Раціональні, ірраціональні, степеневі, показникові, логарифмічні, тригонометричні вирази та їх перетворення',
-    tasks: [
-      { text: 'Основні властивості степенів', testLink: '/test1' },
-      { text: 'Раціональні вирази', materialLink: '/material1' },
-      { text: 'Логарифмічні вирази', testLink: '/test2', materialLink: '/material2' },
-    ],
-  },
-  {
-    value: '2',
-    title:
-      'Лінійні, квадратні, раціональні, ірраціональні, показникові, логарифмічні, тригонометричні рівняння і нерівності',
-    tasks: [
-      { text: 'Лінійні рівняння', testLink: '/test3' },
-      { text: 'Квадратні рівняння', materialLink: '/material3' },
-      { text: 'Тригонометричні рівняння', testLink: '/test4', materialLink: '/material4' },
-    ],
-  },
-  {
-    value: '3',
-    title:
-      'Лінійні, квадратні, раціональні, ірраціональні, показникові, логарифмічні, тригонометричні рівняння і нерівності',
-    tasks: [
-      { text: 'Лінійні рівняння', testLink: '/test3' },
-      { text: 'Квадратні рівняння', materialLink: '/material3' },
-      { text: 'Тригонометричні рівняння', testLink: '/test4', materialLink: '/material4' },
-    ],
-  },
-  {
-    value: '4',
-    title:
-      'Лінійні, квадратні, раціональні, ірраціональні, показникові, логарифмічні, тригонометричні рівняння і нерівності',
-    tasks: [
-      { text: 'Лінійні рівняння', testLink: '/test3' },
-      { text: 'Квадратні рівняння', materialLink: '/material3' },
-      { text: 'Тригонометричні рівняння', testLink: '/test4', materialLink: '/material4' },
-    ],
-  },
-  {
-    value: '5',
-    title:
-      'Лінійні, квадратні, раціональні, ірраціональні, показникові, логарифмічні, тригонометричні рівняння і нерівності',
-    tasks: [
-      { text: 'Лінійні рівняння', testLink: '/test3' },
-      { text: 'Квадратні рівняння', materialLink: '/material3' },
-      { text: 'Тригонометричні рівняння', testLink: '/test4', materialLink: '/material4' },
-    ],
-  },
-];
 
 export default SubjectTaskList;
