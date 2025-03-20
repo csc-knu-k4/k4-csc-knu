@@ -1,4 +1,4 @@
-import { Text, Flex } from '@chakra-ui/react';
+import { Text, Flex, Box } from '@chakra-ui/react';
 import { AddMaterialButton } from '@/features/materials';
 import { MaterialTable } from '@/entities/materials';
 import { getMaterials, getMaterialsByTopic } from '@/shared/api/materialsApi';
@@ -20,7 +20,16 @@ const Materials = () => {
   );
 
   const header = (
-    <Flex justifyContent="space-between" alignItems="center" mb={2}>
+    <Flex
+      position="sticky"
+      top="0"
+      bg="white"
+      zIndex="3"
+      p={4}
+      justifyContent="space-between"
+      alignItems="center"
+      borderBottom="1px solid #ddd"
+    >
       <Text fontSize="2xl" fontWeight="medium">
         {topicId ? `Матеріали для теми #${topicId}` : 'Матеріали'}
       </Text>
@@ -42,14 +51,16 @@ const Materials = () => {
   }
 
   return (
-    <>
+    <Box height="calc(100vh - 180px)" display="flex" flexDirection="column">
       {header}
-      {materials && materials.length > 0 ? (
-        <MaterialTable items={materials} />
-      ) : (
-        <Text>Дані відсутні.</Text>
-      )}
-    </>
+      <Box flex="1" overflowY="auto" p={4}>
+        {materials && materials.length > 0 ? (
+          <MaterialTable items={materials} />
+        ) : (
+          <Text>Дані відсутні.</Text>
+        )}
+      </Box>
+    </Box>
   );
 };
 

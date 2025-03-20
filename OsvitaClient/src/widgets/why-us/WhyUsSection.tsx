@@ -1,7 +1,7 @@
-import IconBox from '@/shared/ui/IconBox/IconBox';
 import { Flex, Text, Highlight } from '@chakra-ui/react';
 import { VscBook } from 'react-icons/vsc';
 import { boxData } from './why-usConfig';
+import IconBoxIndex from '@/shared/ui/IconBox/IconBoxIndex';
 
 const WhyUsSection = () => {
   return (
@@ -25,7 +25,12 @@ const WhyUsSection = () => {
         mt={9}
       >
         {boxData.map((box, index) => (
-          <IconBox key={index} icon={VscBook} title={box.title} description={box.description} />
+          <IconBoxIndex
+            key={index}
+            icon={VscBook}
+            title={box.title}
+            description={box.description}
+          />
         ))}
       </Flex>
     </Flex>

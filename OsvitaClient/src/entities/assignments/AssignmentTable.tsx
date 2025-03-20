@@ -1,12 +1,12 @@
 import { Table, Box } from '@chakra-ui/react';
-import { MaterialTableRow } from './MaterialTableRow';
-import { Material } from './types';
+import { AssignmentTableRow } from './AssignmentTableRow';
+import { Assignment } from '@/shared/api/testsApi';
 
-interface MaterialTableProps {
-  items: Material[];
+interface AssignmentTableProps {
+  items: Assignment[];
 }
 
-export function MaterialTable({ items }: MaterialTableProps) {
+export function AssignmentTable({ items }: AssignmentTableProps) {
   const sortedItems = [...items].sort((a, b) => a.id - b.id);
 
   return (
@@ -15,7 +15,7 @@ export function MaterialTable({ items }: MaterialTableProps) {
         <Table.Root size="lg">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader color="orange">Тема</Table.ColumnHeader>
+              <Table.ColumnHeader color="orange">Умова тесту</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="start" color="orange">
                 Дії
               </Table.ColumnHeader>
@@ -23,7 +23,7 @@ export function MaterialTable({ items }: MaterialTableProps) {
           </Table.Header>
           <Table.Body>
             {sortedItems.map((item) => (
-              <MaterialTableRow key={item.id} item={item} />
+              <AssignmentTableRow key={item.id} item={item} />
             ))}
           </Table.Body>
         </Table.Root>
