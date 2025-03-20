@@ -7,6 +7,9 @@ using Microsoft.OpenApi.Models;
 using OsvitaBLL.Interfaces;
 using OsvitaDAL.Entities;
 using OsvitaWebApiPL.Identity;
+using OsvitaWebApiPL.Jobs;
+using Quartz;
+using Quartz.AspNetCore;
 
 namespace OsvitaWebApiPL.Configurations
 {
@@ -95,6 +98,26 @@ namespace OsvitaWebApiPL.Configurations
                     logger.LogError(ex, "An error occurred while seeding the database." + DateTime.Now.ToString());
                 }
             }
+        }
+
+        public static void AddQuartzJobs(this IServiceCollection services)
+        {
+            services.AddQuartz(q =>
+            {
+                var jobKey = new JobKey("AddRecomendationMessagesJob");
+                q.AddJob<AddRecomendationMessagesJob>(opts => opts.WithIdentity(jobKey));
+
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("AddRecomendationMessagesJob-trigger")
+                    .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(10, 00))
+                );
+            });
+
+            services.AddQuartzServer(options =>
+            {
+                options.WaitForJobsToComplete = true;
+            });
         }
     }
 }

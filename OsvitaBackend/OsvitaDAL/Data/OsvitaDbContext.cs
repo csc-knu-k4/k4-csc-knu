@@ -35,6 +35,9 @@ namespace OsvitaDAL.Data
         public DbSet<EducationClassInvitation> EducationClassInvitations { get; set; }
         public DbSet<EducationClassPlan> EducationClassPlans { get; set; }
         public DbSet<AssignmentSetPlanDetail> AssignmentSetPlanDetails { get; set; }
+        public DbSet<EducationPlan> EducationPlans { get; set; }
+        public DbSet<TopicPlanDetail> TopicPlanDetails { get; set; }
+        public DbSet<RecomendationMessage> RecomendationMessages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -49,6 +52,12 @@ namespace OsvitaDAL.Data
                 .WithMany(e => e.Students);
             modelBuilder.Entity<EducationClass>()
                 .HasOne(e => e.Teacher);
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.EducationPlan);
+            modelBuilder.Entity<EducationPlan>()
+                .HasMany(x => x.TopicPlanDetails);
+            modelBuilder.Entity<TopicPlanDetail>()
+                .HasOne(x => x.EducationPlan);
         }
     }
 }

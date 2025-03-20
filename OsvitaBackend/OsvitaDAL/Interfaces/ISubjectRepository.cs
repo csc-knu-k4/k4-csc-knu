@@ -5,6 +5,8 @@ namespace OsvitaDAL.Interfaces
 {
 	public interface ISubjectRepository : IRepository<Subject>
 	{
-	}
+        Task<IEnumerable<Subject>> GetAllWithDetailsAsync();
+        Task<Subject> GetByIdWithDetailsAsync(int id);
+    }
 }
 

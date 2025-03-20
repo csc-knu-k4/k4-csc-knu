@@ -58,6 +58,9 @@ namespace OsvitaDAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ValueImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AssignmentId");
@@ -85,6 +88,9 @@ namespace OsvitaDAL.Migrations
 
                     b.Property<string>("ProblemDescription")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProblemDescriptionImage")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -341,6 +347,25 @@ namespace OsvitaDAL.Migrations
                     b.ToTable("EducationClassPlans");
                 });
 
+            modelBuilder.Entity("OsvitaDAL.Entities.EducationPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("EducationPlans");
+                });
+
             modelBuilder.Entity("OsvitaDAL.Entities.Material", b =>
                 {
                     b.Property<int>("Id")
@@ -364,6 +389,37 @@ namespace OsvitaDAL.Migrations
                     b.HasIndex("TopicId");
 
                     b.ToTable("Materials");
+                });
+
+            modelBuilder.Entity("OsvitaDAL.Entities.RecomendationMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RecomendationText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RecomendationMessages");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.Statistic", b =>
@@ -425,6 +481,29 @@ namespace OsvitaDAL.Migrations
                     b.HasIndex("ChapterId");
 
                     b.ToTable("Topics");
+                });
+
+            modelBuilder.Entity("OsvitaDAL.Entities.TopicPlanDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EducationPlanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EducationPlanId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("TopicPlanDetails");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.TopicProgressDetail", b =>
@@ -581,6 +660,15 @@ namespace OsvitaDAL.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OsvitaDAL.Entities.EducationPlan", b =>
+                {
+                    b.HasOne("OsvitaDAL.Entities.User", null)
+                        .WithOne("EducationPlan")
+                        .HasForeignKey("OsvitaDAL.Entities.EducationPlan", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OsvitaDAL.Entities.Material", b =>
                 {
                     b.HasOne("OsvitaDAL.Entities.Topic", "Topic")
@@ -590,6 +678,17 @@ namespace OsvitaDAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Topic");
+                });
+
+            modelBuilder.Entity("OsvitaDAL.Entities.RecomendationMessage", b =>
+                {
+                    b.HasOne("OsvitaDAL.Entities.User", "User")
+                        .WithMany("RecomendationMessages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.Statistic", b =>
@@ -610,6 +709,25 @@ namespace OsvitaDAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Chapter");
+                });
+
+            modelBuilder.Entity("OsvitaDAL.Entities.TopicPlanDetail", b =>
+                {
+                    b.HasOne("OsvitaDAL.Entities.EducationPlan", "EducationPlan")
+                        .WithMany("TopicPlanDetails")
+                        .HasForeignKey("EducationPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OsvitaDAL.Entities.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EducationPlan");
+
+                    b.Navigation("Topic");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.TopicProgressDetail", b =>
@@ -657,6 +775,11 @@ namespace OsvitaDAL.Migrations
                     b.Navigation("AssignmentSetPlanDetails");
                 });
 
+            modelBuilder.Entity("OsvitaDAL.Entities.EducationPlan", b =>
+                {
+                    b.Navigation("TopicPlanDetails");
+                });
+
             modelBuilder.Entity("OsvitaDAL.Entities.Material", b =>
                 {
                     b.Navigation("ContentBlocks");
@@ -681,6 +804,11 @@ namespace OsvitaDAL.Migrations
 
             modelBuilder.Entity("OsvitaDAL.Entities.User", b =>
                 {
+                    b.Navigation("EducationPlan")
+                        .IsRequired();
+
+                    b.Navigation("RecomendationMessages");
+
                     b.Navigation("Statistic")
                         .IsRequired();
                 });
