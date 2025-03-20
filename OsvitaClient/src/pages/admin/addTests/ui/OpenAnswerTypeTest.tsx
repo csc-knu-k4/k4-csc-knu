@@ -97,7 +97,7 @@ const OpenAnswerTypeTest: React.FC<OpenAnswerTypeTestProps> = ({ materialId }) =
     <>
       <Field label="Запитання" required mb={3} color="orange">
         <Input
-          width="30.5rem"
+          w={{ base: '20rem', md: '30.5rem' }}
           placeholder="Введіть запитання"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
@@ -133,7 +133,7 @@ const OpenAnswerTypeTest: React.FC<OpenAnswerTypeTestProps> = ({ materialId }) =
 
       <Field label="Відповідь" required mb={3} color="orange">
         <Input
-          width="30.5rem"
+          w={{ base: '20rem', md: '30.5rem' }}
           placeholder="Введіть відповідь"
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}

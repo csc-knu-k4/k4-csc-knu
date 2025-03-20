@@ -163,7 +163,7 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
     <Flex flexDir="column" justifyContent="center" alignItems="flex-start">
       <Field label="Завдання" required mb={3} color="orange">
         <Input
-          width="30.5rem"
+          w={{ base: '20rem', md: '30.5rem' }}
           placeholder="Введіть завдання"
           value={problemDescription}
           onChange={(e) => setProblemDescription(e.target.value)}
@@ -194,7 +194,7 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
         </Button>
       )}
 
-      <Flex flexDir="row" gap={8}>
+      <Flex flexDir={{ base: 'column', xl: 'row' }} gap={8}>
         <Flex flexDir="column">
           <Text color="orange" fontSize="sm" mb={2}>
             Запитання
@@ -212,7 +212,7 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
                 {index + 1}
               </Text>
               <Input
-                width="30.5rem"
+                w={{ base: '20rem', md: '30.5rem' }}
                 placeholder={`Запитання ${index + 1}`}
                 value={question}
                 onChange={(e) => handleQuestionChange(index, e.target.value)}
@@ -237,7 +237,7 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
                 {String.fromCharCode(1040 + index)}
               </Text>
               <Input
-                width="30.5rem"
+                w={{ base: '20rem', md: '30.5rem' }}
                 placeholder={`Відповідь ${String.fromCharCode(1040 + index)}`}
                 value={answer}
                 onChange={(e) => handleAnswerChange(index, e.target.value)}

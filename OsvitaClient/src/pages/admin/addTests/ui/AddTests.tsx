@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Field } from '@/components/ui/field';
-import { createListCollection, Flex, Text } from '@chakra-ui/react';
+import { Box, createListCollection, Flex, Text } from '@chakra-ui/react';
 import {
   SelectContent,
   SelectItem,
@@ -33,14 +33,14 @@ const AddTests = () => {
   }
 
   return (
-    <>
+    <Box overflowY="auto" height="calc(100vh - 170px)">
       <Flex flexDir="column">
         <Text mb="2rem" fontSize="2xl" fontWeight="medium">
           Додати тест
         </Text>
         <Field label="Матеріал" required mb={3} color="orange">
           <SelectRoot
-            width="30.5rem"
+            w={{ base: '20rem', md: '30.5rem' }}
             collection={materials}
             onValueChange={(selected) => setMaterialId(Number(selected?.value))}
           >
@@ -59,7 +59,7 @@ const AddTests = () => {
         <Field label="Тип тесту" required mb={3} color="orange">
           <SelectRoot
             collection={assignmentsList}
-            width="30.5rem"
+            w={{ base: '20rem', md: '30.5rem' }}
             onValueChange={(selected) => setTestType(selected?.value?.toString() || null)}
           >
             <SelectTrigger>
@@ -81,7 +81,7 @@ const AddTests = () => {
       {testType === '1' && <OpenAnswerTypeTest materialId={materialId} />}
 
       {testType === '2' && <MultiAnswerTypeTest materialId={materialId} />}
-    </>
+    </Box>
   );
 };
 
