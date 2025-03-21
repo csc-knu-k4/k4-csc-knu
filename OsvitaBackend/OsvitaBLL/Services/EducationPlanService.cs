@@ -20,6 +20,17 @@ namespace OsvitaBLL.Services
             this.mapper = mapper;
         }
 
+        public async Task<int> AddAssignmentSetPlanDetailAsync(AssignmentSetPlanDetailModel model, int userId)
+        {
+            var assignmentSetPlanDetail = mapper.Map<AssignmentSetPlanDetail>(model);
+            var educationPlan = await educationPlanRepository.GetEducationPlanByUserIdWithDetailsAsync(userId);
+            assignmentSetPlanDetail.EducationClassPlanId = null;
+            educationPlan.AssignmentSetPlanDetails.Add(assignmentSetPlanDetail);
+            await educationPlanRepository.UpdateAsync(educationPlan);
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSetPlanDetail.Id;
+        }
+
         public async Task<int> AddAsync(EducationPlanModel model)
         {
             var educationPlan = mapper.Map<EducationPlan>(model);

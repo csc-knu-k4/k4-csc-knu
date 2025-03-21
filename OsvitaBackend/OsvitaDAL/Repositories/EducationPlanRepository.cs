@@ -23,6 +23,7 @@ namespace OsvitaDAL.Repositories
         {
             return await context.EducationPlans
                 .Include(x => x.TopicPlanDetails)
+                .Include(x => x.AssignmentSetPlanDetails)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
@@ -35,6 +36,7 @@ namespace OsvitaDAL.Repositories
         {
             return await context.EducationPlans
                 .Include(x => x.TopicPlanDetails)
+                .Include(x => x.AssignmentSetPlanDetails)
                 .SingleOrDefaultAsync(x => x.UserId == userId);
         }
 

@@ -182,6 +182,21 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
+        // POST: api/users/5/educationplan/assignments
+        [HttpPost("{id}/educationplan/assignments")]
+        public async Task<ActionResult> PostAssignmentSetProgressDetail(int id, [FromBody] AssignmentSetPlanDetailModel model)
+        {
+            try
+            {
+                await educationPlanService.AddAssignmentSetPlanDetailAsync(model, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //GET api/users/5/recomendationmessages/
         [HttpGet("{id}/recomendationmessages/")]
         public async Task<ActionResult<IEnumerable<RecomendationMessageModel>>> GetRecomendationMessages(int id)
