@@ -1,4 +1,4 @@
-import { Flex, Stack, Text, Spinner, Button } from '@chakra-ui/react';
+import { Flex, Stack, Text, Spinner } from '@chakra-ui/react';
 import {
   AccordionItem,
   AccordionItemContent,
@@ -65,17 +65,18 @@ const SubjectTaskList = () => {
                           <AccordionItemContent>
                             <Stack mt={2}>
                               {topic.materials.map((material) => (
-                                <Button
+                                <Text
                                   key={material.id}
-                                  w="full"
-                                  variant="outline"
-                                  colorScheme="orange"
+                                  fontSize="md"
+                                  color="gray.700"
+                                  cursor="pointer"
+                                  _hover={{ textDecoration: 'underline' }}
                                   onClick={() =>
                                     navigate(`/course/subject-material/${material.id}`)
                                   }
                                 >
-                                  {material.title}
-                                </Button>
+                                  📖 {material.title}
+                                </Text>
                               ))}
                             </Stack>
                           </AccordionItemContent>

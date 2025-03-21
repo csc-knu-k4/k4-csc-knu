@@ -1,4 +1,14 @@
-import { Box, HStack, Text, Highlight, Flex, Input, GridItem, Grid } from '@chakra-ui/react';
+import {
+  Box,
+  HStack,
+  Text,
+  Highlight,
+  Flex,
+  Input,
+  GridItem,
+  Grid,
+  Button,
+} from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -18,7 +28,6 @@ const tasks = [
   'Обчисліть значення виразу: 5x−3, якщо x=2',
   'Розв’яжіть рівняння: 3y+7=16',
   'Знайдіть площу прямокутника зі сторонами 4 см і 6 см',
-  'Визначте периметр квадрата зі стороною 7 см.',
 ];
 
 const SubjectTaskTest = () => {
@@ -147,6 +156,9 @@ const SubjectTaskTest = () => {
           ))}
         </Grid>
       </Box>
+      <Button colorPalette="orange" maxW="20%">
+        Завершити тест
+      </Button>
     </Flex>
   );
 };
