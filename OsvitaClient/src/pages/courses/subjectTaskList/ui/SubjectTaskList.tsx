@@ -1,4 +1,4 @@
-import { Flex, Stack, Text, Spinner } from '@chakra-ui/react';
+import { Flex, Stack, Text, Spinner, Button } from '@chakra-ui/react';
 import {
   AccordionItem,
   AccordionItemContent,
@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getSubjects, Subject } from '@/shared/api/subjectsApi';
+import { addAssignmentsSets, getAssignmentsSets } from '@/shared/api/assingnmentsSets';
 
 const SubjectTaskList = () => {
   const { subjectId } = useParams();
@@ -17,12 +18,41 @@ const SubjectTaskList = () => {
 
   useEffect(() => {
     getSubjects()
-      .then((data) => setSubjects(data))
+      .then((data) => {
+        setSubjects(data);
+        localStorage.setItem('subjectsData', JSON.stringify(data));
+      })
       .catch((error) => console.error('Помилка завантаження предметів:', error))
       .finally(() => setLoading(false));
   }, []);
 
   const selectedSubject = subjects.find((sub) => sub.id.toString() === subjectId);
+
+  const handleStartTestFromTopic = async (topicId: number) => {
+    try {
+      // Створюємо тест
+      const testId = await addAssignmentsSets({
+        id: 0,
+        objectModelType: 1,
+        objectId: topicId,
+        assignments: [],
+      });
+
+      // Отримуємо завдання тесту
+      const testData = await getAssignmentsSets(testId);
+
+      if (!testData.assignments || testData.assignments.length === 0) {
+        alert('До цієї теми ще немає тесту 😔');
+        return;
+      }
+
+      // Переходимо на тест
+      navigate(`/course/subject-test/${testId}`);
+    } catch (err) {
+      console.error('Помилка при створенні тесту:', err);
+      alert('Не вдалося створити тест. Спробуйте пізніше.');
+    }
+  };
 
   return (
     <Flex
@@ -64,20 +94,35 @@ const SubjectTaskList = () => {
                           <AccordionItemTrigger>{topic.title}</AccordionItemTrigger>
                           <AccordionItemContent>
                             <Stack mt={2}>
-                              {topic.materials.map((material) => (
-                                <Text
-                                  key={material.id}
-                                  fontSize="md"
-                                  color="gray.700"
-                                  cursor="pointer"
-                                  _hover={{ textDecoration: 'underline' }}
-                                  onClick={() =>
-                                    navigate(`/course/subject-material/${material.id}`)
-                                  }
-                                >
-                                  📖 {material.title}
-                                </Text>
-                              ))}
+                              {[...topic.materials]
+                                .sort((a, b) => a.orderPosition - b.orderPosition)
+                                .map((material) => (
+                                  <Text
+                                    key={material.id}
+                                    fontSize="md"
+                                    color="gray.700"
+                                    cursor="pointer"
+                                    _hover={{ textDecoration: 'underline' }}
+                                    onClick={() =>
+                                      navigate(`/course/subject-material/${material.id}`, {
+                                        state: { topicId: topic.id },
+                                      })
+                                    }
+                                  >
+                                    📖 {material.title}
+                                  </Text>
+                                ))}
+
+                              <Button
+                                colorPalette="orange"
+                                maxW="10rem"
+                                mt={3}
+                                size="sm"
+                                borderRadius="0.5rem"
+                                onClick={() => handleStartTestFromTopic(topic.id)}
+                              >
+                                Пройти тест
+                              </Button>
                             </Stack>
                           </AccordionItemContent>
                         </AccordionItem>

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getMaterialContentById } from '@/shared/api/materialsApi';
-import { Button } from '@/components/ui/button';
-import { Flex, Text, Spinner, Box } from '@chakra-ui/react';
-import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
+import { Text, Spinner } from '@chakra-ui/react';
+import { addAssignmentsSets, getAssignmentsSets } from '@/shared/api/assingnmentsSets';
+import { useLocation } from 'react-router-dom';
+import SubjectTaskLayout from '@/app/layouts/SubjectTaskLayout/SubjectTaskLayout';
+import { goToNextMaterialOrTopic } from '@/shared/utils/navigationUtils';
 
 interface MaterialContent {
   id: number;
@@ -15,10 +17,65 @@ interface MaterialContent {
 }
 
 const SubjectTaskMaterial = () => {
+  const location = useLocation();
+  const topicId = location.state?.topicId;
   const { materialId } = useParams<{ materialId: string }>();
   const [content, setContent] = useState<MaterialContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [isTest, setIsTest] = useState(false);
+  const [nextTopic, setNextTopic] = useState<any | null>(null);
+
+  const navigate = useNavigate();
+
+  const handleStartTest = async () => {
+    if (!topicId) return;
+    setLoading(true);
+    try {
+      const testId = await addAssignmentsSets({
+        id: 0,
+        objectModelType: 1,
+        objectId: topicId,
+        assignments: [],
+      });
+
+      const testData = await getAssignmentsSets(testId);
+
+      if (!testData.assignments || testData.assignments.length === 0) {
+        alert('До цієї теми ще немає тесту 😔');
+        return;
+      }
+
+      navigate(`/course/subject-test/${testId}`);
+    } catch (err) {
+      console.error('Помилка створення тесту', err);
+      alert('Не вдалося створити тест. Спробуйте пізніше.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const subjectsData = JSON.parse(localStorage.getItem('subjectsData') || '[]');
+    if (!Array.isArray(subjectsData) || !topicId) return;
+
+    const allTopics: any[] = [];
+
+    subjectsData.forEach((subject: any) => {
+      subject.chapters.forEach((chapter: any) => {
+        chapter.topics.forEach((topic: any) => {
+          allTopics.push({
+            ...topic,
+            subjectId: subject.id,
+            chapterId: chapter.id,
+          });
+        });
+      });
+    });
+
+    const currentIndex = allTopics.findIndex((t) => t.id === topicId);
+    const nt = allTopics[currentIndex + 1];
+    if (nt) setNextTopic(nt);
+  }, [topicId]);
 
   useEffect(() => {
     if (materialId) {
@@ -30,54 +87,16 @@ const SubjectTaskMaterial = () => {
   }, [materialId]);
 
   return (
-    <Flex minHeight="100vh" flexDir="column">
-      <Flex
-        flexDir="row"
-        justifyContent="space-between"
-        alignItems="center"
-        p={5}
-        position="sticky"
-        top="0"
-        zIndex="10"
-      >
-        <Text fontSize="2xl" fontWeight="bold" color="orange">
-          Матеріал
-        </Text>
-        <Text fontSize="xl">{content?.title || 'Завантаження...'}</Text>
-        <Button rounded="xl" fontSize="md" bgColor="orange" onClick={() => setIsTest(!isTest)}>
-          {isTest ? 'Матеріал' : 'Пройти тест'}
-        </Button>
-      </Flex>
-
-      {/* Контент з прокруткою */}
-      <Box flex="1" overflowY="auto" p={5}>
-        {loading ? (
-          <Spinner size="xl" />
-        ) : (
-          <Text>{isTest ? 'Тут буде тест' : content?.value || 'Немає контенту'}</Text>
-        )}
-      </Box>
-
-      <Flex
-        flexDir="row"
-        justifyContent="space-between"
-        alignItems="center"
-        p={5}
-        position="sticky"
-        bottom="0"
-        zIndex="10"
-      >
-        <Button color="orange" variant="ghost" fontSize="md">
-          <IoIosArrowBack /> Повернутися назад
-        </Button>
-        <Button rounded="xl" fontSize="md" bgColor="orange" onClick={() => setIsTest(!isTest)}>
-          {isTest ? 'Матеріал' : 'Пройти тест'}
-        </Button>
-        <Button color="orange" variant="ghost" fontSize="md">
-          Наступна тема <IoIosArrowForward />
-        </Button>
-      </Flex>
-    </Flex>
+    <SubjectTaskLayout
+      title={content?.title || ''}
+      showTest={isTest}
+      onToggleMode={isTest ? () => setIsTest(false) : handleStartTest}
+      onNextTopic={() => goToNextMaterialOrTopic(topicId, Number(materialId), navigate)}
+      isNextDisabled={!nextTopic}
+      nextTopicTitle={nextTopic?.title || ''}
+    >
+      {loading ? <Spinner size="xl" /> : <Text>{content?.value || 'Немає контенту'}</Text>}
+    </SubjectTaskLayout>
   );
 };
 

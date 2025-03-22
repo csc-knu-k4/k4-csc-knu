@@ -6,6 +6,6 @@ export const getAssignmentsSets = async (id: number) => {
 };
 
 export const addAssignmentsSets = async (assignment: any) => {
-  const response = await api.post('/assignments', assignment);
+  const response = await api.post('/assignments/sets', assignment);
   return response.data;
 };
