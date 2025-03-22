@@ -134,7 +134,7 @@ const MatchAssignment = ({
           </GridItem>
         ))}
 
-        {data.childAssignments.map((child: any, row: number) => (
+        {data.childAssignments.map((_: any, row: number) => (
           <React.Fragment key={`row-${row}`}>
             <GridItem fontWeight="bold" color="orange" textAlign="center">
               {row + 1}

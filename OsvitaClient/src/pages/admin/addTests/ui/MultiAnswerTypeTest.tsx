@@ -368,7 +368,8 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
           <Text color="orange" fontSize="sm" mb={2}>
             Варіанти відповіді
           </Text>
-          {answers.map((answer, index) => (
+
+          {answers.map((_: any, index) => (
             <Flex key={index} flexDir="column" mb={4}>
               <Flex flexDir="row" gap={2} mb={1} justifyContent="center" alignItems="center">
                 <Text fontWeight="bold" color="orange" w="0.75rem">
