@@ -11,6 +11,7 @@ export interface Assignment {
   answers: {
     id: number;
     value: string;
+    valueImage: string;
     isCorrect: boolean;
     points: number;
     assignmentId: number;

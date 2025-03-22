@@ -32,6 +32,9 @@ export function MaterialTableRow({ item }: MaterialTableRowProps) {
     <>
       <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'orange.100'}>
         <Table.Cell w="full">{item.title}</Table.Cell>
+        <Table.Cell w="full" fontWeight="bold">
+          {item.id}
+        </Table.Cell>
         <Table.Cell>
           <ActionButtons
             actions={[
