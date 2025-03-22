@@ -21,7 +21,7 @@ const MatchAssignment = ({
   userAnswers: any[];
 }) => {
   const [variants, setVariants] = useState<any[]>([]);
-  const [selected, setSelected] = useState<number[]>([]); // зберігає індекс відповіді для кожного рядка
+  const [selected, setSelected] = useState<number[]>([]);
 
   useEffect(() => {
     const allAnswers = data.childAssignments.flatMap((c: any) => c.answers);

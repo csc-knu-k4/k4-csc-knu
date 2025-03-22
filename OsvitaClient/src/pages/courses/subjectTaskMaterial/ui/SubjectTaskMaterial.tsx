@@ -6,6 +6,7 @@ import { addAssignmentsSets, getAssignmentsSets } from '@/shared/api/assingnment
 import { useLocation } from 'react-router-dom';
 import SubjectTaskLayout from '@/app/layouts/SubjectTaskLayout/SubjectTaskLayout';
 import { goToNextMaterialOrTopic } from '@/shared/utils/navigationUtils';
+import { toaster } from '@/components/ui/toaster';
 
 interface MaterialContent {
   id: number;
@@ -41,14 +42,19 @@ const SubjectTaskMaterial = () => {
       const testData = await getAssignmentsSets(testId);
 
       if (!testData.assignments || testData.assignments.length === 0) {
-        alert('До цієї теми ще немає тесту 😔');
+        toaster.create({
+          title: `До цієї теми ще немає тесту 😔`,
+          type: 'warning',
+        });
         return;
       }
 
       navigate(`/course/subject-test/${testId}`);
     } catch (err) {
-      console.error('Помилка створення тесту', err);
-      alert('Не вдалося створити тест. Спробуйте пізніше.');
+      toaster.create({
+        title: `Не вдалося створити тест: ${err}`,
+        type: 'error',
+      });
     } finally {
       setLoading(false);
     }
@@ -81,7 +87,12 @@ const SubjectTaskMaterial = () => {
     if (materialId) {
       getMaterialContentById(Number(materialId))
         .then((data) => setContent(data[0]))
-        .catch((error) => console.error('Помилка завантаження матеріалу:', error))
+        .catch((error) => {
+          toaster.create({
+            title: `Помилка завантаження матеріалу: ${error}`,
+            type: 'error',
+          });
+        })
         .finally(() => setLoading(false));
     }
   }, [materialId]);

@@ -6,6 +6,7 @@ import SingleChoiceQuestion from './SingleChoiceQuestion';
 import OpenAnswerQuestion from './OpenAnswerQuestion';
 import MatchAssignment from './MatchAssignment';
 import { addStatisticAssignments } from '@/shared/api/userStatisticApi';
+import { toaster } from '@/components/ui/toaster';
 
 const TestRenderer = ({ testId }: { testId: number }) => {
   const [assignments, setAssignments] = useState<any[]>([]);
@@ -107,7 +108,10 @@ const TestRenderer = ({ testId }: { testId: number }) => {
       setScore(localScore);
       setIsFinished(true);
     } catch (err) {
-      console.error('Помилка збереження результату:', err);
+      toaster.create({
+        title: `Помилка збереження результату: ${err}`,
+        type: 'error',
+      });
     }
   };
 

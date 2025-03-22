@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getSubjects, Subject } from '@/shared/api/subjectsApi';
 import { addAssignmentsSets, getAssignmentsSets } from '@/shared/api/assingnmentsSets';
+import { toaster } from '@/components/ui/toaster';
 
 const SubjectTaskList = () => {
   const { subjectId } = useParams();
@@ -22,7 +23,12 @@ const SubjectTaskList = () => {
         setSubjects(data);
         localStorage.setItem('subjectsData', JSON.stringify(data));
       })
-      .catch((error) => console.error('Помилка завантаження предметів:', error))
+      .catch((error) => {
+        toaster.create({
+          title: `Помилка завантаження предметів: ${error}`,
+          type: 'error',
+        });
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -30,7 +36,6 @@ const SubjectTaskList = () => {
 
   const handleStartTestFromTopic = async (topicId: number) => {
     try {
-      // Створюємо тест
       const testId = await addAssignmentsSets({
         id: 0,
         objectModelType: 1,
@@ -38,19 +43,22 @@ const SubjectTaskList = () => {
         assignments: [],
       });
 
-      // Отримуємо завдання тесту
       const testData = await getAssignmentsSets(testId);
 
       if (!testData.assignments || testData.assignments.length === 0) {
-        alert('До цієї теми ще немає тесту 😔');
+        toaster.create({
+          title: `До цієї теми ще немає тесту 😔`,
+          type: 'warning',
+        });
         return;
       }
 
-      // Переходимо на тест
       navigate(`/course/subject-test/${testId}`);
     } catch (err) {
-      console.error('Помилка при створенні тесту:', err);
-      alert('Не вдалося створити тест. Спробуйте пізніше.');
+      toaster.create({
+        title: `Не вдалося створити тест. Спробуйте пізніше. ${err}`,
+        type: 'error',
+      });
     }
   };
 
