@@ -20,6 +20,8 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
   const [imageId, setImageId] = useState<string | null>(null);
   const [answerImages, setAnswerImages] = useState<(File | null)[]>(Array(5).fill(null));
   const [answerImageIds, setAnswerImageIds] = useState<(string | null)[]>(Array(5).fill(null));
+  const [questionImages, setQuestionImages] = useState<(File | null)[]>(Array(3).fill(null));
+  const [questionImageIds, setQuestionImageIds] = useState<(string | null)[]>(Array(3).fill(null));
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,10 +31,30 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
     }
   }, [materialId]);
 
+  const handleQuestionImageChange = (index: number, file: File) => {
+    const newImages = [...questionImages];
+    newImages[index] = file;
+    setQuestionImages(newImages);
+  };
+
+  const handleRemoveQuestionImage = (index: number) => {
+    const newImages = [...questionImages];
+    const newIds = [...questionImageIds];
+    newImages[index] = null;
+    newIds[index] = null;
+    setQuestionImages(newImages);
+    setQuestionImageIds(newIds);
+  };
+
   const handleAnswerImageChange = (index: number, file: File) => {
     const newImages = [...answerImages];
     newImages[index] = file;
     setAnswerImages(newImages);
+
+    // автозаміщення тексту на літеру
+    const newAnswers = [...answers];
+    newAnswers[index] = String.fromCharCode(1040 + index);
+    setAnswers(newAnswers);
   };
 
   const handleRemoveAnswerImage = (index: number) => {
@@ -133,6 +155,26 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
     }
     setAnswerImageIds(uploadedAnswerImageIds);
 
+    const uploadedQuestionImageIds: (string | null)[] = [];
+
+    for (let i = 0; i < questionImages.length; i++) {
+      if (questionImages[i]) {
+        try {
+          const uploaded = await uploadFile(questionImages[i]!);
+          uploadedQuestionImageIds[i] = uploaded;
+        } catch {
+          toaster.create({
+            title: `Помилка при завантаженні зображення до запитання ${i + 1}`,
+            type: 'warning',
+          });
+          return;
+        }
+      } else {
+        uploadedQuestionImageIds[i] = null;
+      }
+    }
+    setQuestionImageIds(uploadedQuestionImageIds);
+
     // Побудова тесту
     const usedCorrectIndexes = new Set(correctMatches.flat());
     const lastCorrectIndex = correctMatches[correctMatches.length - 1][0];
@@ -188,8 +230,8 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
         return {
           id: 0,
           objectId: validatedTopicId,
-          problemDescription: question,
-          problemDescriptionImage: uploadedImageId || '',
+          problemDescription: uploadedQuestionImageIds[index] ? String(index + 1) : question,
+          problemDescriptionImage: uploadedQuestionImageIds[index] || '',
           explanation: '',
           assignmentModelType: 3,
           parentAssignmentId: 0,
@@ -215,6 +257,8 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
       setImageId(null);
       setAnswerImages(Array(5).fill(null));
       setAnswerImageIds(Array(5).fill(null));
+      setQuestionImages(Array(3).fill(null));
+      setQuestionImageIds(Array(3).fill(null));
     } catch (error) {
       toaster.create({
         title: `Помилка при додаванні тесту: ${error}`,
@@ -269,23 +313,54 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
             Запитання
           </Text>
           {questions.map((question, index) => (
-            <Flex
-              key={index}
-              flexDir="row"
-              gap={2}
-              mb={3}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Text fontWeight="bold" color="orange" w="0.75rem">
-                {index + 1}
-              </Text>
-              <Input
-                w={{ base: '20rem', md: '30.5rem' }}
-                placeholder={`Запитання ${index + 1}`}
-                value={question}
-                onChange={(e) => handleQuestionChange(index, e.target.value)}
-              />
+            <Flex key={index} flexDir="column" mb={3}>
+              <Flex flexDir="row" gap={2} justifyContent="center" alignItems="center">
+                <Text fontWeight="bold" color="orange" w="0.75rem">
+                  {index + 1}
+                </Text>
+                <Input
+                  w={{ base: '20rem', md: '30.5rem' }}
+                  placeholder={`Запитання ${index + 1}`}
+                  value={question}
+                  onChange={(e) => handleQuestionChange(index, e.target.value)}
+                />
+              </Flex>
+
+              {/* Додавання картинки до запитання */}
+              <Flex align="center" gap={2} mt={1}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id={`question-image-${index}`}
+                  style={{ display: 'none' }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleQuestionImageChange(index, file);
+                  }}
+                />
+                <Button
+                  size="xs"
+                  colorPalette="orange"
+                  ml={6}
+                  onClick={() => document.getElementById(`question-image-${index}`)?.click()}
+                >
+                  Додати фото
+                </Button>
+                {questionImages[index] && (
+                  <>
+                    <Text fontSize="sm" color="green">
+                      {questionImages[index]?.name}
+                    </Text>
+                    <Button
+                      size="xs"
+                      colorPalette="red"
+                      onClick={() => handleRemoveQuestionImage(index)}
+                    >
+                      Видалити
+                    </Button>
+                  </>
+                )}
+              </Flex>
             </Flex>
           ))}
         </Flex>
