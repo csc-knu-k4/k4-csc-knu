@@ -9,8 +9,12 @@ namespace OsvitaApp.Models.ObservableModels
 {
     public partial class TopicObservableModel : ObservableObject
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public int ChapterId { get; set; }
         public int OrderPosition { get; set; }
+
+        [ObservableProperty] public bool _isSelected;
+        [ObservableProperty] public bool _isChecked;
     }
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      x:Class="OsvitaApp.Pages.Controls.TopicView"
+      xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
+      xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
+      xmlns:vm="clr-namespace:OsvitaApp.PageModels"
+      x:DataType="om:TopicObservableModel"
+      RowSpacing="10"
+      ColumnSpacing="10"
+      HorizontalOptions="Fill"
+      VerticalOptions="Fill">
+
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="0.1*" />
+        <ColumnDefinition Width="0.45*" />
+        <ColumnDefinition Width="0.45*" />
+
+    </Grid.ColumnDefinitions>
+
+    <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Ellipse Stroke="{x:StaticResource GrayD9}"
+             WidthRequest="26"
+             HeightRequest="26">
+        <Ellipse.Triggers>
+            <DataTrigger TargetType="Ellipse"
+                         Binding="{Binding IsChecked}"
+                         Value="True">
+                <Setter Property="Stroke"
+                        Value="{x:StaticResource IsChecked}" />
+            </DataTrigger>
+        </Ellipse.Triggers>
+    </Ellipse>
+
+    <Image Source="{x:StaticResource CheckMarkPrimary}"
+           WidthRequest="15"
+           HeightRequest="10"
+           IsVisible="{Binding IsChecked}" />
+
+    <Label Grid.Row="0"
+           Grid.Column="1"
+           Grid.ColumnSpan="2"
+           Text="{Binding Title}"
+           VerticalTextAlignment="Start"
+           VerticalOptions="Fill"
+           HorizontalTextAlignment="Start"
+           HorizontalOptions="Fill" />
+
+    <controls:RippleButton Grid.Row="1"
+                           Grid.Column="1"
+                           Text="Матеріал"
+                           IsVisible="{Binding IsSelected}"
+                           Style="{x:StaticResource TopicsMaterialButton}"
+                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=TopicsMaterialButtonClickedCommand}"
+                           CommandParameter="{Binding .}" />
+
+    <controls:RippleButton Grid.Row="1"
+                           Grid.Column="2"
+                           Text="Тест"
+                           IsVisible="{Binding IsSelected}"
+                           Style="{x:StaticResource TopicsTestButton}"
+                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=TopicsTestButtonClickedCommand}"
+                           CommandParameter="{Binding .}" />
+</Grid>

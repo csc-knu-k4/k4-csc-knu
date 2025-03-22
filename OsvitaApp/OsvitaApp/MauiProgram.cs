@@ -45,10 +45,10 @@ namespace OsvitaApp
             builder.Services.AddSingleton<ProjectListPageModel>();
             builder.Services.AddSingleton<ManageMetaPageModel>();
             builder.Services.AddSingleton<ApiService>();
+            builder.Services.AddSingleton<IUserService, UserService>();
             builder.Services.AddSingleton<IAccountService, AccountService>();
             builder.Services.AddSingleton<ISubjectsService, SubjectsService>();
             builder.Services.AddSingleton<IChaptersService, ChaptersService>();
-
 
 
             builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");

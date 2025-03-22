@@ -11,10 +11,13 @@ namespace OsvitaApp.Services
 {
     public class AccountService : BaseService, IAccountService
     {
+        private readonly IUserService _userService;
+
         private string _token;
 
-        public AccountService(ApiService apiService) : base(apiService, "api/account")
+        public AccountService(ApiService apiService, IUserService userService) : base(apiService, "api/account")
         {
+            _userService = userService;
         }
 
         public async Task<(bool IsSuccess, string ErrorMessage)> LoginAsync(string email, string password)
@@ -26,6 +29,7 @@ namespace OsvitaApp.Services
             {
                 _token = response.Data.Token;
                 _apiService.SetAuthToken(_token);
+                await _userService.Init(response.Data.Id);
                 return (true, string.Empty);
             }
 

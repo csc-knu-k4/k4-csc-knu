@@ -39,15 +39,23 @@
             <controls:TopPanel Grid.Row="0" />
 
             <Border Grid.Row="1"
-                    Style="{x:StaticResource BackgroundBorderStyle}">
+                    Style="{x:StaticResource BackgroundBorderStyle}"
+                    Padding="10">
 
                 <CollectionView ItemsSource="{Binding Chapters}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical"
+                                           ItemSpacing="7.5" />
+                    </CollectionView.ItemsLayout>
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="om:ChapterObservableModel">
-                            <Border Stroke="Black"
+                            <Border Stroke="#f4f4f4"
+                                    StrokeThickness="1"
+                                    BackgroundColor="White"
                                     Padding="10"
-                                    Margin="5"
-                                    StrokeShape="RoundRectangle 12">
+                                    StrokeShape="RoundRectangle 15">
+
                                 <VerticalStackLayout>
                                     <Grid>
                                         <Label Text="{Binding Title}"
@@ -72,12 +80,27 @@
                                     <VerticalStackLayout IsVisible="{Binding IsExpanded}">
                                         <Label Text="Завантаження тем..."
                                                IsVisible="{Binding Topics, Converter={StaticResource IsNullConverter}}" />
-                                        <CollectionView ItemsSource="{Binding Topics}">
+                                        <Line Fill="#000000"
+                                              Opacity="0.15"
+                                              BackgroundColor="#000000"
+                                              HeightRequest="1" />
+                                        <CollectionView ItemsSource="{Binding Topics}"
+                                                        Margin = "0, 20, 0, 0">
+                                            <CollectionView.ItemsLayout>
+                                                <LinearItemsLayout Orientation="Vertical"
+                                                                   ItemSpacing="7.5" />
+                                            </CollectionView.ItemsLayout>
                                             <CollectionView.ItemTemplate>
                                                 <DataTemplate x:DataType="om:TopicObservableModel">
-                                                    <Label Text="{Binding Title}"
-                                                           FontSize="16"
-                                                           Padding="5" />
+                                                    <controls:TopicView>
+
+                                                        <Grid.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=TopicClickedCommand}"
+                                                                                  CommandParameter="{Binding .}" />
+
+                                                        </Grid.GestureRecognizers>
+                                                    
+                                                    </controls:TopicView>
                                                 </DataTemplate>
                                             </CollectionView.ItemTemplate>
                                         </CollectionView>

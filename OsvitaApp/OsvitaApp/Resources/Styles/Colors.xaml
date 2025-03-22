@@ -13,6 +13,8 @@
     <Color x:Key="SecondaryDarkText">LightBlue</Color>
     <Color x:Key="Tertiary">#00B800</Color>
 
+    <Color x:Key="GrayD9">#D9D9D9</Color>
+
     <Color x:Key="DarkBackground">#17171a</Color>
     <Color x:Key="LightOnDarkBackground">White</Color>
     <Color x:Key="LightBackground">#F7F6F4</Color>

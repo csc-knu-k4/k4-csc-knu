@@ -118,6 +118,9 @@
     <FileImageSource x:Key="ArrowDown"
                      File="arrowdown.png" />
 
+    <FileImageSource x:Key="CheckMarkPrimary"
+                     File="checkmarkprimary.png" />
+
     <Style TargetType="Label">
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />

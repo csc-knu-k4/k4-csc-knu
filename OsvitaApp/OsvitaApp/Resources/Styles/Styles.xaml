@@ -684,12 +684,13 @@
     <Style TargetType="buttons:SfButton"
            x:Key="BigPrimaryButton"
            BasedOn="{x:StaticResource SfButtonStyle}">
-
+        <Setter Property="Stroke"
+                Value="{x:StaticResource Primary}" />
         <Setter Property="Background"
                 Value="{x:StaticResource Primary}" />
         <Setter Property="TextColor"
                 Value="{x:StaticResource LightOnDarkBackground}" />
-        
+
         <Setter Property="CornerRadius"
                 Value="25" />
         <Setter Property="HeightRequest"
@@ -700,6 +701,47 @@
                 Value="Center" />
         <Setter Property="VerticalTextAlignment"
                 Value="Center" />
+
+    </Style>
+
+    <Style TargetType="buttons:SfButton"
+           x:Key="MaterialButton"
+           BasedOn="{x:StaticResource SfButtonStyle}">
+
+        <Setter Property="CornerRadius"
+                Value="10" />
+        <Setter Property="HeightRequest"
+                Value="40" />
+        <Setter Property="FontSize"
+                Value="24" />
+        <Setter Property="HorizontalTextAlignment"
+                Value="Center" />
+        <Setter Property="VerticalTextAlignment"
+                Value="Center" />
+
+    </Style>
+
+    <Style TargetType="buttons:SfButton"
+           x:Key="TopicsMaterialButton"
+           BasedOn="{x:StaticResource MaterialButton}">
+        <Setter Property="Stroke"
+                Value="{x:StaticResource Secondary}" />
+        <Setter Property="Background"
+                Value="{x:StaticResource Secondary}" />
+        <Setter Property="TextColor"
+                Value="{x:StaticResource LightOnDarkBackground}" />
+
+    </Style>
+
+    <Style TargetType="buttons:SfButton"
+           x:Key="TopicsTestButton"
+           BasedOn="{x:StaticResource MaterialButton}">
+        <Setter Property="Stroke"
+                Value="{x:StaticResource Primary}" />
+        <Setter Property="Background"
+                Value="{x:StaticResource Primary}" />
+        <Setter Property="TextColor"
+                Value="{x:StaticResource LightOnDarkBackground}" />
 
     </Style>
 
