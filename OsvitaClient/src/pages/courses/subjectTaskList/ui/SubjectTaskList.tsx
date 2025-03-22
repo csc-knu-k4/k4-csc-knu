@@ -79,7 +79,7 @@ const SubjectTaskList = () => {
       navigate(`/course/subject-test/${testId}`);
     } catch (err) {
       toaster.create({
-        title: `Не вдалося створити тест. Спробуйте пізніше. ${err}`,
+        title: `Не вдалося створити тест. Спробуйте пізніше: ${err}`,
         type: 'error',
       });
     }
@@ -92,7 +92,6 @@ const SubjectTaskList = () => {
 
     try {
       if (current) {
-        // оновлення
         await updateStatisticTopic(userId, {
           id: current.id,
           statisticId: userId,
@@ -101,7 +100,6 @@ const SubjectTaskList = () => {
           completedDate: now,
         });
       } else {
-        // нова тема
         const res = await addStatisticTopic(userId, {
           id: 0,
           statisticId: userId,
@@ -125,9 +123,8 @@ const SubjectTaskList = () => {
         },
       }));
     } catch (err) {
-      console.log(err);
       toaster.create({
-        title: 'Не вдалося оновити прогрес теми',
+        title: `Не вдалося оновити прогрес теми ${err}`,
         type: 'error',
       });
     }
@@ -178,7 +175,7 @@ const SubjectTaskList = () => {
                                 onChange={() => handleTopicCheckboxChange(topic.id)}
                                 colorPalette="orange"
                               >
-                                Пройдена
+                                Пройдено
                               </Checkbox>
                             </Flex>
                           </AccordionItemTrigger>
