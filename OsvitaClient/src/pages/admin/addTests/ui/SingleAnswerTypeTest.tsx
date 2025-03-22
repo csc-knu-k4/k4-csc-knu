@@ -22,6 +22,9 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageId, setImageId] = useState<string | null>(null);
 
+  const [optionImages, setOptionImages] = useState<(File | null)[]>([null, null]);
+  const [optionImageIds, setOptionImageIds] = useState<(string | null)[]>([null, null]);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -29,6 +32,21 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
       setValidatedMaterialId(materialId);
     }
   }, [materialId]);
+
+  const handleOptionImageChange = (index: number, file: File) => {
+    const newImages = [...optionImages];
+    newImages[index] = file;
+    setOptionImages(newImages);
+  };
+
+  const handleRemoveOptionImage = (index: number) => {
+    const newImages = [...optionImages];
+    const newIds = [...optionImageIds];
+    newImages[index] = null;
+    newIds[index] = null;
+    setOptionImages(newImages);
+    setOptionImageIds(newIds);
+  };
 
   const handleOptionChange = (index: number, value: string) => {
     const newOptions = [...options];
@@ -61,9 +79,14 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
   };
 
   const handleSubmit = async () => {
-    if (!question || options.some((opt) => opt === '') || validatedMaterialId === null) {
+    const isOptionEmptyWithoutImage = options.some((opt, index) => {
+      const hasImage = optionImages[index] !== null;
+      return !hasImage && opt.trim() === '';
+    });
+
+    if (!question || isOptionEmptyWithoutImage || validatedMaterialId === null) {
       toaster.create({
-        title: `Будь ласка, заповніть усі поля.`,
+        title: `Будь ласка, заповніть усі обов'язкові поля.`,
         type: 'warning',
       });
       return;
@@ -76,12 +99,32 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
         setImageId(uploadedImageId);
       } catch {
         toaster.create({
-          title: `Помилка при завантаженні зображення`,
+          title: `Помилка при завантаженні зображення до питання`,
           type: 'warning',
         });
         return;
       }
     }
+
+    const uploadedOptionImageIds: (string | null)[] = [];
+
+    for (let i = 0; i < optionImages.length; i++) {
+      if (optionImages[i]) {
+        try {
+          const uploaded = await uploadFile(optionImages[i]!);
+          uploadedOptionImageIds[i] = uploaded;
+        } catch {
+          toaster.create({
+            title: `Помилка при завантаженні зображення до варіанту ${OPTION_LABELS[i]}`,
+            type: 'warning',
+          });
+          return;
+        }
+      } else {
+        uploadedOptionImageIds[i] = null;
+      }
+    }
+    setOptionImageIds(uploadedOptionImageIds);
 
     const test: Assignment = {
       id: 0,
@@ -91,13 +134,17 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
       explanation: '',
       assignmentModelType: 0,
       parentAssignmentId: 0,
-      answers: options.map((value, index) => ({
-        id: 0,
-        value,
-        isCorrect: index === correctAnswerIndex,
-        points: index === correctAnswerIndex ? 1 : 0,
-        assignmentId: 0,
-      })),
+      answers: options.map((value, index) => {
+        const hasImage = uploadedOptionImageIds[index];
+        return {
+          id: 0,
+          value: hasImage ? OPTION_LABELS[index] : value,
+          valueImage: hasImage || '',
+          isCorrect: index === correctAnswerIndex,
+          points: index === correctAnswerIndex ? 1 : 0,
+          assignmentId: 0,
+        };
+      }),
       childAssignments: [],
     };
 
@@ -107,9 +154,17 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
         title: `Тест успішно додано!`,
         type: 'success',
       });
+
+      setQuestion('');
+      setOptions(['', '']);
+      setCorrectAnswerIndex(null);
+      setImageFile(null);
+      setImageId(null);
+      setOptionImages([null, null]);
+      setOptionImageIds([null, null]);
     } catch (error) {
       toaster.create({
-        title: `Помилка при додаванні тесту ${error}`,
+        title: `Помилка при додаванні тесту: ${error}`,
         type: 'warning',
       });
     }
@@ -126,7 +181,6 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
         />
       </Field>
 
-      {/* Поле вибору файлу */}
       <input
         type="file"
         accept="image/*"
@@ -135,18 +189,22 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
         style={{ display: 'none' }}
       />
 
-      {/* Відображення доданого файлу */}
       {imageFile ? (
         <Flex alignItems="center" mb={3}>
           <Text fontSize="sm" color="green" mr={3}>
             {imageFile.name}
           </Text>
-          <Button size="sm" colorPalette="red" onClick={handleRemoveFile}>
+          <Button size="xs" colorPalette="red" onClick={handleRemoveFile}>
             Видалити
           </Button>
         </Flex>
       ) : (
-        <Button colorPalette="orange" mb={2} onClick={() => fileInputRef.current?.click()}>
+        <Button
+          size="xs"
+          colorPalette="orange"
+          mb={2}
+          onClick={() => fileInputRef.current?.click()}
+        >
           Додати фото
         </Button>
       )}
@@ -156,26 +214,61 @@ const SingleAnswerTypeTest: React.FC<SingleAnswerTypeTestProps> = ({ materialId 
       </Text>
 
       {options.map((option, index) => (
-        <Flex key={index} flexDir="row" alignItems="center" gap={3} mb={3}>
-          <Text fontWeight="bold" color="orange" w="0.75rem">
-            {OPTION_LABELS[index]}
-          </Text>
-          <Input
-            w={{ base: '20rem', md: '30.5rem' }}
-            placeholder={`Варіант ${OPTION_LABELS[index]}`}
-            value={option}
-            onChange={(e) => handleOptionChange(index, e.target.value)}
-          />
-          <Checkbox
-            checked={correctAnswerIndex === index}
-            onCheckedChange={() => setCorrectAnswerIndex(index)}
-            colorPalette="orange"
-          />
-          {options.length > MIN_OPTIONS && (
-            <Button size="sm" colorPalette="orange" onClick={() => handleRemoveOption(index)}>
-              Видалити
+        <Flex key={index} flexDir="column" mb={4}>
+          <Flex align="center" gap={3}>
+            <Text fontWeight="bold" color="orange">
+              {OPTION_LABELS[index]}
+            </Text>
+            <Input
+              w={{ base: '20rem', md: '30.5rem' }}
+              placeholder={`Варіант ${OPTION_LABELS[index]}`}
+              value={option}
+              onChange={(e) => handleOptionChange(index, e.target.value)}
+            />
+            <Checkbox
+              checked={correctAnswerIndex === index}
+              onCheckedChange={() => setCorrectAnswerIndex(index)}
+              colorPalette="orange"
+            />
+            {options.length > MIN_OPTIONS && (
+              <Button size="xs" colorPalette="orange" onClick={() => handleRemoveOption(index)}>
+                Видалити
+              </Button>
+            )}
+          </Flex>
+
+          <Flex align="center" mt={1} gap={3}>
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              id={`option-image-${index}`}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  handleOptionImageChange(index, file);
+                }
+              }}
+            />
+            <Button
+              ml={6}
+              colorPalette="orange"
+              size="xs"
+              onClick={() => document.getElementById(`option-image-${index}`)?.click()}
+            >
+              Додати фото
             </Button>
-          )}
+            {optionImages[index] && (
+              <>
+                <Text fontSize="sm" color="green">
+                  {optionImages[index]?.name}
+                </Text>
+                <Button size="xs" colorPalette="red" onClick={() => handleRemoveOptionImage(index)}>
+                  Видалити
+                </Button>
+              </>
+            )}
+          </Flex>
         </Flex>
       ))}
 

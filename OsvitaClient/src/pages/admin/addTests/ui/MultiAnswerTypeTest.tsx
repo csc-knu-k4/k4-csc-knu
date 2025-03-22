@@ -18,6 +18,8 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
   const [validatedTopicId, setValidatedTopicId] = useState<number | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageId, setImageId] = useState<string | null>(null);
+  const [answerImages, setAnswerImages] = useState<(File | null)[]>(Array(5).fill(null));
+  const [answerImageIds, setAnswerImageIds] = useState<(string | null)[]>(Array(5).fill(null));
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -26,6 +28,21 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
       setValidatedTopicId(materialId);
     }
   }, [materialId]);
+
+  const handleAnswerImageChange = (index: number, file: File) => {
+    const newImages = [...answerImages];
+    newImages[index] = file;
+    setAnswerImages(newImages);
+  };
+
+  const handleRemoveAnswerImage = (index: number) => {
+    const newImages = [...answerImages];
+    const newIds = [...answerImageIds];
+    newImages[index] = null;
+    newIds[index] = null;
+    setAnswerImages(newImages);
+    setAnswerImageIds(newIds);
+  };
 
   const handleQuestionChange = (index: number, value: string) => {
     const newQuestions = [...questions];
@@ -62,19 +79,25 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
   };
 
   const handleSubmit = async () => {
+    const isAnswerInvalid = answers.some((answer, index) => {
+      const hasImage = answerImages[index] !== null;
+      return !hasImage && answer.trim() === '';
+    });
+
     if (
       !problemDescription ||
       questions.some((q) => !q) ||
-      answers.some((a) => !a) ||
+      isAnswerInvalid ||
       validatedTopicId === null
     ) {
       toaster.create({
-        title: `Будь ласка, заповніть усі поля.`,
+        title: `Будь ласка, заповніть усі поля або додайте зображення до варіантів.`,
         type: 'warning',
       });
       return;
     }
 
+    // Завантаження зображення до завдання
     let uploadedImageId = imageId;
     if (imageFile) {
       try {
@@ -82,13 +105,35 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
         setImageId(uploadedImageId);
       } catch {
         toaster.create({
-          title: `Помилка при завантаженні зображення`,
+          title: `Помилка при завантаженні зображення до завдання`,
           type: 'warning',
         });
         return;
       }
     }
 
+    // Завантаження зображень до відповідей
+    const uploadedAnswerImageIds: (string | null)[] = [];
+
+    for (let i = 0; i < answerImages.length; i++) {
+      if (answerImages[i]) {
+        try {
+          const uploaded = await uploadFile(answerImages[i]!);
+          uploadedAnswerImageIds[i] = uploaded;
+        } catch {
+          toaster.create({
+            title: `Помилка при завантаженні зображення до відповіді ${String.fromCharCode(1040 + i)}`,
+            type: 'warning',
+          });
+          return;
+        }
+      } else {
+        uploadedAnswerImageIds[i] = null;
+      }
+    }
+    setAnswerImageIds(uploadedAnswerImageIds);
+
+    // Побудова тесту
     const usedCorrectIndexes = new Set(correctMatches.flat());
     const lastCorrectIndex = correctMatches[correctMatches.length - 1][0];
     const remainingIncorrectIndexes = answers
@@ -103,21 +148,27 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
       explanation: '',
       assignmentModelType: 2,
       parentAssignmentId: 0,
-      answers: [],
+      answers: [], // головне завдання не має відповідей
       childAssignments: questions.map((question, index) => {
         const assignedAnswers =
           index === questions.length - 1
             ? [
                 ...remainingIncorrectIndexes.map((answerIndex) => ({
                   id: 0,
-                  value: answers[answerIndex],
+                  value: uploadedAnswerImageIds[answerIndex]
+                    ? String.fromCharCode(1040 + answerIndex)
+                    : answers[answerIndex],
+                  valueImage: uploadedAnswerImageIds[answerIndex] || '',
                   isCorrect: false,
                   points: 0,
                   assignmentId: 0,
                 })),
                 {
                   id: 0,
-                  value: answers[lastCorrectIndex],
+                  value: uploadedAnswerImageIds[lastCorrectIndex]
+                    ? String.fromCharCode(1040 + lastCorrectIndex)
+                    : answers[lastCorrectIndex],
+                  valueImage: uploadedAnswerImageIds[lastCorrectIndex] || '',
                   isCorrect: true,
                   points: 1,
                   assignmentId: 0,
@@ -125,7 +176,10 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
               ]
             : correctMatches[index].map((answerIndex) => ({
                 id: 0,
-                value: answers[answerIndex],
+                value: uploadedAnswerImageIds[answerIndex]
+                  ? String.fromCharCode(1040 + answerIndex)
+                  : answers[answerIndex],
+                valueImage: uploadedAnswerImageIds[answerIndex] || '',
                 isCorrect: true,
                 points: 1,
                 assignmentId: 0,
@@ -151,9 +205,19 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
         title: `Тест успішно додано!`,
         type: 'success',
       });
+
+      // (опційно) очистити форму:
+      setProblemDescription('');
+      setQuestions(['', '', '']);
+      setAnswers(['', '', '', '', '']);
+      setCorrectMatches(Array(3).fill([]));
+      setImageFile(null);
+      setImageId(null);
+      setAnswerImages(Array(5).fill(null));
+      setAnswerImageIds(Array(5).fill(null));
     } catch (error) {
       toaster.create({
-        title: `Помилка при додаванні тесту ${error}`,
+        title: `Помилка при додаванні тесту: ${error}`,
         type: 'warning',
       });
     }
@@ -184,12 +248,17 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
           <Text fontSize="sm" color="green" mr={3}>
             {imageFile.name}
           </Text>
-          <Button size="sm" colorPalette="red" onClick={handleRemoveFile}>
+          <Button size="xs" colorPalette="red" onClick={handleRemoveFile}>
             Видалити
           </Button>
         </Flex>
       ) : (
-        <Button colorPalette="orange" mb={2} onClick={() => fileInputRef.current?.click()}>
+        <Button
+          size="xs"
+          colorPalette="orange"
+          mb={2}
+          onClick={() => fileInputRef.current?.click()}
+        >
           Додати фото
         </Button>
       )}
@@ -225,23 +294,53 @@ const MultiAnswerTypeTest: React.FC<MultiTypeTestProps> = ({ materialId }) => {
             Варіанти відповіді
           </Text>
           {answers.map((answer, index) => (
-            <Flex
-              key={index}
-              flexDir="row"
-              gap={2}
-              mb={3}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Text fontWeight="bold" color="orange" w="0.75rem">
-                {String.fromCharCode(1040 + index)}
-              </Text>
-              <Input
-                w={{ base: '20rem', md: '30.5rem' }}
-                placeholder={`Відповідь ${String.fromCharCode(1040 + index)}`}
-                value={answer}
-                onChange={(e) => handleAnswerChange(index, e.target.value)}
-              />
+            <Flex key={index} flexDir="column" mb={4}>
+              <Flex flexDir="row" gap={2} mb={1} justifyContent="center" alignItems="center">
+                <Text fontWeight="bold" color="orange" w="0.75rem">
+                  {String.fromCharCode(1040 + index)}
+                </Text>
+                <Input
+                  w={{ base: '20rem', md: '30.5rem' }}
+                  placeholder={`Відповідь ${String.fromCharCode(1040 + index)}`}
+                  value={answers[index]}
+                  onChange={(e) => handleAnswerChange(index, e.target.value)}
+                />
+              </Flex>
+
+              <Flex align="center" gap={2}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id={`answer-image-${index}`}
+                  style={{ display: 'none' }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleAnswerImageChange(index, file);
+                  }}
+                />
+                <Button
+                  ml={6}
+                  colorPalette="orange"
+                  size="xs"
+                  onClick={() => document.getElementById(`answer-image-${index}`)?.click()}
+                >
+                  Додати фото
+                </Button>
+                {answerImages[index] && (
+                  <>
+                    <Text fontSize="sm" color="green">
+                      {answerImages[index]?.name}
+                    </Text>
+                    <Button
+                      size="xs"
+                      colorPalette="red"
+                      onClick={() => handleRemoveAnswerImage(index)}
+                    >
+                      Видалити
+                    </Button>
+                  </>
+                )}
+              </Flex>
             </Flex>
           ))}
         </Flex>

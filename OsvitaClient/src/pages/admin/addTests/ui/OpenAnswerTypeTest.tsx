@@ -71,6 +71,7 @@ const OpenAnswerTypeTest: React.FC<OpenAnswerTypeTestProps> = ({ materialId }) =
         {
           id: 0,
           value: answer,
+          valueImage: '',
           isCorrect: true,
           points: 2,
           assignmentId: 0,
