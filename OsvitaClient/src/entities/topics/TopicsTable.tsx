@@ -15,7 +15,7 @@ export function TopicsTable({ items }: TopicsTableProps) {
         <Table.Root size="lg">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader color="orange">Назва</Table.ColumnHeader>
+              <Table.ColumnHeader color="orange">Тема</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="center" color="orange">
                 Розділ
               </Table.ColumnHeader>

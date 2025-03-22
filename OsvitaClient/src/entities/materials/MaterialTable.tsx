@@ -15,7 +15,8 @@ export function MaterialTable({ items }: MaterialTableProps) {
         <Table.Root size="lg">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader color="orange">Тема</Table.ColumnHeader>
+              <Table.ColumnHeader color="orange">Назва матеріалу</Table.ColumnHeader>
+              <Table.ColumnHeader color="orange">Id</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="start" color="orange">
                 Дії
               </Table.ColumnHeader>

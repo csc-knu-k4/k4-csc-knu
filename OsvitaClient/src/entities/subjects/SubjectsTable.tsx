@@ -18,7 +18,7 @@ export function SubjectsTable({ items }: SubjectsTableProps) {
         <Table.Root size="lg">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader color="orange">Назва</Table.ColumnHeader>
+              <Table.ColumnHeader color="orange">Предмет</Table.ColumnHeader>
               <Table.ColumnHeader textAlign="start" color="orange">
                 Дії
               </Table.ColumnHeader>

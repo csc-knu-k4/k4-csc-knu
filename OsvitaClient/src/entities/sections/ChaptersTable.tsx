@@ -16,7 +16,7 @@ export function ChaptersTable({ items }: ChaptersTableProps) {
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeader color="orange" minWidth="250px">
-                Назва
+                Розділ
               </Table.ColumnHeader>
               <Table.ColumnHeader textAlign="center" color="orange" minWidth="200px">
                 Предмет
