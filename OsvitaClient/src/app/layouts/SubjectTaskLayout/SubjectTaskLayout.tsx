@@ -44,7 +44,7 @@ const SubjectTaskLayout = ({
           size={{ base: 'xs', md: 'md' }}
           rounded="xl"
           fontSize={{ base: 'xs', md: 'md' }}
-          bgColor="orange"
+          bgColor={showTest ? 'blue' : 'orange'}
           onClick={onToggleMode}
         >
           {showTest ? 'Матеріал' : 'Пройти тест'}
@@ -86,7 +86,7 @@ const SubjectTaskLayout = ({
           size={{ base: 'xs', md: 'md' }}
           rounded="xl"
           fontSize={{ base: 'xs', md: 'md' }}
-          bgColor="orange"
+          bgColor={showTest ? 'blue' : 'orange'}
           onClick={onToggleMode}
         >
           {showTest ? 'Матеріал' : 'Пройти тест'}

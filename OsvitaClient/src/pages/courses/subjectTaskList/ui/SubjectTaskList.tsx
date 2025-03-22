@@ -10,12 +10,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getSubjects, Subject } from '@/shared/api/subjectsApi';
 import { addAssignmentsSets, getAssignmentsSets } from '@/shared/api/assingnmentsSets';
 import { toaster } from '@/components/ui/toaster';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  addStatisticTopic,
+  getUserStatisticbyId,
+  updateStatisticTopic,
+} from '@/shared/api/userStatisticApi';
 
 const SubjectTaskList = () => {
   const { subjectId } = useParams();
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [topicProgress, setTopicProgress] = useState<
+    Record<number, { isCompleted: boolean; id: number }>
+  >({});
+  const userId = Number(localStorage.getItem('userId'));
 
   useEffect(() => {
     getSubjects()
@@ -30,6 +40,19 @@ const SubjectTaskList = () => {
         });
       })
       .finally(() => setLoading(false));
+
+    getUserStatisticbyId(userId).then((stat) => {
+      const progressMap: Record<number, { isCompleted: boolean; id: number }> = {};
+
+      stat.topicProgressDetails.forEach((item: any) => {
+        progressMap[item.topicId] = {
+          isCompleted: item.isCompleted,
+          id: item.id,
+        };
+      });
+
+      setTopicProgress(progressMap);
+    });
   }, []);
 
   const selectedSubject = subjects.find((sub) => sub.id.toString() === subjectId);
@@ -57,6 +80,54 @@ const SubjectTaskList = () => {
     } catch (err) {
       toaster.create({
         title: `Не вдалося створити тест. Спробуйте пізніше. ${err}`,
+        type: 'error',
+      });
+    }
+  };
+
+  const handleTopicCheckboxChange = async (topicId: number) => {
+    const current = topicProgress[topicId];
+    const newStatus = !current?.isCompleted;
+    const now = new Date().toISOString();
+
+    try {
+      if (current) {
+        // оновлення
+        await updateStatisticTopic(userId, {
+          id: current.id,
+          statisticId: userId,
+          topicId,
+          isCompleted: newStatus,
+          completedDate: now,
+        });
+      } else {
+        // нова тема
+        const res = await addStatisticTopic(userId, {
+          id: 0,
+          statisticId: userId,
+          topicId,
+          isCompleted: true,
+          completedDate: now,
+        });
+
+        setTopicProgress((prev) => ({
+          ...prev,
+          [topicId]: { isCompleted: true, id: res.id },
+        }));
+        return;
+      }
+
+      setTopicProgress((prev) => ({
+        ...prev,
+        [topicId]: {
+          ...(prev[topicId] || { id: 0 }),
+          isCompleted: newStatus,
+        },
+      }));
+    } catch (err) {
+      console.log(err);
+      toaster.create({
+        title: 'Не вдалося оновити прогрес теми',
         type: 'error',
       });
     }
@@ -99,7 +170,18 @@ const SubjectTaskList = () => {
                     <AccordionRoot multiple collapsible>
                       {chapter.topics.map((topic) => (
                         <AccordionItem key={topic.id} value={`topic-${topic.id}`} mb={2}>
-                          <AccordionItemTrigger>{topic.title}</AccordionItemTrigger>
+                          <AccordionItemTrigger>
+                            <Flex align="center" justify="space-between" w="full">
+                              <Text>{topic.title}</Text>
+                              <Checkbox
+                                checked={topicProgress[topic.id]?.isCompleted || false}
+                                onChange={() => handleTopicCheckboxChange(topic.id)}
+                                colorPalette="orange"
+                              >
+                                Пройдена
+                              </Checkbox>
+                            </Flex>
+                          </AccordionItemTrigger>
                           <AccordionItemContent>
                             <Stack mt={2}>
                               {[...topic.materials]
