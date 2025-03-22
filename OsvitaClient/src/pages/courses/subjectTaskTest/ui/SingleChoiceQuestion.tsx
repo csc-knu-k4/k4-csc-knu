@@ -21,6 +21,7 @@ const SingleChoiceQuestion = ({
 }) => {
   const [shuffledAnswers, setShuffledAnswers] = useState<any[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+  const allAnswersAreImages = shuffledAnswers.every((ans) => ans.valueImage);
 
   useEffect(() => {
     const shuffled = shuffle(data.answers);
@@ -52,19 +53,54 @@ const SingleChoiceQuestion = ({
           maxH="300px"
           objectFit="contain"
           mt={4}
+          mb={5}
         />
       )}
-      <HStack align="start" wrap="wrap">
-        {shuffledAnswers.map((ans, i) => (
-          <Highlight
-            key={`highlight-${ans.id}`}
-            query={alphabet[i]}
-            styles={{ fontWeight: 'semibold', color: 'orange' }}
-          >
-            {`${alphabet[i]} ${ans.value}`}
-          </Highlight>
-        ))}
-      </HStack>
+      {allAnswersAreImages ? (
+        <Flex direction="column" align="flex-start" gap={4} mb={4}>
+          {shuffledAnswers.map((ans, i) => (
+            <Flex key={`highlight-${ans.id}`} align="center" gap={4}>
+              <Text fontWeight="bold" color="orange" minW="1.5rem">
+                {alphabet[i]}
+              </Text>
+              <Image
+                src={`${window.location.origin}${ans.valueImage}`}
+                alt={`Варіант ${alphabet[i]}`}
+                borderRadius="md"
+                maxW="200px"
+                maxH="140px"
+                objectFit="contain"
+              />
+            </Flex>
+          ))}
+        </Flex>
+      ) : (
+        <HStack align="start" wrap="wrap">
+          {shuffledAnswers.map((ans, i) => (
+            <Box key={`highlight-${ans.id}`} textAlign="center" mr={4} mb={2}>
+              {ans.valueImage ? (
+                <>
+                  <Image
+                    src={`${window.location.origin}${ans.valueImage}`}
+                    alt={`Варіант ${alphabet[i]}`}
+                    borderRadius="md"
+                    maxW="120px"
+                    maxH="100px"
+                    objectFit="contain"
+                  />
+                  <Text fontWeight="semibold" color="orange" mt={1}>
+                    {alphabet[i]}
+                  </Text>
+                </>
+              ) : (
+                <Highlight query={alphabet[i]} styles={{ fontWeight: 'semibold', color: 'orange' }}>
+                  {`${alphabet[i]} ${ans.value}`}
+                </Highlight>
+              )}
+            </Box>
+          ))}
+        </HStack>
+      )}
 
       <Text fontSize="md" my={3}>
         Позначте відповідь:
