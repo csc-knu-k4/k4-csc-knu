@@ -79,17 +79,45 @@ const MatchAssignment = ({
       <Flex gap={10}>
         <Flex flexDir="column">
           {data.childAssignments.map((child: any, i: number) => (
-            <Text key={`q-${child.id}`} mb={2}>
-              {i + 1}. {child.problemDescription}
-            </Text>
+            <Flex key={`q-${child.id}`} align="center" gap={2} mb={2}>
+              <Text fontWeight="bold" color="orange" minW="1.5rem">
+                {i + 1}.
+              </Text>
+              {child.problemDescriptionImage ? (
+                <Image
+                  src={`${window.location.origin}${child.problemDescriptionImage}`}
+                  alt={`Запитання ${i + 1}`}
+                  borderRadius="md"
+                  maxW="140px"
+                  maxH="100px"
+                  objectFit="contain"
+                />
+              ) : (
+                <Text>{child.problemDescription}</Text>
+              )}
+            </Flex>
           ))}
         </Flex>
 
         <Flex flexDir="column">
           {variants.map((v: any, i: number) => (
-            <Text key={`v-${v.id}`} mb={2}>
-              {alphabet[i]} {v.value}
-            </Text>
+            <Flex key={`v-${v.id}`} align="center" gap={2} mb={2}>
+              <Text fontWeight="bold" color="orange" minW="1.5rem">
+                {alphabet[i]}
+              </Text>
+              {v.valueImage ? (
+                <Image
+                  src={`${window.location.origin}${v.valueImage}`}
+                  alt={`Варіант ${alphabet[i]}`}
+                  borderRadius="md"
+                  maxW="140px"
+                  maxH="100px"
+                  objectFit="contain"
+                />
+              ) : (
+                <Text>{v.value}</Text>
+              )}
+            </Flex>
           ))}
         </Flex>
       </Flex>
