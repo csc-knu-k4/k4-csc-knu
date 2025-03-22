@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getMaterialContentById } from '@/shared/api/materialsApi';
-import { Text, Spinner } from '@chakra-ui/react';
+import { Text, Spinner, Box } from '@chakra-ui/react';
 import { addAssignmentsSets, getAssignmentsSets } from '@/shared/api/assingnmentsSets';
 import { useLocation } from 'react-router-dom';
 import SubjectTaskLayout from '@/app/layouts/SubjectTaskLayout/SubjectTaskLayout';
@@ -106,7 +106,9 @@ const SubjectTaskMaterial = () => {
       isNextDisabled={!nextTopic}
       nextTopicTitle={nextTopic?.title || ''}
     >
-      {loading ? <Spinner size="xl" /> : <Text>{content?.value || 'Немає контенту'}</Text>}
+      <Box height="calc(100vh - 400px)" overflowY="auto">
+        {loading ? <Spinner size="xl" /> : <Text>{content?.value || 'Немає контенту'}</Text>}
+      </Box>
     </SubjectTaskLayout>
   );
 };

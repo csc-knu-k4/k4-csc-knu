@@ -25,7 +25,7 @@ const SubjectTaskLayout = ({
     <Flex minHeight="100vh" flexDir="column">
       {/* Header */}
       <Flex
-        flexDir="row"
+        flexDir={{ base: 'column', md: 'row' }}
         justifyContent="space-between"
         alignItems="center"
         px={3}
@@ -37,14 +37,22 @@ const SubjectTaskLayout = ({
         <Text fontSize="2xl" fontWeight="bold" color="orange">
           {showTest ? 'Тестування' : 'Матеріал'}
         </Text>
-        <Text fontSize="xl">{title}</Text>
-        <Button rounded="xl" fontSize="md" bgColor="orange" onClick={onToggleMode}>
+        <Text fontSize="xl" textAlign="center">
+          {title}
+        </Text>
+        <Button
+          size={{ base: 'xs', md: 'md' }}
+          rounded="xl"
+          fontSize={{ base: 'xs', md: 'md' }}
+          bgColor="orange"
+          onClick={onToggleMode}
+        >
           {showTest ? 'Матеріал' : 'Пройти тест'}
         </Button>
       </Flex>
 
       {/* Основний контент */}
-      <Flex flex="1" overflowY="auto" p={5}>
+      <Flex flex="1" overflowY="auto" p={{ base: 'none', md: 4 }}>
         <Flex flexDir="column" w="full">
           {children}
           {nextTopicTitle && (
@@ -57,25 +65,36 @@ const SubjectTaskLayout = ({
 
       {/* Footer */}
       <Flex
-        flexDir="row"
+        flexDir={{ base: 'column', md: 'row' }}
         justifyContent="space-between"
         alignItems="center"
-        p={5}
+        p={{ base: 'none', md: 5 }}
         position="sticky"
-        bottom="0"
+        bottom={{ base: '-5', md: '0' }}
         zIndex="10"
         bg="white"
       >
-        <Button color="orange" variant="ghost" fontSize="md" onClick={() => navigate(-1)}>
+        <Button
+          color="orange"
+          variant="ghost"
+          fontSize={{ base: 'xs', md: 'md' }}
+          onClick={() => navigate(-1)}
+        >
           <IoIosArrowBack /> Повернутися назад
         </Button>
-        <Button rounded="xl" fontSize="md" bgColor="orange" onClick={onToggleMode}>
+        <Button
+          size={{ base: 'xs', md: 'md' }}
+          rounded="xl"
+          fontSize={{ base: 'xs', md: 'md' }}
+          bgColor="orange"
+          onClick={onToggleMode}
+        >
           {showTest ? 'Матеріал' : 'Пройти тест'}
         </Button>
         <Button
           color="orange"
           variant="ghost"
-          fontSize="md"
+          fontSize={{ base: 'xs', md: 'md' }}
           onClick={onNextTopic}
           disabled={isNextDisabled}
         >
