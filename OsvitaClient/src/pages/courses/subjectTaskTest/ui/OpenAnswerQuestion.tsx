@@ -1,4 +1,4 @@
-import { Box, Text, Input } from '@chakra-ui/react';
+import { Box, Text, Input, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 const OpenAnswerQuestion = ({
@@ -36,6 +36,17 @@ const OpenAnswerQuestion = ({
       <Text fontSize="lg" mb={3}>
         {index + 1}. {data.problemDescription}
       </Text>
+      {data.problemDescriptionImage && (
+        <Image
+          src={`${window.location.origin}${data.problemDescriptionImage}`}
+          alt="зображення до завдання"
+          borderRadius="lg"
+          maxW="100%"
+          maxH="300px"
+          objectFit="contain"
+          mt={4}
+        />
+      )}
       <Text fontSize="md" my={3}>
         Впишіть відповідь:
       </Text>

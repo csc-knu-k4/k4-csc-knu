@@ -1,4 +1,4 @@
-import { Box, Text, Flex, Grid, GridItem } from '@chakra-ui/react';
+import { Box, Text, Flex, Grid, GridItem, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import React from 'react';
@@ -64,6 +64,18 @@ const MatchAssignment = ({
         {index + 1}. Встановіть відповідність:
       </Text>
 
+      {data.problemDescriptionImage && (
+        <Image
+          src={`${window.location.origin}${data.problemDescriptionImage}`}
+          alt="зображення до завдання"
+          borderRadius="lg"
+          maxW="100%"
+          maxH="300px"
+          objectFit="contain"
+          mt={4}
+        />
+      )}
+
       <Flex gap={10}>
         <Flex flexDir="column">
           {data.childAssignments.map((child: any, i: number) => (
@@ -108,8 +120,8 @@ const MatchAssignment = ({
                     checked={isChecked}
                     onChange={() => handleSelect(row, col)}
                     disabled={isFinished}
-                    borderColor={isFinished && isCorrect ? 'green.500' : 'gray.200'}
-                    colorPalette={isFinished && isCorrect ? 'green' : 'gray.200'}
+                    borderColor={isFinished && isCorrect ? 'green.500' : 'orange'}
+                    colorPalette={isFinished && isCorrect ? 'green' : 'orange'}
                   />
                 </GridItem>
               );

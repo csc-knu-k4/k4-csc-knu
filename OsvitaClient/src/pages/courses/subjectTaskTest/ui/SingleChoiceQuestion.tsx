@@ -1,4 +1,4 @@
-import { Box, Text, HStack, Highlight, Flex } from '@chakra-ui/react';
+import { Box, Text, HStack, Highlight, Flex, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -43,7 +43,17 @@ const SingleChoiceQuestion = ({
       <Text fontSize="lg" mb={3}>
         {index + 1}. {data.problemDescription}
       </Text>
-
+      {data.problemDescriptionImage && (
+        <Image
+          src={`${window.location.origin}${data.problemDescriptionImage}`}
+          alt="зображення до завдання"
+          borderRadius="lg"
+          maxW="100%"
+          maxH="300px"
+          objectFit="contain"
+          mt={4}
+        />
+      )}
       <HStack align="start" wrap="wrap">
         {shuffledAnswers.map((ans, i) => (
           <Highlight
@@ -79,8 +89,8 @@ const SingleChoiceQuestion = ({
                 checked={isChecked}
                 disabled={isFinished}
                 onChange={() => handleSelect(ans)}
-                borderColor={isFinished && isCorrect ? 'green.500' : 'gray.300'}
-                colorPalette={isFinished && isCorrect ? 'green' : 'gray.200'}
+                borderColor={isFinished && isCorrect ? 'green.500' : 'orange'}
+                colorPalette={isFinished && isCorrect ? 'green' : 'orange'}
               />
             </Flex>
           );
