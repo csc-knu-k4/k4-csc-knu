@@ -47,7 +47,7 @@ namespace OsvitaApp.PageModels
         private async Task SubjectTapped(SubjectObservableModel subject)
         {
             _chaptersPageDto.Subject = subject;
-            await Shell.Current.GoToAsync($"///chapters");
+            await Shell.Current.GoToAsync($"chapters");
         }
     }
 }

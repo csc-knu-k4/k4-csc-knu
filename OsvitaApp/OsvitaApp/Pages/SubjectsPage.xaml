@@ -48,10 +48,8 @@
                         <DataTemplate x:DataType="om:SubjectObservableModel">
                             <controls:SubjectCard>
                                 <controls:SubjectCard.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SubjectsPageVM}}, Path=SubjectTappedCommand}" CommandParameter="{Binding .}"/>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding x:DataType='vm:SubjectsPageVM', Source={RelativeSource AncestorType={x:Type vm:SubjectsPageVM}}, Path=SubjectTappedCommand}" CommandParameter="{Binding .}"/>
                                 </controls:SubjectCard.GestureRecognizers>
-                            
-                            
                             </controls:SubjectCard>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>

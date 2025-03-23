@@ -36,7 +36,7 @@ namespace OsvitaApp.PageModels
             var authResult = await _authService.LoginAsync(Email, Password);
             if(authResult.IsSuccess)
             {
-                await Shell.Current.GoToAsync("///subjects", true);
+                await Shell.Current.GoToAsync("subjects", true);
             }
             else
             {
@@ -55,7 +55,7 @@ namespace OsvitaApp.PageModels
         {
             try
             {
-                return Shell.Current.GoToAsync("///registration", true);
+                return Shell.Current.GoToAsync("registration", true);
             }
             catch(Exception ex)
             {

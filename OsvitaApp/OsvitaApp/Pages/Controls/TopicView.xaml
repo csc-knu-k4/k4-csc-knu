@@ -31,7 +31,7 @@
                          Binding="{Binding IsChecked}"
                          Value="True">
                 <Setter Property="Stroke"
-                        Value="{x:StaticResource IsChecked}" />
+                        Value="{x:StaticResource Primary}" />
             </DataTrigger>
         </Ellipse.Triggers>
     </Ellipse>

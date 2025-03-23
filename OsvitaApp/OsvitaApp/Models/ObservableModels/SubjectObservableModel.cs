@@ -9,9 +9,9 @@ namespace OsvitaApp.Models.ObservableModels
 {
     public partial class SubjectObservableModel : ObservableObject
     {
-        [ObservableProperty] public int _id;
-        [ObservableProperty] public string _title;
-        [ObservableProperty] public List<int> _chaptersIds;
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public List<int> ChaptersIds { get; set; }
         [ObservableProperty] public bool _isEnabled;
     }
 }

@@ -63,7 +63,7 @@
                                                VerticalOptions="Center" />
                                         <ImageButton Source="{x:StaticResource ArrowDown}"
                                                      HorizontalOptions="End"
-                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=ChapterExpandedCommand}"
+                                                     Command="{Binding x:DataType='vm:ChaptersPageVM', Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=ChapterExpandedCommand}"
                                                      CommandParameter="{Binding .}">
                                             <ImageButton.Triggers>
                                                 <DataTrigger TargetType="ImageButton"
@@ -95,7 +95,7 @@
                                                     <controls:TopicView>
 
                                                         <Grid.GestureRecognizers>
-                                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=TopicClickedCommand}"
+                                                            <TapGestureRecognizer Command="{Binding x:DataType='vm:ChaptersPageVM', Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=TopicClickedCommand}"
                                                                                   CommandParameter="{Binding .}" />
 
                                                         </Grid.GestureRecognizers>

@@ -41,22 +41,18 @@ namespace OsvitaApp
             builder.Services.AddSingleton<TagRepository>();
             builder.Services.AddSingleton<SeedDataService>();
             builder.Services.AddSingleton<ModalErrorHandler>();
-            builder.Services.AddSingleton<MainPageModel>();
-            builder.Services.AddSingleton<ProjectListPageModel>();
-            builder.Services.AddSingleton<ManageMetaPageModel>();
             builder.Services.AddSingleton<ApiService>();
             builder.Services.AddSingleton<IUserService, UserService>();
             builder.Services.AddSingleton<IAccountService, AccountService>();
             builder.Services.AddSingleton<ISubjectsService, SubjectsService>();
             builder.Services.AddSingleton<IChaptersService, ChaptersService>();
-
-
-            builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
-            builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");   
-            builder.Services.AddTransientWithShellRoute<LoginPage, LoginPageVM>("login");
+            
+            builder.Services.AddTransient<LoginPage, LoginPageVM>();
             builder.Services.AddTransientWithShellRoute<RegistrationPage, RegistrationPageVM>("registration");
             builder.Services.AddTransientWithShellRoute<SubjectsPage, SubjectsPageVM>("subjects");
             builder.Services.AddTransientWithShellRoute<ChaptersPage, ChaptersPageVM>("chapters");
+            builder.Services.AddTransientWithShellRoute<MaterialPage, MaterialPageVM>("material");
+            builder.Services.AddTransientWithShellRoute<TestPage, TestPageVM>("test");
 
             builder.Services.AddSingleton<ChaptersPageDto>();
             return builder.Build();

@@ -17,12 +17,12 @@
                   ContentTemplate="{DataTemplate pages:LoginPage}"
                   Route="login" />
 
-    <ShellContent Title="Registration"
+    <!--<ShellContent Title="Registration"
                   Icon="{StaticResource IconDashboard}"
                   ContentTemplate="{DataTemplate pages:RegistrationPage}"
-                  Route="registration" />
+                  Route="registration" />-->
 
-    <ShellContent Title="Subjects"
+    <!--<ShellContent Title="Subjects"
                   Icon="{StaticResource IconDashboard}"
                   ContentTemplate="{DataTemplate pages:SubjectsPage}"
                   Route="subjects" />
@@ -30,7 +30,7 @@
     <ShellContent Title="Chapters"
                   Icon="{StaticResource IconDashboard}"
                   ContentTemplate="{DataTemplate pages:ChaptersPage}"
-                  Route="chapters" />
+                  Route="chapters" />-->
 
     <!--<ShellContent Title="Projects"
                   Icon="{StaticResource IconProjects}"
