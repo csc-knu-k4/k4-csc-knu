@@ -397,3 +397,15 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /OsvitaBackend/OsvitaWebApiPL/appsettings.Development.json
+
+# Rider
+# Rider auto-generates .iml files, and contentModel.xml
+**/.idea/**/*.iml
+**/.idea/**/contentModel.xml
+**/.idea/**/modules.xml
+
+[Pp]ackages/
+
+Thumbs.db
+Desktop.ini
+.DS_Store
