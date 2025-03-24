@@ -9,9 +9,11 @@ namespace OsvitaBLL.Services
 	public class ExcelService : IExcelService
 	{
         private readonly IUnitOfWork unitOfWork;
-        public ExcelService(IUnitOfWork unitOfWork)
+        private readonly IStaticFileService staticFileService;
+        public ExcelService(IUnitOfWork unitOfWork, IStaticFileService staticFileService)
         {
             this.unitOfWork = unitOfWork;
+            this.staticFileService = staticFileService;
         }
 
         public async Task ImportAsync(IFormFile fileExcel)
@@ -149,7 +151,8 @@ namespace OsvitaBLL.Services
                 }
                 if (contentType == ContentType.ImageBlock)
                 {
-                    var fileName = worksheet.Row(contentBlockIndex).Cell(1).Value.ToString();
+                    var directoryPath = await staticFileService.GetStoragePath();
+                    var fileName = directoryPath + "/" + worksheet.Row(contentBlockIndex).Cell(1).Value.ToString();
                     var contentBlock = (await unitOfWork.ContentBlockRepository.GetAllAsync()).FirstOrDefault(x => x.Title == fileName && x.MaterialId == material.Id);
                     if (contentBlock is null)
                     {
