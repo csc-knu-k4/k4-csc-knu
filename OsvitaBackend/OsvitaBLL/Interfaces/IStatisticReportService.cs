@@ -10,5 +10,6 @@ namespace OsvitaBLL.Interfaces
         Task<byte[]> GenerateEducationClassAssignmetSetsReportAsync(int educationClassId, int assignmentSetId);
         Task<byte[]> GenerateDiagnosticalAssignmetSetsReportAsync(int educationClassId, int assignmentSetId);
         Task<List<AssignmentSetReportModel>> GetLastAssignmetSetsReportsAsync(int userId, int assignmentSetsCount);
+        Task<AssignmentSetReportModel> GetAssignmetSetReportModelAsync(int userId, int assignmentSetProgressDetailId);
     }
 }

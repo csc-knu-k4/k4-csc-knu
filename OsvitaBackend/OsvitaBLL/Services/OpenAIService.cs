@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Options;
 using OpenAI.Chat;
 using OsvitaBLL.Configurations;
 using OsvitaBLL.Interfaces;
+using OsvitaBLL.Models;
 using OsvitaBLL.Models.ReportModels;
 
 namespace OsvitaBLL.Services
@@ -47,6 +49,46 @@ namespace OsvitaBLL.Services
 
             return completion.Content[0].Text;
         }
-	}
+
+        public async Task<RecomendationAIModel> GetRecomendationByDiagnosticalAssignmentSetResultAsync(AssignmentSetReportModel assignmentSetReportModel)
+        {
+            ChatClient client = new(model: openAISettings.Model, apiKey: openAISettings.ApiKey);
+            ChatCompletionOptions options = new()
+            {
+                ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
+                    jsonSchemaFormatName: "math_reasoning",
+                    jsonSchema: BinaryData.FromBytes("""
+                        {
+                            "type": "object",
+                            "properties": {
+                                "TopicIds": {
+                                    "type": "array",
+                                    "items": { "type": "number" }
+                                },
+                                "RecomendationText": { "type": "string" }
+                            },
+                            "required": ["TopicIds", "RecomendationText"],
+                            "additionalProperties": false
+                        }
+                        """u8.ToArray()),
+                    jsonSchemaIsStrict: true)
+            };
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Ти вчитель. Проаналізуй статистику проходження тестів за темами при підготовці до іспиту у форматі НМТ і порадь учню навчальний план підготовки:");
+            foreach (var model in assignmentSetReportModel.Assignments.GroupBy(x => x.TopicId))
+            {
+                stringBuilder.AppendLine($"Тема: \"{model.First().TopicName}\"; Результат: {model.Sum(x => x.MaxPoints)}; Максимальний результат: {model.Sum(x => x.MaxPoints)}; ID теми: {model.Key}");
+            }
+            stringBuilder.AppendLine($"Розмір відповіді повинна бути не більше 10 рядків тексту. Звертайся до учня. Привітання не потрібне. Відповідь у вигляді списку аналізу тем. В TopicIds запиши ID тем, які необхідно вивчити.");
+            var messages = new List<ChatMessage>
+            {
+                new UserChatMessage(stringBuilder.ToString())
+            };
+            ChatCompletion completion = await client.CompleteChatAsync(messages, options);
+            var result = JsonSerializer.Deserialize<RecomendationAIModel>(completion.Content[0].Text);
+
+            return result;
+        }
+    }
 }
 
