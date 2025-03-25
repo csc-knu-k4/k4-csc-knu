@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
+using OsvitaBLL.Services;
 using OsvitaWebApiPL.Models;
 
 namespace OsvitaWebApiPL.Controllers
@@ -152,6 +153,36 @@ namespace OsvitaWebApiPL.Controllers
             try
             {
                 await educationClassService.ConfirmStudentAsync(userId, id, guid);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POST api/classes/5/educationplan/topics
+        [HttpPost("{id}/educationplan/topics")]
+        public async Task<ActionResult> PostTopicPlanDetail(int id, [FromBody] TopicPlanDetailModel model)
+        {
+            try
+            {
+                await educationClassPlanService.AddTopicPlanDetailAsync(model, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // DELETE api/classes/5/educationplan/topics/5
+        [HttpDelete("{id}/educationplan/topics/{topicId}")]
+        public async Task<ActionResult> DeleteTopicPlanDetail(int id, int topicId)
+        {
+            try
+            {
+                await educationClassPlanService.DeleteTopicPlanDetailAsync(id, topicId);
                 return Ok();
             }
             catch (Exception ex)

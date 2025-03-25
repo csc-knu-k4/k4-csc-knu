@@ -5,6 +5,7 @@ namespace OsvitaDAL.Entities
 	{
 		public int EducationClassId { get; set; }
 		public List<AssignmentSetPlanDetail> AssignmentSetPlanDetails { get; set; }
+		public List<TopicPlanDetail> TopicPlanDetails { get; set; }
 	}
 }
 
