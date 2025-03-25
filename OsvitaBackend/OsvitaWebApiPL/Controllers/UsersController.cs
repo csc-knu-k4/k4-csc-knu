@@ -225,5 +225,17 @@ namespace OsvitaWebApiPL.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        //GET api/users/5/diagnosticalrecomendation/
+        [HttpGet("{id}/diagnosticalrecomendation/")]
+        public async Task<ActionResult<IEnumerable<RecomendationMessageModel>>> GetDiagnosticalRecomendation(int id, int assignmentSetProgressDetailId)
+        {
+            var recomendation = await recomendationService.GetDiagnosticalRecomendationAsync(id, assignmentSetProgressDetailId);
+            if (recomendation is not null)
+            {
+                return Ok(recomendation);
+            }
+            return NotFound();
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace OsvitaBLL.Interfaces
 		Task<RecomendationMessageModel> GetRecomendationMessageByIdAsync(int id);
 		Task DeleteRecomendationMessageByIdAsync(int id);
 		Task UpdateRecomendationMessageAsync(RecomendationMessageModel model);
+		Task<RecomendationAIModel> GetDiagnosticalRecomendationAsync(int userId, int assignmentSetId);
     }
 }
 
