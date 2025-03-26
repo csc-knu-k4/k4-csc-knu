@@ -36,6 +36,7 @@ namespace OsvitaBLL.Services
             {
                 educationPlan.TopicPlanDetails = new List<TopicPlanDetail>();
             }
+            topicPlanDetail.EducationClassPlanId = null;
             educationPlan.TopicPlanDetails.Add(topicPlanDetail);
             await educationPlanRepository.UpdateAsync(educationPlan);
             await unitOfWork.SaveChangesAsync();

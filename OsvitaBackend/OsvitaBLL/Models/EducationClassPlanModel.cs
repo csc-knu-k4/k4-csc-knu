@@ -6,6 +6,7 @@ namespace OsvitaBLL.Models
 		public int Id { get; set; }
         public int EducationClassId { get; set; }
         public List<AssignmentSetPlanDetailModel> AssignmentSetPlanDetails { get; set; }
+        public List<TopicPlanDetailModel> TopicPlanDetails { get; set; }
     }
 }
 

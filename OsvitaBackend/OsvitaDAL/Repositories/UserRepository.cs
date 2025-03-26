@@ -19,6 +19,7 @@ namespace OsvitaDAL.Repositories
                 .Include(x => x.Statistic)
                 .Include(x => x.EducationClasses)
                 .Include(x => x.EducationPlan)
+                .Include(x => x.RecomendationMessages)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
     }

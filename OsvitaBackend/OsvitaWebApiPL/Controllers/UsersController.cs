@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaBLL.Services;
+using OsvitaDAL.Entities;
 using OsvitaWebApiPL.Interfaces;
 
 namespace OsvitaWebApiPL.Controllers
@@ -11,18 +12,18 @@ namespace OsvitaWebApiPL.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IStatisticService statisticService;
-        private readonly IStatisticReportService statisticReportService;
         private readonly IUserService userService;
         private readonly IIdentityService identityService;
         private readonly IEducationPlanService educationPlanService;
+        private readonly IRecomendationService recomendationService;
 
-        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IStatisticReportService statisticReportService, IEducationPlanService educationPlanService)
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService)
         {
             this.statisticService = statisticService;
             this.userService = userService;
             this.identityService = identityService;
-            this.statisticReportService = statisticReportService;
             this.educationPlanService = educationPlanService;
+            this.recomendationService = recomendationService;
         }
 
         // GET api/users/5/statistic/
@@ -73,8 +74,8 @@ namespace OsvitaWebApiPL.Controllers
         {
             try
             {
-                await statisticService.AddAssignmentSetProgressDetailAsync(model, id);
-                return Ok();
+                var assignmentSetProgressDetailId = await statisticService.AddAssignmentSetProgressDetailAsync(model, id);
+                return Ok(assignmentSetProgressDetailId);
             }
             catch (Exception ex)
             {
@@ -88,8 +89,8 @@ namespace OsvitaWebApiPL.Controllers
         {
             try
             {
-                await statisticService.UpdateAssignmentSetProgressDetailAsync(model, id);
-                return Ok();
+                var assignmentSetProgressDetailId = await statisticService.UpdateAssignmentSetProgressDetailAsync(model, id);
+                return Ok(assignmentSetProgressDetailId);
             }
             catch (Exception ex)
             {
@@ -97,7 +98,21 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
-        // GET api/users
+        [HttpGet("{id}/statistic/assignments/{assignmentSetProgressDetailId}")]
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> PostAssignmentSetProgressDetail(int id, int assignmentSetProgressDetailId)
+        {
+            try
+            {
+                var assignmentSetProgressDetail = await statisticService.GetAssignmentSetProgressDetailAsync(id, assignmentSetProgressDetailId);
+                return Ok(assignmentSetProgressDetail);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserModel>> Get(int id)
         {
@@ -113,8 +128,8 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
-        // GET api/users/5/Educationplan/topics
-        [HttpGet("{id}/Educationplan/topics")]
+        // GET api/users/5/educationplan
+        [HttpGet("{id}/educationplan")]
         public async Task<ActionResult<EducationPlanModel>> GetEducationPlan(int id)
         {
             var educationPlanModel = await educationPlanService.GetEducationPlanByUserIdAsync(id);
@@ -125,8 +140,8 @@ namespace OsvitaWebApiPL.Controllers
             return NotFound();
         }
 
-        //GET api/users/5/Educationplan/topics/4
-        [HttpGet("{id}/Educationplan/topics/{topicId}")]
+        //GET api/users/5/educationplan/topics/4
+        [HttpGet("{id}/educationplan/topics/{topicId}")]
         public async Task<ActionResult<TopicPlanDetailModel>> GetTopicPlanDetail(int id, int topicId)
         {
             var topicPlanDetailModel = await educationPlanService.GetTopicPlanDetailAsync(id, topicId);
@@ -137,8 +152,8 @@ namespace OsvitaWebApiPL.Controllers
             return NotFound();
         }
 
-        // POST api/users/5/Educationplan/topics
-        [HttpPost("{id}/Educationplan/topics")]
+        // POST api/users/5/educationplan/topics
+        [HttpPost("{id}/educationplan/topics")]
         public async Task<ActionResult> PostTopicPlanDetail(int id, [FromBody] TopicPlanDetailModel model)
         {
             try
@@ -152,8 +167,8 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
-        // DELETE api/users/5/Educationplan/topics/3
-        [HttpDelete("{id}/Educationplan/topics/{topicId}")]
+        // DELETE api/users/5/educationplan/topics/3
+        [HttpDelete("{id}/educationplan/topics/{topicId}")]
         public async Task<ActionResult> DeleteTopicPlanDetail(int id, int topicId)
         {
             try
@@ -167,8 +182,8 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
-        // PUT: api/users/5/Educationplan/topics/3
-        [HttpPut("{id}/Educationplan/topic/{topicId}")]
+        // PUT: api/users/5/educationplan/topics/3
+        [HttpPut("{id}/educationplan/topic/{topicId}")]
         public async Task<ActionResult> PutTopicPlanDetail(int id, int topicId, [FromBody] TopicPlanDetailModel model)
         {
             try
@@ -180,6 +195,62 @@ namespace OsvitaWebApiPL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        //GET api/users/5/recomendationmessages/
+        [HttpGet("{id}/recomendationmessages/")]
+        public async Task<ActionResult<IEnumerable<RecomendationMessageModel>>> GetRecomendationMessages(int id)
+        {
+            var messages = await recomendationService.GetRecomendationMessagesByUserIdAsync(id);
+            if (messages is not null)
+            {
+                return Ok(messages);
+            }
+            return NotFound();
+        }
+
+        // PUT: api/users/5/recomendationmessages/3
+        [HttpPut("{id}/recomendationmessages/{recomendationMessageId}")]
+        public async Task<ActionResult> PutRecomendationMessage(int id, int recomendationMessageId, [FromBody] RecomendationMessageModel model)
+        {
+            try
+            {
+                model.Id = recomendationMessageId;
+                model.UserId = id;
+                await recomendationService.UpdateRecomendationMessageAsync(model);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // DELETE api/users/5/recomendationmessages/3
+        [HttpDelete("{id}/recomendationmessages/{recomendationMessageId}")]
+        public async Task<ActionResult> DeleteRecomendationMessage(int id, int recomendationMessageId)
+        {
+            try
+            {
+                await recomendationService.DeleteRecomendationMessageByIdAsync(recomendationMessageId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //GET api/users/5/diagnosticalrecomendation/
+        [HttpGet("{id}/diagnosticalrecomendation/")]
+        public async Task<ActionResult<RecomendationAIModel>> GetDiagnosticalRecomendation(int id, int assignmentSetProgressDetailId)
+        {
+            var recomendation = await recomendationService.GetDiagnosticalRecomendationAsync(id, assignmentSetProgressDetailId);
+            if (recomendation is not null)
+            {
+                return Ok(recomendation);
+            }
+            return NotFound();
         }
     }
 }

@@ -42,11 +42,7 @@ namespace OsvitaBLL.Services
 
         public async Task<IEnumerable<SubjectModel>> GetAllAsync()
         {
-            var subjects = await subjectRepository.GetAllAsync();
-            foreach (var subject in subjects)
-            {
-                subject.Chapters = (await unitOfWork.ChapterRepository.GetAllAsync()).Where(x => x.SubjectId == subject.Id).ToList();
-            }
+            var subjects = await subjectRepository.GetAllWithDetailsAsync();
             var subjectsModels = mapper.Map<IEnumerable<Subject>, IEnumerable<SubjectModel>>(subjects);
             return subjectsModels;
 

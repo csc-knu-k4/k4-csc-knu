@@ -1,31 +1,59 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Mvc;
+using OsvitaBLL.Interfaces;
+using OsvitaBLL.Models;
+using OsvitaBLL.Services;
 
 namespace OsvitaWebApiPL.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/files")]
     [ApiController]
-    public class FilesController(ILogger<FilesController> logger, IWebHostEnvironment environment) : ControllerBase
+    public class FilesController : ControllerBase
     {
+        private readonly IStaticFileService staticFileService;
+        private readonly IExcelService excelService;
+        public FilesController(IStaticFileService staticFileService, IExcelService excelService)
+        {
+            this.staticFileService = staticFileService;
+            this.excelService = excelService;
+        }
+
         [HttpPost]
-        public async Task<ActionResult<string>> UploadFile(IFormFile file)
+        public async Task<ActionResult<string>> UploadFile(IFormFile file, [FromQuery] bool addCustomGuid)
         {
             try
             {
-                if (file == null || file.Length == 0)
-                {
-                    throw new ArgumentException("Invalid file");
-                }
-                var fileName = $"{Guid.NewGuid().ToString()}-{Path.GetExtension(file.FileName)}";
-                var webrootPath = environment.WebRootPath;
-                var path = Path.Combine(webrootPath, "uploads", fileName);
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-                var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
-                var fileUrl = $"{baseUrl}/uploads/{fileName}";
-                return fileUrl;
+                var result = await staticFileService.Upload(file, addCustomGuid);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("api/materials")]
+        public async Task<ActionResult> ImportMaterials(IFormFile file)
+        {
+            try
+            {
+                await excelService.ImportMaterialsAsync(file);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPost("api/assignments")]
+        public async Task<ActionResult> ImportAssignments(IFormFile file)
+        {
+            try
+            {
+                await excelService.ImportAssignmentsAsync(file);
+                return Ok();
             }
             catch (Exception ex)
             {

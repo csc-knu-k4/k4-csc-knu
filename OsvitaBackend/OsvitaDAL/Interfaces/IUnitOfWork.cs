@@ -17,6 +17,7 @@ namespace OsvitaDAL.Interfaces
         IEducationClassRepository EducationClassRepository { get; }
         IEducationClassPlanRepository EducationClassPlanRepository { get; }
 		IEducationPlanRepository EducationPlanRepository { get; }
+        IRecomendationMessageRepository RecomendationMessageRepository { get; }
         Task SaveChangesAsync();
     }
 }

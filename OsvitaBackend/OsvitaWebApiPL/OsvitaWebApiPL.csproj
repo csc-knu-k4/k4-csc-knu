@@ -23,6 +23,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="OpenAI" Version="2.1.0" />
+    <PackageReference Include="Quartz.AspNetCore" Version="3.14.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +41,7 @@
     <None Remove="Services\" />
     <None Remove="Models\" />
     <None Remove="Interfaces\" />
+    <None Remove="Jobs\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configurations\" />
@@ -47,5 +50,10 @@
     <Folder Include="Services\" />
     <Folder Include="Models\" />
     <Folder Include="Interfaces\" />
+    <Folder Include="wwwroot\StaticFiles\" />
+    <Folder Include="Jobs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\StaticFiles\" />
   </ItemGroup>
 </Project>
