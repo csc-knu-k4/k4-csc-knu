@@ -10,7 +10,7 @@ import { toaster } from '@/components/ui/toaster';
 
 interface TestRendererProps {
   testId: number;
-  onFinish?: () => void;
+  onFinish?: (assignmentSetProgressDetailId: number) => void;
 }
 
 const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish }) => {
@@ -109,10 +109,10 @@ const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish }) => {
     };
 
     try {
-      await addStatisticAssignments(userId, payload);
+      const progressDetailId = Number(await addStatisticAssignments(userId, payload));
       setScore(localScore);
       setIsFinished(true);
-      if (onFinish) onFinish();
+      if (onFinish) onFinish(progressDetailId);
     } catch (err) {
       toaster.create({
         title: `Помилка збереження результату: ${err}`,
