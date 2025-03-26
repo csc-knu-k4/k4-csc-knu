@@ -7,13 +7,23 @@ import OpenAnswerQuestion from './OpenAnswerQuestion';
 import MatchAssignment from './MatchAssignment';
 import { addStatisticAssignments } from '@/shared/api/userStatisticApi';
 import { toaster } from '@/components/ui/toaster';
+import { useLocation } from 'react-router-dom';
 
-const TestRenderer = ({ testId }: { testId: number }) => {
+interface TestRendererProps {
+  testId: number;
+  onFinish?: (assignmentSetProgressDetailId: number) => void;
+}
+
+const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish }) => {
   const [assignments, setAssignments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
   const [userAnswers, setUserAnswers] = useState<any[]>([]);
   const [score, setScore] = useState(0);
+  const location = useLocation();
+
+  const isDiagnosticTestPage = location.pathname.startsWith('/course/diagnostic-test/');
+  const containerHeight = isDiagnosticTestPage ? 'calc(100vh - 180px)' : 'calc(100vh - 350px)';
 
   const userId = Number(localStorage.getItem('userId'));
 
@@ -104,9 +114,10 @@ const TestRenderer = ({ testId }: { testId: number }) => {
     };
 
     try {
-      await addStatisticAssignments(userId, payload);
+      const progressDetailId = Number(await addStatisticAssignments(userId, payload));
       setScore(localScore);
       setIsFinished(true);
+      if (onFinish) onFinish(progressDetailId);
     } catch (err) {
       toaster.create({
         title: `Помилка збереження результату: ${err}`,
@@ -139,7 +150,7 @@ const TestRenderer = ({ testId }: { testId: number }) => {
   if (loading) return <Spinner size="xl" />;
 
   return (
-    <Flex w="full" flexDir="column" gap={5} height="calc(100vh - 350px)" overflowY="auto">
+    <Flex w="full" flexDir="column" gap={5} height={containerHeight} overflowY="auto">
       {assignments.map(renderQuestion)}
 
       {!isFinished ? (

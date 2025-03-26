@@ -26,7 +26,7 @@ const Login = () => {
         title: 'Вхід успішний',
         type: 'info',
       });
-      navigate('/admin');
+      navigate('/course');
     } catch (error) {
       toaster.error({
         title: `Помилка при авторизації ${error}`,

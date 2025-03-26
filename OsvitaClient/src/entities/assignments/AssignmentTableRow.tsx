@@ -30,8 +30,10 @@ export function AssignmentTableRow({ item }: AssignmentTableRowProps) {
   return (
     <>
       <Table.Row bgColor={item.id % 2 === 0 ? 'white' : 'orange.100'}>
-        <Table.Cell w="full">{item.problemDescription}</Table.Cell>
-        <Table.Cell>
+        <Table.Cell maxW="350px" truncate>
+          {item.problemDescription}
+        </Table.Cell>
+        <Table.Cell maxW="80px">
           <ActionButtons
             actions={[
               { icon: <IoEyeOutline />, ariaLabel: 'Watch', onClick: () => setViewOpen(true) },
