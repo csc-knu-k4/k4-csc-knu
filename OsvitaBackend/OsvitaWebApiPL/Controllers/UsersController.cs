@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaBLL.Services;
+using OsvitaDAL.Entities;
 using OsvitaWebApiPL.Interfaces;
 
 namespace OsvitaWebApiPL.Controllers
@@ -73,8 +74,8 @@ namespace OsvitaWebApiPL.Controllers
         {
             try
             {
-                await statisticService.AddAssignmentSetProgressDetailAsync(model, id);
-                return Ok();
+                var assignmentSetProgressDetailId = await statisticService.AddAssignmentSetProgressDetailAsync(model, id);
+                return Ok(assignmentSetProgressDetailId);
             }
             catch (Exception ex)
             {
@@ -88,8 +89,22 @@ namespace OsvitaWebApiPL.Controllers
         {
             try
             {
-                await statisticService.UpdateAssignmentSetProgressDetailAsync(model, id);
-                return Ok();
+                var assignmentSetProgressDetailId = await statisticService.UpdateAssignmentSetProgressDetailAsync(model, id);
+                return Ok(assignmentSetProgressDetailId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}/statistic/assignments/{assignmentSetProgressDetailId}")]
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> PostAssignmentSetProgressDetail(int id, int assignmentSetProgressDetailId)
+        {
+            try
+            {
+                var assignmentSetProgressDetail = await statisticService.GetAssignmentSetProgressDetailAsync(id, assignmentSetProgressDetailId);
+                return Ok(assignmentSetProgressDetail);
             }
             catch (Exception ex)
             {
@@ -228,7 +243,7 @@ namespace OsvitaWebApiPL.Controllers
 
         //GET api/users/5/diagnosticalrecomendation/
         [HttpGet("{id}/diagnosticalrecomendation/")]
-        public async Task<ActionResult<IEnumerable<RecomendationMessageModel>>> GetDiagnosticalRecomendation(int id, int assignmentSetProgressDetailId)
+        public async Task<ActionResult<RecomendationAIModel>> GetDiagnosticalRecomendation(int id, int assignmentSetProgressDetailId)
         {
             var recomendation = await recomendationService.GetDiagnosticalRecomendationAsync(id, assignmentSetProgressDetailId);
             if (recomendation is not null)
