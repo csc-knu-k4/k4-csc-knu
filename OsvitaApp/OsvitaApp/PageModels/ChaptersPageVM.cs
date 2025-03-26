@@ -19,21 +19,25 @@ namespace OsvitaApp.PageModels
     {
         private readonly ISubjectsService _subjectsService;
         private readonly IChaptersService _chaptersService;
+        private readonly ITopicsService _topicsService; 
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly ChaptersPageDto _chaptersPageDto;
+        private readonly MaterialPageDto _materialPageDto;
         private ChapterObservableModel _selectedChapter;
 
 
         [ObservableProperty] private ObservableCollection<ChapterObservableModel> _chapters;
 
-        public ChaptersPageVM(ISubjectsService subjectsService, IChaptersService chaptersService, IUserService userService, IMapper mapper, ChaptersPageDto chaptersPageDto)
+        public ChaptersPageVM(ISubjectsService subjectsService, IChaptersService chaptersService, ITopicsService topicsService, IUserService userService, IMapper mapper, ChaptersPageDto chaptersPageDto, MaterialPageDto materialPageDto)
         {
             _subjectsService = subjectsService;
             _chaptersService = chaptersService;
+            _topicsService = topicsService;
             _userService = userService;
             _mapper = mapper;
             _chaptersPageDto = chaptersPageDto;
+            _materialPageDto = materialPageDto;
         }
 
 
@@ -65,7 +69,7 @@ namespace OsvitaApp.PageModels
             }
             if(chapter.IsExpanded)
             {
-                foreach(var item in Chapters.Where(x => x != chapter))
+                foreach(var item in Chapters.Where(x => x != chapter && x.IsExpanded))
                 {
                     item.IsExpanded = false;
                 }
@@ -94,7 +98,8 @@ namespace OsvitaApp.PageModels
 
             if(chapter.Topics.Any(x => !x.IsChecked))
             {
-                chapter.Topics.FirstOrDefault(x => !x.IsChecked).IsSelected = true;
+                TopicClicked(chapter.Topics.FirstOrDefault(x => !x.IsChecked));
+                //chapter.Topics.FirstOrDefault(x => !x.IsChecked).IsSelected = true;
             }
         }
 
@@ -104,7 +109,16 @@ namespace OsvitaApp.PageModels
             topic.IsSelected = !topic.IsSelected;
             if(topic.IsSelected)
             {
-                foreach(var item in _selectedChapter.Topics.Where(x => x != topic))
+                if(!topic.Materials?.Any() ?? true)
+                {
+                    var getMaterialsResult = await _topicsService.GetMaterialsAsync(topic.Id);
+                    if (getMaterialsResult.IsSuccess)
+                    {
+                        topic.Materials = getMaterialsResult.Data.Select(_mapper.Map<MaterialObservableModel>)
+                            .ToObservableCollection();
+                    }
+                }
+                foreach(var item in _selectedChapter.Topics.Where(x => x != topic && x.IsSelected))
                 {
                     item.IsSelected = false;
                 }
@@ -112,9 +126,10 @@ namespace OsvitaApp.PageModels
         }
 
         [RelayCommand]
-        public async Task TopicsMaterialButtonClicked(TopicObservableModel topic)
+        public async Task MaterialClicked(MaterialObservableModel material)
         {
-            
+            _materialPageDto.Material = material;
+            await Shell.Current.GoToAsync($"material");
         }
 
         [RelayCommand]

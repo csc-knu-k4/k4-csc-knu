@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OsvitaApp.Models.Api.Responce;
 
 namespace OsvitaApp.Mappers
 {
@@ -16,6 +17,8 @@ namespace OsvitaApp.Mappers
             CreateMap<SubjectModel, SubjectObservableModel>().ReverseMap();
             CreateMap<ChapterModel, ChapterObservableModel>().ReverseMap();
             CreateMap<TopicModel, TopicObservableModel>().ReverseMap();
+            CreateMap<MaterialModel, MaterialObservableModel>().ReverseMap();
+            CreateMap<ContentBlockModel, ContentBlockObservableModel>().ReverseMap();
         }
     }
 }

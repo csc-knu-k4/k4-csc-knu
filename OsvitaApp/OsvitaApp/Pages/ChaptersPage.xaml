@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
@@ -18,12 +19,6 @@
                                     Command="{Binding NavigatedToCommand}" />
 
     </ContentPage.Behaviors>
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <mct:IsNullConverter x:Key="IsNullConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <ScrollView>
 
@@ -50,63 +45,7 @@
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="om:ChapterObservableModel">
-                            <Border Stroke="#f4f4f4"
-                                    StrokeThickness="1"
-                                    BackgroundColor="White"
-                                    Padding="10"
-                                    StrokeShape="RoundRectangle 15">
-
-                                <VerticalStackLayout>
-                                    <Grid>
-                                        <Label Text="{Binding Title}"
-                                               FontSize="20"
-                                               VerticalOptions="Center" />
-                                        <ImageButton Source="{x:StaticResource ArrowDown}"
-                                                     HorizontalOptions="End"
-                                                     Command="{Binding x:DataType='vm:ChaptersPageVM', Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=ChapterExpandedCommand}"
-                                                     CommandParameter="{Binding .}">
-                                            <ImageButton.Triggers>
-                                                <DataTrigger TargetType="ImageButton"
-                                                             Binding="{Binding IsExpanded}"
-                                                             Value="True">
-                                                    <Setter Property="Source"
-                                                            Value="{x:StaticResource ArrowUp}" />
-                                                </DataTrigger>
-                                            </ImageButton.Triggers>
-
-                                        </ImageButton>
-                                    </Grid>
-
-                                    <VerticalStackLayout IsVisible="{Binding IsExpanded}">
-                                        <Label Text="Завантаження тем..."
-                                               IsVisible="{Binding Topics, Converter={StaticResource IsNullConverter}}" />
-                                        <Line Fill="#000000"
-                                              Opacity="0.15"
-                                              BackgroundColor="#000000"
-                                              HeightRequest="1" />
-                                        <CollectionView ItemsSource="{Binding Topics}"
-                                                        Margin = "0, 20, 0, 0">
-                                            <CollectionView.ItemsLayout>
-                                                <LinearItemsLayout Orientation="Vertical"
-                                                                   ItemSpacing="7.5" />
-                                            </CollectionView.ItemsLayout>
-                                            <CollectionView.ItemTemplate>
-                                                <DataTemplate x:DataType="om:TopicObservableModel">
-                                                    <controls:TopicView>
-
-                                                        <Grid.GestureRecognizers>
-                                                            <TapGestureRecognizer Command="{Binding x:DataType='vm:ChaptersPageVM', Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=TopicClickedCommand}"
-                                                                                  CommandParameter="{Binding .}" />
-
-                                                        </Grid.GestureRecognizers>
-                                                    
-                                                    </controls:TopicView>
-                                                </DataTemplate>
-                                            </CollectionView.ItemTemplate>
-                                        </CollectionView>
-                                    </VerticalStackLayout>
-                                </VerticalStackLayout>
-                            </Border>
+                            <controls:ChapterView />
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

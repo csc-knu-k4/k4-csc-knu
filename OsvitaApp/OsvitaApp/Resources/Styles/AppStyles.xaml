@@ -120,6 +120,9 @@
 
     <FileImageSource x:Key="CheckMarkPrimary"
                      File="checkmarkprimary.png" />
+    
+    <FileImageSource x:Key="MaterialIcon"
+                     File="materialicon.png" />
 
     <Style TargetType="Label">
         <Setter Property="TextColor"

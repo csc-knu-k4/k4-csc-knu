@@ -1,6 +1,6 @@
 namespace OsvitaApp.Pages.Controls;
 
-public partial class TopicView : Grid
+public partial class TopicView : ContentView
 {
     public TopicView()
     {

@@ -34,18 +34,15 @@ namespace OsvitaApp
 #endif
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-            builder.Services.AddSingleton<ProjectRepository>();
-            builder.Services.AddSingleton<TaskRepository>();
-            builder.Services.AddSingleton<CategoryRepository>();
-            builder.Services.AddSingleton<TagRepository>();
-            builder.Services.AddSingleton<SeedDataService>();
+            
             builder.Services.AddSingleton<ModalErrorHandler>();
             builder.Services.AddSingleton<ApiService>();
             builder.Services.AddSingleton<IUserService, UserService>();
             builder.Services.AddSingleton<IAccountService, AccountService>();
             builder.Services.AddSingleton<ISubjectsService, SubjectsService>();
             builder.Services.AddSingleton<IChaptersService, ChaptersService>();
+            builder.Services.AddSingleton<ITopicsService, TopicsService>();
+            builder.Services.AddSingleton<IMaterialService, MaterialService>();
             
             builder.Services.AddTransient<LoginPage, LoginPageVM>();
             builder.Services.AddTransientWithShellRoute<RegistrationPage, RegistrationPageVM>("registration");
@@ -55,6 +52,7 @@ namespace OsvitaApp
             builder.Services.AddTransientWithShellRoute<TestPage, TestPageVM>("test");
 
             builder.Services.AddSingleton<ChaptersPageDto>();
+            builder.Services.AddSingleton<MaterialPageDto>();
             return builder.Build();
         }
     }

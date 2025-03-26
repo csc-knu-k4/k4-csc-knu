@@ -1,68 +1,96 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-      x:Class="OsvitaApp.Pages.Controls.TopicView"
-      xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
-      xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
-      xmlns:vm="clr-namespace:OsvitaApp.PageModels"
-      x:DataType="om:TopicObservableModel"
-      RowSpacing="10"
-      ColumnSpacing="10"
-      HorizontalOptions="Fill"
-      VerticalOptions="Fill">
+<?xml version="1.0" encoding="utf-8"?>
 
-    <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="0.1*" />
-        <ColumnDefinition Width="0.45*" />
-        <ColumnDefinition Width="0.45*" />
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OsvitaApp.Pages.Controls.TopicView"
+             xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
+             xmlns:vm="clr-namespace:OsvitaApp.PageModels"
+             xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="om:TopicObservableModel">
 
-    </Grid.ColumnDefinitions>
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <mct:IsNullConverter x:Key="IsNullConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <VerticalStackLayout>
+        <Grid RowSpacing="10"
+              ColumnSpacing="10"
+              HorizontalOptions="Fill"
+              VerticalOptions="Fill">
 
-    <Grid.RowDefinitions>
-        <RowDefinition Height="*" />
-        <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.1*" />
+                <ColumnDefinition Width="0.45*" />
+                <ColumnDefinition Width="0.45*" />
 
-    <Ellipse Stroke="{x:StaticResource GrayD9}"
-             WidthRequest="26"
-             HeightRequest="26">
-        <Ellipse.Triggers>
-            <DataTrigger TargetType="Ellipse"
-                         Binding="{Binding IsChecked}"
-                         Value="True">
-                <Setter Property="Stroke"
-                        Value="{x:StaticResource Primary}" />
-            </DataTrigger>
-        </Ellipse.Triggers>
-    </Ellipse>
+            </Grid.ColumnDefinitions>
 
-    <Image Source="{x:StaticResource CheckMarkPrimary}"
-           WidthRequest="15"
-           HeightRequest="10"
-           IsVisible="{Binding IsChecked}" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-    <Label Grid.Row="0"
-           Grid.Column="1"
-           Grid.ColumnSpan="2"
-           Text="{Binding Title}"
-           VerticalTextAlignment="Start"
-           VerticalOptions="Fill"
-           HorizontalTextAlignment="Start"
-           HorizontalOptions="Fill" />
+            <Ellipse Stroke="{x:StaticResource GrayD9}"
+                     WidthRequest="26"
+                     HeightRequest="26">
+                <Ellipse.Triggers>
+                    <DataTrigger TargetType="Ellipse"
+                                 Binding="{Binding IsChecked}"
+                                 Value="True">
+                        <Setter Property="Stroke"
+                                Value="{x:StaticResource Primary}" />
+                    </DataTrigger>
+                </Ellipse.Triggers>
+            </Ellipse>
 
-    <controls:RippleButton Grid.Row="1"
-                           Grid.Column="1"
-                           Text="Матеріал"
-                           IsVisible="{Binding IsSelected}"
-                           Style="{x:StaticResource TopicsMaterialButton}"
-                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=TopicsMaterialButtonClickedCommand}"
-                           CommandParameter="{Binding .}" />
+            <Image Grid.Row="0"
+                   Grid.Column="0"
+                   Source="{x:StaticResource CheckMarkPrimary}"
+                   WidthRequest="15"
+                   HeightRequest="10"
+                   IsVisible="{Binding IsChecked}" />
 
-    <controls:RippleButton Grid.Row="1"
-                           Grid.Column="2"
-                           Text="Тест"
-                           IsVisible="{Binding IsSelected}"
-                           Style="{x:StaticResource TopicsTestButton}"
-                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=TopicsTestButtonClickedCommand}"
-                           CommandParameter="{Binding .}" />
-</Grid>
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Grid.ColumnSpan="2"
+                   Text="{Binding Title}"
+                   VerticalTextAlignment="Start"
+                   VerticalOptions="Fill"
+                   HorizontalTextAlignment="Start"
+                   HorizontalOptions="Fill" />
+
+        </Grid>
+
+        <VerticalStackLayout IsVisible="{Binding IsSelected}">
+            <Label Text="Завантаження матеріалів..."
+                   IsVisible="{Binding Materials, Converter={StaticResource IsNullConverter}}" />
+            <CollectionView ItemsSource="{Binding Materials}"
+                            Margin="0, 10, 0, 10">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                       ItemSpacing="7.5" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="om:MaterialObservableModel">
+                        <controls:MaterialListItemView>
+                            <ContentView.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding x:DataType='vm:ChaptersPageVM', Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=MaterialClickedCommand}"
+                                    CommandParameter="{Binding .}" />
+
+                            </ContentView.GestureRecognizers>
+                        </controls:MaterialListItemView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+
+        <controls:RippleButton Text="Пройти тест"
+                               IsVisible="{Binding IsSelected}"
+                               Style="{x:StaticResource TopicsTestButton}"
+                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChaptersPageVM}}, Path=TopicsTestButtonClickedCommand}"
+                               CommandParameter="{Binding .}" />
+    </VerticalStackLayout>
+</ContentView>
