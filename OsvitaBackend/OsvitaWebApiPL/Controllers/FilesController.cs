@@ -32,12 +32,27 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
-        [HttpPost("/materials")]
-        public async Task<ActionResult> Import(IFormFile file)
+        [HttpPost("api/materials")]
+        public async Task<ActionResult> ImportMaterials(IFormFile file)
         {
             try
             {
-                await excelService.ImportAsync(file);
+                await excelService.ImportMaterialsAsync(file);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPost("api/assignments")]
+        public async Task<ActionResult> ImportAssignments(IFormFile file)
+        {
+            try
+            {
+                await excelService.ImportAssignmentsAsync(file);
                 return Ok();
             }
             catch (Exception ex)
