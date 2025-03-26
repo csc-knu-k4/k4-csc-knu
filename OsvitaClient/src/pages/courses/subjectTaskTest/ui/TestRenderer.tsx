@@ -7,6 +7,7 @@ import OpenAnswerQuestion from './OpenAnswerQuestion';
 import MatchAssignment from './MatchAssignment';
 import { addStatisticAssignments } from '@/shared/api/userStatisticApi';
 import { toaster } from '@/components/ui/toaster';
+import { useLocation } from 'react-router-dom';
 
 interface TestRendererProps {
   testId: number;
@@ -19,6 +20,10 @@ const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish }) => {
   const [isFinished, setIsFinished] = useState(false);
   const [userAnswers, setUserAnswers] = useState<any[]>([]);
   const [score, setScore] = useState(0);
+  const location = useLocation();
+
+  const isDiagnosticTestPage = location.pathname.startsWith('/course/diagnostic-test/');
+  const containerHeight = isDiagnosticTestPage ? 'calc(100vh - 180px)' : 'calc(100vh - 350px)';
 
   const userId = Number(localStorage.getItem('userId'));
 
@@ -145,7 +150,7 @@ const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish }) => {
   if (loading) return <Spinner size="xl" />;
 
   return (
-    <Flex w="full" flexDir="column" gap={5} height="calc(100vh - 350px)" overflowY="auto">
+    <Flex w="full" flexDir="column" gap={5} height={containerHeight} overflowY="auto">
       {assignments.map(renderQuestion)}
 
       {!isFinished ? (

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Text, Box, Flex, Spinner } from '@chakra-ui/react';
+import { Text, Box, Spinner, Button } from '@chakra-ui/react';
 import { getDiagnosticalRecomendation } from '@/shared/api/userStatisticApi';
 import TestRenderer from '../../subjectTaskTest/ui/TestRenderer';
 
@@ -36,27 +36,31 @@ const DiagnosticTest = () => {
 
   return (
     <Box>
-      <TestRenderer
-        testId={Number(testId)}
-        onFinish={(id) => {
-          setIsTestFinished(true);
-          setProgressDetailId(id);
-        }}
-      />
+      {!isTestFinished && (
+        <TestRenderer
+          testId={Number(testId)}
+          onFinish={(id) => {
+            setIsTestFinished(true);
+            setProgressDetailId(id);
+          }}
+        />
+      )}
 
-      {isTestFinished && recommendation && (
+      {isTestFinished && (
         <Box mt={5} p={4} borderWidth={1} borderRadius="xl" bg="gray.50">
           <Text fontSize="lg" fontWeight="bold" mb={2}>
             Рекомендація:
           </Text>
           {isLoadingRecommendation ? (
-            <Flex align="center" gap={3}>
-              <Spinner size="sm" />
-              <Text>Очікуємо рекомендацію...</Text>
-            </Flex>
+            <Box>
+              <Spinner size="md" />
+            </Box>
           ) : (
             <Text whiteSpace="pre-wrap">{recommendation}</Text>
           )}
+          <Button mt={4} colorPalette="orange" onClick={() => window.location.reload()}>
+            Пройти ще раз
+          </Button>
         </Box>
       )}
     </Box>
