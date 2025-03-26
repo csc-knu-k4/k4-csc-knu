@@ -13,12 +13,10 @@ export function AssignmentTable({ items }: AssignmentTableProps) {
     <Box width="100%">
       <Table.ScrollArea w="full" maxW="calc(100vw - 100px)" overflowX="auto">
         <Table.Root size="lg">
-          <Table.Header>
+          <Table.Header justifyContent="space-between">
             <Table.Row>
               <Table.ColumnHeader color="orange">Умова тесту</Table.ColumnHeader>
-              <Table.ColumnHeader textAlign="start" color="orange">
-                Дії
-              </Table.ColumnHeader>
+              <Table.ColumnHeader color="orange">Дії</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
