@@ -69,7 +69,7 @@ namespace OsvitaBLL.Services
             statistic.AssignmentSetProgressDetails.Add(assignmentSetProgressDetail);
             await statisticRepository.UpdateAsync(statistic);
             await unitOfWork.SaveChangesAsync();
-            return statistic.Id;
+            return assignmentSetProgressDetail.Id;
         }
 
         public async Task DeleteAsync(StatisticModel model)
