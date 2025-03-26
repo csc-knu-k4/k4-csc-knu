@@ -85,6 +85,26 @@ const SubjectTaskList = () => {
     }
   };
 
+  const handleStartDiagnosticTest = async () => {
+    const subjectIdNumber = Number(subjectId);
+
+    try {
+      const testId = await addAssignmentsSets({
+        id: 0,
+        objectModelType: 4,
+        objectId: subjectIdNumber,
+        assignments: [],
+      });
+
+      navigate(`/course/diagnostic-test/${testId}`);
+    } catch (err) {
+      toaster.create({
+        title: `Не вдалося створити діагностичний тест. Спробуйте пізніше: ${err}`,
+        type: 'error',
+      });
+    }
+  };
+
   const handleTopicCheckboxChange = async (topicId: number) => {
     const current = topicProgress[topicId];
     const newStatus = !current?.isCompleted;
@@ -140,10 +160,20 @@ const SubjectTaskList = () => {
       p={5}
       height="calc(100vh - 180px)"
     >
-      <Text fontSize="2xl" fontWeight="bold" mb={4} color="orange">
-        {selectedSubject ? selectedSubject.title : 'Завантаження...'}
-      </Text>
+      <Flex w="full" justifyContent="space-between" flexDir="row" alignItems="center" mb={4}>
+        <Text fontSize="2xl" fontWeight="bold" color="orange">
+          {selectedSubject ? selectedSubject.title : 'Завантаження...'}
+        </Text>
 
+        <Button
+          _hover={{ bgColor: '#677be0' }}
+          borderRadius="0.5rem"
+          bgColor="blue"
+          onClick={handleStartDiagnosticTest}
+        >
+          Діагностичний тест
+        </Button>
+      </Flex>
       {loading ? (
         <Spinner size="xl" />
       ) : (

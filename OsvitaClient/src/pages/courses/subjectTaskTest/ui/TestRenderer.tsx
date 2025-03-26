@@ -8,7 +8,12 @@ import MatchAssignment from './MatchAssignment';
 import { addStatisticAssignments } from '@/shared/api/userStatisticApi';
 import { toaster } from '@/components/ui/toaster';
 
-const TestRenderer = ({ testId }: { testId: number }) => {
+interface TestRendererProps {
+  testId: number;
+  onFinish?: () => void;
+}
+
+const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish }) => {
   const [assignments, setAssignments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
@@ -107,6 +112,7 @@ const TestRenderer = ({ testId }: { testId: number }) => {
       await addStatisticAssignments(userId, payload);
       setScore(localScore);
       setIsFinished(true);
+      if (onFinish) onFinish();
     } catch (err) {
       toaster.create({
         title: `Помилка збереження результату: ${err}`,

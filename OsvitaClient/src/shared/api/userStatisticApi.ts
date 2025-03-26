@@ -19,3 +19,13 @@ export const updateStatisticTopic = async (userId: number, topic: any) => {
   const response = await api.put(`/users/${userId}/statistic/topics`, topic);
   return response.data;
 };
+
+export const getDiagnosticalRecomendation = async (
+  userId: number,
+  assignmentSetProgressDetailId: number,
+): Promise<any> => {
+  const response = await api.get(
+    `/users/${userId}/diagnosticalrecomendation?assignmentSetProgressDetailId=${assignmentSetProgressDetailId}`,
+  );
+  return response.data;
+};

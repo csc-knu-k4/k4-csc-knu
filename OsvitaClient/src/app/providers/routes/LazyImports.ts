@@ -16,6 +16,9 @@ export const Register = lazy(() => import('@/pages/register/ui/Register'));
 export const SelectSubject = lazy(() => import('@/pages/admin/selectSubject/ui/SelectSubject'));
 export const AddTests = lazy(() => import('@/pages/admin/addTests/ui/AddTests'));
 export const Tests = lazy(() => import('@/pages/admin/testsPage/ui/Tests'));
+export const DiagnosticTest = lazy(
+  () => import('@/pages/courses/diagnosticTest/ui/DiagnosticTest'),
+);
 export const SubjectTaskList = lazy(
   () => import('@/pages/courses/subjectTaskList/ui/SubjectTaskList'),
 );
