@@ -64,6 +64,12 @@ const MatchAssignment = ({
         {index + 1}. Встановіть відповідність:
       </Text>
 
+      {data.problemDescription && (
+        <Text fontSize="lg" mb={3}>
+          {data.problemDescription}
+        </Text>
+      )}
+
       {data.problemDescriptionImage && (
         <Image
           src={`${window.location.origin}${data.problemDescriptionImage}`}
