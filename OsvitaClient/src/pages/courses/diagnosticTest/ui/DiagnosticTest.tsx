@@ -15,7 +15,7 @@ const DiagnosticTest = () => {
     if (isTestFinished) {
       getDiagnosticalRecomendation(userId, Number(testId))
         .then((data) => {
-          if (data?.length) setRecommendation(data[0].recomendationText);
+          if (data?.length) setRecommendation(data.recomendationText);
         })
         .catch(() => {
           setRecommendation('Не вдалося завантажити рекомендацію');
