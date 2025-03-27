@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
+             xmlns:converters="clr-namespace:OsvitaApp.Helpers.Converters"
+             x:Class="OsvitaApp.Pages.Controls.ImageContentBlockView"
+             x:DataType="om:ContentBlockObservableModel">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:Base64ToImageConverter x:Key="Base64ToImageConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Image Source="{Binding Value, Converter={StaticResource Base64ToImageConverter}}"
+           Aspect="Center"/>
+</ContentView>

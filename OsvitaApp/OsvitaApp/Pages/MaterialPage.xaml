@@ -1,9 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
              xmlns:vm="clr-namespace:OsvitaApp.PageModels"
              xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
+             xmlns:selectors="clr-namespace:OsvitaApp.Helpers.TemplateSelectors"
              xmlns:textInput="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Toolkit.Buttons;assembly=Syncfusion.Maui.Toolkit"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -15,12 +17,28 @@
              Shell.FlyoutBehavior="Flyout"
              BackgroundColor="{x:StaticResource LightBackground}"
              x:DataType="vm:MaterialPageVM">
-    
+
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior EventName="NavigatedTo"
                                     Command="{Binding NavigatedToCommand}" />
 
     </ContentPage.Behaviors>
+
+    <ContentPage.Resources>
+
+        <DataTemplate x:Key="textContextBlockTemplate">
+            <controls:TextContentBlockView></controls:TextContentBlockView>
+        </DataTemplate>
+        <DataTemplate x:Key="imageContextBlockViewTemplate">
+            <controls:ImageContentBlockView></controls:ImageContentBlockView>
+        </DataTemplate>
+
+        <selectors:ContentBlockTemplateSelector x:Key="ContentBlockTemplateSelector"
+                                                x:DataType="om:ContentBlockObservableModel"
+                                                TextContentBlockTemplate="{StaticResource textContextBlockTemplate}"
+                                                ImageContentBlockTemplate="{StaticResource imageContextBlockViewTemplate}" />
+
+    </ContentPage.Resources>
     <ScrollView>
 
         <Grid Padding="20,60,20,20"
@@ -37,19 +55,19 @@
             <Border Grid.Row="1"
                     Style="{x:StaticResource BackgroundBorderStyle}"
                     Padding="10">
+                <VerticalStackLayout>
+                    <Label Text="{Binding Material.Title}" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <CollectionView ItemsSource="{Binding Material.ContentBlocks}"
+                                    ItemTemplate="{StaticResource ContentBlockTemplateSelector}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical"
+                                               ItemSpacing="7.5" />
+                        </CollectionView.ItemsLayout>
 
-                <CollectionView ItemsSource="{Binding Chapters}">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Vertical"
-                                           ItemSpacing="7.5" />
-                    </CollectionView.ItemsLayout>
+                    </CollectionView>
+                </VerticalStackLayout>
 
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="om:ChapterObservableModel">
-                            <controls:ChapterView />
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                
 
             </Border>
 

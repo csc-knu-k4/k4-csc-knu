@@ -9,6 +9,6 @@
     <HorizontalStackLayout>
 
         <Image Source="{x:StaticResource MaterialIcon}" HeightRequest="19" WidthRequest="26"/>
-        <Label Text="{Binding Title}" />
+        <Label Text="{Binding Title}" FontSize="14" />
     </HorizontalStackLayout>
 </ContentView>

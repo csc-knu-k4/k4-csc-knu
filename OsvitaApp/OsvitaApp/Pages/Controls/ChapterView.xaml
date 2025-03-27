@@ -22,7 +22,7 @@
     <VerticalStackLayout>
         <Grid>
             <Label Text="{Binding Title}"
-                   FontSize="20"
+                   FontSize="16"
                    VerticalOptions="Center" />
             <ImageButton Source="{x:StaticResource ArrowDown}"
                          HorizontalOptions="End"
