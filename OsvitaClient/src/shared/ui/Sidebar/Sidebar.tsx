@@ -12,6 +12,7 @@ export function Sidebar({ onClose }: SidebarProps) {
   return (
     <Box
       h="calc(100vh - 2.5rem)"
+      zIndex="9999"
       bg="white"
       borderRadius="1rem"
       position={{ base: 'fixed', md: 'relative' }}

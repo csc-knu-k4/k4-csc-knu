@@ -88,6 +88,13 @@ namespace OsvitaBLL.Services
             await recomendationMessageRepository.UpdateAsync(recomendationMessage);
             await unitOfWork.SaveChangesAsync();
         }
+
+        public async Task<RecomendationAIModel> GetDiagnosticalRecomendationAsync(int userId, int assignmentSetId)
+        {
+            var assignmentSetReportModel = await statisticReportService.GetAssignmetSetReportModelAsync(userId, assignmentSetId);
+            var recomendation = await aiService.GetRecomendationByDiagnosticalAssignmentSetResultAsync(assignmentSetReportModel);
+            return recomendation;
+        }
     }
 }
 

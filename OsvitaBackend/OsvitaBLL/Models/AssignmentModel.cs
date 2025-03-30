@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public int? ObjectId { get; set; }
         public string ProblemDescription { get; set; }
+        public string? ProblemDescriptionImage { get; set; }
         public string Explanation { get; set; }
         public AssignmentModelType AssignmentModelType { get; set; }
         public int? ParentAssignmentId { get; set; }

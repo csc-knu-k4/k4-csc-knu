@@ -116,7 +116,7 @@ namespace OsvitaBLL.Services
             return report;
         }
 
-        private async Task<AssignmentSetReportModel> GetAssignmetSetReportModelAsync(int userId, int assignmentSetProgressDetailId)
+        public async Task<AssignmentSetReportModel> GetAssignmetSetReportModelAsync(int userId, int assignmentSetProgressDetailId)
         {
             var assignmentSetReportModel = new AssignmentSetReportModel();
             var statistic = await statisticService.GetStatisticByUserIdAsync(userId);

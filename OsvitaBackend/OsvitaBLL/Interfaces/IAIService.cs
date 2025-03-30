@@ -1,4 +1,5 @@
 ﻿using System;
+using OsvitaBLL.Models;
 using OsvitaBLL.Models.ReportModels;
 
 namespace OsvitaBLL.Interfaces
@@ -7,6 +8,7 @@ namespace OsvitaBLL.Interfaces
 	{
         Task<string> GetRecomendationTextByDiagnosticalAssignmentSetResultAsync(AssignmentSetReportModel assignmentSetReportModel);
         Task<string> GetRecomendationTextByAssignmentResultsAsync(List<AssignmentReportModel> assignmentReportModels);
+        Task<RecomendationAIModel> GetRecomendationByDiagnosticalAssignmentSetResultAsync(AssignmentSetReportModel assignmentSetReportModel);
     }
 }
 

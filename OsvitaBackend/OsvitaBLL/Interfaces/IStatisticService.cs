@@ -9,6 +9,7 @@ namespace OsvitaBLL.Interfaces
         Task<int> UpdateTopicProgressDetailAsync(TopicProgressDetailModel model, int userId);
         Task<int> AddAssignmentSetProgressDetailAsync(AssignmentSetProgressDetailModel model, int userId);
         Task<int> UpdateAssignmentSetProgressDetailAsync(AssignmentSetProgressDetailModel model, int userId);
+        Task<AssignmentSetProgressDetailModel> GetAssignmentSetProgressDetailAsync(int userId, int assignmentSetProgressDetailId);
     }
 }
 

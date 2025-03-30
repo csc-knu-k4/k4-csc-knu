@@ -69,7 +69,7 @@ namespace OsvitaBLL.Services
             statistic.AssignmentSetProgressDetails.Add(assignmentSetProgressDetail);
             await statisticRepository.UpdateAsync(statistic);
             await unitOfWork.SaveChangesAsync();
-            return statistic.Id;
+            return assignmentSetProgressDetail.Id;
         }
 
         public async Task DeleteAsync(StatisticModel model)
@@ -122,6 +122,22 @@ namespace OsvitaBLL.Services
                 }
             }
             return statisticModel;
+        }
+
+        public async Task<AssignmentSetProgressDetailModel> GetAssignmentSetProgressDetailAsync(int userId, int assignmentSetProgressDetailId)
+        {
+            var statistic = await statisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
+            var assignmentSetProgressDetail = (await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id)).FirstOrDefault(x => x.Id == assignmentSetProgressDetailId);
+            var assignmentSetProgressDetailModel = mapper.Map<AssignmentSetProgressDetail, AssignmentSetProgressDetailModel>(assignmentSetProgressDetail);
+            assignmentSetProgressDetailModel.MaxScore = 0;
+            foreach (var assignmentProgressDetail in assignmentSetProgressDetailModel.AssignmentProgressDetails)
+            {
+                var assignment = await assignmentRepository.GetByIdWithDetailsAsync(assignmentProgressDetail.AssignmentId);
+                var maxPoints = GetMaxPointsByAssignmentType(assignment.AssignmentType);
+                assignmentProgressDetail.MaxPoints = maxPoints;
+                assignmentSetProgressDetailModel.MaxScore += maxPoints;
+            }
+            return assignmentSetProgressDetailModel;
         }
 
         public async Task UpdateAsync(StatisticModel model)

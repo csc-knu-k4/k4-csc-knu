@@ -1,6 +1,8 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Http;
 using OsvitaBLL.Interfaces;
+using OsvitaBLL.Models;
 using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
 
@@ -9,12 +11,14 @@ namespace OsvitaBLL.Services
 	public class ExcelService : IExcelService
 	{
         private readonly IUnitOfWork unitOfWork;
-        public ExcelService(IUnitOfWork unitOfWork)
+        private readonly IAssignmentService assignmentService;
+        public ExcelService(IUnitOfWork unitOfWork, IAssignmentService assignmentService)
         {
             this.unitOfWork = unitOfWork;
+            this.assignmentService = assignmentService;
         }
 
-        public async Task ImportAsync(IFormFile fileExcel)
+        public async Task ImportMaterialsAsync(IFormFile fileExcel)
         {
             if (fileExcel != null)
             {
@@ -138,7 +142,7 @@ namespace OsvitaBLL.Services
                         contentBlock = new ContentBlock
                         {
                             Value = content,
-                            Title = content,
+                            Title = material.Title,
                             ContentType = contentType,
                             MaterialId = material.Id,
                             OrderPosition = (int)worksheet.Row(contentBlockIndex).Cell(3).Value.GetNumber()
@@ -173,6 +177,161 @@ namespace OsvitaBLL.Services
         private ContentType GetContentType(int type)
         {
             return type == 0 ? ContentType.TextBlock : ContentType.ImageBlock;
+        }
+
+        public async Task ImportAssignmentsAsync(IFormFile fileExcel)
+        {
+            if (fileExcel != null)
+            {
+                using (var stream = fileExcel.OpenReadStream())
+                {
+                    using (XLWorkbook workBook = new XLWorkbook(stream))
+                    {
+                        var oneAnswerAssignmentsWorksheet = workBook.Worksheets.ToArray()[0];
+                        await AddOneAnswerAssignments(oneAnswerAssignmentsWorksheet);
+                        var openAnswerAssignmentsWorksheet = workBook.Worksheets.ToArray()[1];
+                        await AddOpenAnswerAssignments(openAnswerAssignmentsWorksheet);
+                        var matchComplianceAssignmentsWorksheet = workBook.Worksheets.ToArray()[2];
+                        await AddMatchComplianceAssignments(matchComplianceAssignmentsWorksheet);
+                    }
+                }
+            }
+        }
+
+        private async Task AddOneAnswerAssignments(IXLWorksheet oneAnswerAssignmentsWorksheet)
+        {
+            var index = 2;
+            var isAssignmentExist = !string.IsNullOrEmpty(oneAnswerAssignmentsWorksheet.Row(index).Cell(1).Value.ToString());
+            while (isAssignmentExist)
+            {
+                var materialId = (int)oneAnswerAssignmentsWorksheet.Row(index).Cell(1).Value.GetNumber();
+                var description = oneAnswerAssignmentsWorksheet.Row(index).Cell(2).Value.ToString();
+                var descriptionImage = oneAnswerAssignmentsWorksheet.Row(index).Cell(3).Value.ToString().Trim();
+                var answersCount = (int)oneAnswerAssignmentsWorksheet.Row(index).Cell(4).Value.GetNumber();
+                var explanation = oneAnswerAssignmentsWorksheet.Row(index).Cell(8).Value.ToString();
+                var assignmentModel = new AssignmentModel
+                {
+                    ObjectId = materialId,
+                    ProblemDescription = description,
+                    ProblemDescriptionImage = descriptionImage,
+                    Explanation = explanation,
+                    AssignmentModelType = AssignmentModelType.OneAnswerAsssignment,
+                    Answers = new List<AnswerModel>()
+                };
+                for (int i = 0; i < answersCount; i++)
+                {
+                    var answerIndex = index + i + 1;
+                    var answerValue = oneAnswerAssignmentsWorksheet.Row(answerIndex).Cell(5).Value.ToString();
+                    var answerValueImage = oneAnswerAssignmentsWorksheet.Row(answerIndex).Cell(6).Value.ToString().Trim();
+                    var answerPoints = (int)oneAnswerAssignmentsWorksheet.Row(answerIndex).Cell(7).Value.GetNumber();
+                    var answerIsCorrect = answerPoints > 0;
+                    var answerModel = new AnswerModel
+                    {
+                        Value = answerValue,
+                        ValueImage = answerValueImage,
+                        IsCorrect = answerIsCorrect,
+                        Points = answerPoints
+                    };
+                    assignmentModel.Answers.Add(answerModel);
+                }
+                await assignmentService.AddAssignmentAsync(assignmentModel);
+                index = index + answersCount + 1;
+                isAssignmentExist = !string.IsNullOrEmpty(oneAnswerAssignmentsWorksheet.Row(index).Cell(1).Value.ToString());
+            }
+        }
+
+        private async Task AddOpenAnswerAssignments(IXLWorksheet openAnswerAssignmentsWorksheet)
+        {
+            foreach (var row in openAnswerAssignmentsWorksheet.Rows().Skip(1))
+            {
+                var materialId = (int)row.Cell(1).Value.GetNumber();
+                var description = row.Cell(2).Value.ToString();
+                var descriptionImage = row.Cell(3).Value.ToString();
+                var answerValue = row.Cell(4).Value.ToString();
+                var answerValueImage = string.IsNullOrWhiteSpace(row.Cell(5).Value.ToString()) ? null : row.Cell(5).Value.ToString();
+                var answerPoints = (int)row.Cell(6).Value.GetNumber();
+                var answerIsCorrect = answerPoints > 0;
+                var explanation = row.Cell(7).Value.ToString();
+                var answerModel = new AnswerModel
+                {
+                    Value = answerValue,
+                    ValueImage = string.IsNullOrWhiteSpace(answerValueImage) ? null : answerValueImage,
+                    IsCorrect = answerIsCorrect,
+                    Points = answerPoints
+                };
+                var assignmentModel = new AssignmentModel
+                {
+                    ObjectId = materialId,
+                    ProblemDescription = description,
+                    ProblemDescriptionImage = string.IsNullOrWhiteSpace(descriptionImage) ? null : descriptionImage,
+                    Explanation = explanation,
+                    AssignmentModelType = AssignmentModelType.OpenAnswerAssignment,
+                    Answers = new List<AnswerModel>() { answerModel }
+                };
+                await assignmentService.AddAssignmentAsync(assignmentModel);
+            }
+        }
+
+        private async Task AddMatchComplianceAssignments(IXLWorksheet matchComplianceAssignmentsWorksheet)
+        {
+            var index = 2;
+            var isAssignmentExist = !string.IsNullOrEmpty(matchComplianceAssignmentsWorksheet.Row(index).Cell(1).Value.ToString());
+            while (isAssignmentExist)
+            {
+                var materialId = (int)matchComplianceAssignmentsWorksheet.Row(index).Cell(1).Value.GetNumber();
+                var description = matchComplianceAssignmentsWorksheet.Row(index).Cell(2).Value.ToString();
+                var descriptionImage = matchComplianceAssignmentsWorksheet.Row(index).Cell(3).Value.ToString().Trim();
+                var childAssignmentsCount = (int)matchComplianceAssignmentsWorksheet.Row(index).Cell(4).Value.GetNumber();
+                var explanation = matchComplianceAssignmentsWorksheet.Row(index).Cell(9).Value.ToString();
+                var assignmentModel = new AssignmentModel
+                {
+                    ObjectId = materialId,
+                    ProblemDescription = description,
+                    ProblemDescriptionImage = string.IsNullOrWhiteSpace(descriptionImage) ? null : descriptionImage,
+                    Explanation = explanation,
+                    AssignmentModelType = AssignmentModelType.MatchComplianceAssignment,
+                    Answers = new List<AnswerModel>(),
+                    ChildAssignments = new List<AssignmentModel>()
+                };
+                var childIndex = index + 1;
+                for (int i = 0; i < childAssignmentsCount; i++)
+                {
+                    var childDescription = matchComplianceAssignmentsWorksheet.Row(childIndex).Cell(2).Value.ToString();
+                    var childDescriptionImage = matchComplianceAssignmentsWorksheet.Row(childIndex).Cell(3).Value.ToString().Trim();
+                    var answersCount = (int)matchComplianceAssignmentsWorksheet.Row(childIndex).Cell(5).Value.GetNumber();
+                    var childExplanation = matchComplianceAssignmentsWorksheet.Row(childIndex).Cell(9).Value.ToString();
+                    var childAssignmentModel = new AssignmentModel
+                    {
+                        ObjectId = materialId,
+                        ProblemDescription = childDescription,
+                        ProblemDescriptionImage = string.IsNullOrWhiteSpace(childDescriptionImage) ? null : childDescriptionImage,
+                        Explanation = childExplanation,
+                        AssignmentModelType = AssignmentModelType.ChildAssignment,
+                        Answers = new List<AnswerModel>()
+                    };
+                    for (int j = 0; j < answersCount; j++)
+                    {
+                        var answerIndex = childIndex + j + 1;
+                        var answerValue = matchComplianceAssignmentsWorksheet.Row(answerIndex).Cell(6).Value.ToString();
+                        var answerValueImage = matchComplianceAssignmentsWorksheet.Row(answerIndex).Cell(7).Value.ToString().Trim();
+                        var answerPoints = (int)matchComplianceAssignmentsWorksheet.Row(answerIndex).Cell(8).Value.GetNumber();
+                        var answerIsCorrect = answerPoints > 0;
+                        var answerModel = new AnswerModel
+                        {
+                            Value = answerValue,
+                            ValueImage = string.IsNullOrWhiteSpace(answerValueImage) ? null : answerValueImage,
+                            IsCorrect = answerIsCorrect,
+                            Points = answerPoints
+                        };
+                        childAssignmentModel.Answers.Add(answerModel);
+                    }
+                    childIndex = childIndex + answersCount + 1;
+                    index = childIndex;
+                    assignmentModel.ChildAssignments.Add(childAssignmentModel);
+                }
+                await assignmentService.AddAssignmentAsync(assignmentModel);
+                isAssignmentExist = !string.IsNullOrEmpty(matchComplianceAssignmentsWorksheet.Row(index).Cell(1).Value.ToString());
+            }
         }
     }
 }
