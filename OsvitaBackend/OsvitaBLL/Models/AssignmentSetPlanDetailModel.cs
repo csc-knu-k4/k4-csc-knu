@@ -9,4 +9,3 @@ namespace OsvitaBLL.Models
         public int? EducationPlanId { get; set; }
     }
 }
-

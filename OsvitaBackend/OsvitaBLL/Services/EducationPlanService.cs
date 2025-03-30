@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Spreadsheet;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaDAL.Entities;
@@ -52,6 +53,15 @@ namespace OsvitaBLL.Services
             await educationPlanRepository.UpdateAsync(educationPlan);
             await unitOfWork.SaveChangesAsync();
             return topicPlanDetail.Id;
+        }
+
+        public async Task<int> DeleteAssignmentSetPlanDetailAsync(int userId, int assignmentSetId)
+        {
+            var educationPlan = await educationPlanRepository.GetEducationPlanByUserIdWithDetailsAsync(userId);
+            var assignmentSetPlanDetail = await educationPlanRepository.GetAssignmentSetPlanDetailByEducationPlanIdAndAssignmentSetIdAsync(educationPlan.Id, assignmentSetId);
+            await educationPlanRepository.DeleteAssignmentSetPlanDetailByIdAsync(assignmentSetPlanDetail.Id);
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSetPlanDetail.Id;
         }
 
         public async Task DeleteAsync(EducationPlanModel model)

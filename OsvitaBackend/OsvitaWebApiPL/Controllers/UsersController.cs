@@ -199,11 +199,26 @@ namespace OsvitaWebApiPL.Controllers
 
         // POST: api/users/5/educationplan/assignments
         [HttpPost("{id}/educationplan/assignments")]
-        public async Task<ActionResult> PostAssignmentSetProgressDetail(int id, [FromBody] AssignmentSetPlanDetailModel model)
+        public async Task<ActionResult> PostAssignmentSetPlanDetail(int id, [FromBody] AssignmentSetPlanDetailModel model)
         {
             try
             {
                 await educationPlanService.AddAssignmentSetPlanDetailAsync(model, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // DELETE: api/users/5/educationplan/assignments/5
+        [HttpDelete("{id}/educationplan/assignments/{assignmentSetId}")]
+        public async Task<ActionResult> DeleteAssignmentSetProgressDetail(int id, int assignmentSetId)
+        {
+            try
+            {
+                await educationPlanService.DeleteAssignmentSetPlanDetailAsync(id, assignmentSetId);
                 return Ok();
             }
             catch (Exception ex)

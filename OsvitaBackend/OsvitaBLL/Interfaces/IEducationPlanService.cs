@@ -10,5 +10,6 @@ namespace OsvitaBLL.Interfaces
         Task<int> AddAssignmentSetPlanDetailAsync(AssignmentSetPlanDetailModel model, int userId);
         Task<int> UpdateTopicPlanDetailAsync(TopicPlanDetailModel model, int userId);
         Task<int> DeleteTopicPlanDetailAsync(int userId, int topicId);
+        Task<int> DeleteAssignmentSetPlanDetailAsync(int userId, int assignmentSetId);
     }
 }
