@@ -29,3 +29,5 @@ export const SubjectTaskMaterial = lazy(
 export const SubjectTaskTest = lazy(
   () => import('@/pages/courses/subjectTaskTest/ui/SubjectTaskTest'),
 );
+export const ClassTabs = lazy(() => import('@/pages/teacher/Tabs/ui/ClassTabs'));
+export const ClassTask = lazy(() => import('@/pages/teacher/ClassTask/ui/ClassTask'));
