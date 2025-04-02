@@ -1,6 +1,7 @@
 import { Tabs } from '@chakra-ui/react';
 import ClassTask from '../../ClassTask/ui/ClassTask';
 import ClassStudents from '../../ClassStudents/ui/ClassStudents';
+import ClassMarks from '../../ClassMarks/ui/ClassMarks';
 
 const ClassTabs = () => {
   return (
@@ -22,7 +23,9 @@ const ClassTabs = () => {
       <Tabs.Content value="ClassStudents">
         <ClassStudents />
       </Tabs.Content>
-      <Tabs.Content value="ClassMarks">Class Marks</Tabs.Content>
+      <Tabs.Content value="ClassMarks">
+        <ClassMarks />
+      </Tabs.Content>
     </Tabs.Root>
   );
 };

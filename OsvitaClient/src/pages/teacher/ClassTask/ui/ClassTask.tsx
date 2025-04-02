@@ -1,4 +1,4 @@
-import { Button, Flex, VStack, Text, Menu, Portal } from '@chakra-ui/react';
+import { Button, Flex, VStack, Text, Menu } from '@chakra-ui/react';
 import { BsFileEarmarkCheckFill } from 'react-icons/bs';
 import { LuPlus } from 'react-icons/lu';
 import { HiDotsVertical } from 'react-icons/hi';
@@ -25,18 +25,16 @@ const ClassTask = () => {
           </Flex>
           <Menu.Root>
             <Menu.Trigger asChild>
-              <Button maxW="3rem" variant="plain">
+              <Button variant="plain">
                 <HiDotsVertical size="42px" color="rgb(234, 88, 12)" />
               </Button>
             </Menu.Trigger>
-            <Portal>
-              <Menu.Positioner>
-                <Menu.Content>
-                  <Menu.Item value="edit">Редагувати</Menu.Item>
-                  <Menu.Item value="delete">Видалити</Menu.Item>
-                </Menu.Content>
-              </Menu.Positioner>
-            </Portal>
+            <Menu.Positioner>
+              <Menu.Content>
+                <Menu.Item value="edit">Редагувати</Menu.Item>
+                <Menu.Item value="delete">Видалити</Menu.Item>
+              </Menu.Content>
+            </Menu.Positioner>
           </Menu.Root>
         </Flex>
       </VStack>
