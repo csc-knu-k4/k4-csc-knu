@@ -2,6 +2,7 @@ import { lazy } from 'react';
 
 export const BaseLayout = lazy(() => import('@/app/layouts/BaseLayout/BaseLayout'));
 export const CourseLayout = lazy(() => import('@/app/layouts/CourseLayout/CourseLayout'));
+export const TeacherLayout = lazy(() => import('@/app/layouts/TeacherLayout/TeacherLayout'));
 export const AddMaterial = lazy(() => import('@/pages/admin/addMaterial/ui/AddMaterial'));
 export const AddChapter = lazy(() => import('@/pages/admin/addSection/ui/AddChapter'));
 export const AddSubject = lazy(() => import('@/pages/admin/addSubject/ui/AddSubject'));

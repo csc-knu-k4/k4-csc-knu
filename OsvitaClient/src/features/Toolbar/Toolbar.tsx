@@ -1,8 +1,8 @@
 import { Box, Flex, HStack, IconButton, Menu, Portal, Button } from '@chakra-ui/react';
-import { SearchInput } from '@/shared/ui/SearchInput';
 import { UserAvatar } from '@/shared/ui/Avatar';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { SiteLogo } from '@/shared/ui/SiteLogo';
 
 interface ToolbarProps {
   onMenuToggle?: () => void;
@@ -16,9 +16,9 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
   const isCourse = location.pathname.startsWith('/course');
 
   return (
-    <Box bg="white" p={4} borderRadius="1rem" w="full">
+    <Box bg="white" p={{ base: 2, md: 4 }} borderRadius="1rem" w="full">
       <Flex justifyContent="space-between" alignItems="center">
-        <HStack gap="10">
+        <HStack>
           <IconButton
             aria-label="Toggle Sidebar"
             display={{ base: 'flex', md: 'none' }}
@@ -28,7 +28,7 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
           >
             <GiHamburgerMenu />
           </IconButton>
-          <SearchInput />
+          <SiteLogo />
         </HStack>
 
         <Menu.Root>
