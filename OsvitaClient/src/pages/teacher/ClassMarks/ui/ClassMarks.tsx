@@ -1,7 +1,10 @@
 import { Button, Flex, Menu, Table } from '@chakra-ui/react';
 import { HiDotsVertical } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
 
 const ClassMarks = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <Table.Root size="sm" showColumnBorder>
@@ -19,7 +22,12 @@ const ClassMarks = () => {
                   </Menu.Trigger>
                   <Menu.Positioner>
                     <Menu.Content>
-                      <Menu.Item value="View">Переглянути детальніше</Menu.Item>
+                      <Menu.Item
+                        value="View"
+                        onClick={() => navigate(`/teacher/class-marks/details/1`)}
+                      >
+                        Переглянути детальніше
+                      </Menu.Item>
                       <Menu.Item value="DownloadPDF">Вивантажити статистику PDF</Menu.Item>
                       <Menu.Item value="delete">Видалити</Menu.Item>
                     </Menu.Content>

@@ -33,3 +33,6 @@ export const ClassTabs = lazy(() => import('@/pages/teacher/Tabs/ui/ClassTabs'))
 export const ClassTask = lazy(() => import('@/pages/teacher/ClassTask/ui/ClassTask'));
 export const ClassMarks = lazy(() => import('@/pages/teacher/ClassMarks/ui/ClassMarks'));
 export const ClassStudents = lazy(() => import('@/pages/teacher/ClassStudents/ui/ClassStudents'));
+export const ClassMarksDetails = lazy(
+  () => import('@/pages/teacher/ClassMarksDetails/ui/ClassMarksDetails'),
+);
