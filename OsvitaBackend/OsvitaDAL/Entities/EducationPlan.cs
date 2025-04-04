@@ -4,5 +4,6 @@
     {
         public int UserId { get; set; }
         public List<TopicPlanDetail> TopicPlanDetails { get; set; }
+        public List<AssignmentSetPlanDetail> AssignmentSetPlanDetails { get; set; }
     }
 }

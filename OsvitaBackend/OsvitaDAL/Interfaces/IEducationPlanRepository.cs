@@ -9,6 +9,8 @@ namespace OsvitaDAL.Interfaces
         Task<EducationPlan> GetEducationPlanByUserIdWithDetailsAsync(int userId);
         Task<List<TopicPlanDetail>> GetTopicPlanDetailsByEducationPlanIdAsync(int id);
         Task<TopicPlanDetail> GetTopicPlanDetailByEducationPlanIdAndTopicIdAsync(int educationPlanId, int topicId);
+        Task<AssignmentSetPlanDetail> GetAssignmentSetPlanDetailByEducationPlanIdAndAssignmentSetIdAsync(int educationPlanId, int assignmentSetId);
         Task DeleteTopicPlanDetailByIdAsync(int id);
+        Task DeleteAssignmentSetPlanDetailByIdAsync(int id);
     }
 }
