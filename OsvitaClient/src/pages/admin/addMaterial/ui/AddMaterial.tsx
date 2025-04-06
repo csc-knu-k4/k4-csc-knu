@@ -76,6 +76,13 @@ const AddMaterial = () => {
     ]);
   };
 
+  const removeBlock = (index: number) => {
+    setBlocks((prev) => {
+      const updated = prev.filter((_, i) => i !== index);
+      return updated.map((block, i) => ({ ...block, orderPosition: i + 1 }));
+    });
+  };
+
   const updateBlockValue = (index: number, value: string) => {
     setBlocks((prev) => {
       const copy = [...prev];
@@ -121,19 +128,17 @@ const AddMaterial = () => {
       ...block,
       id: 0,
       orderPosition: index + 1,
-      materialId: 0, // сервер сам поставить
+      materialId: 0,
     }));
 
     const newMaterial = {
       id: 0,
       title: title.trim(),
-      topicId: topicId!, // `!` бо ми вже перевірили що не null
+      topicId: topicId!,
       orderPosition: maxOrderPosition + 1,
       contentBlocksIds: [],
       contentBlocks: preparedBlocks,
     };
-
-    console.log('🧾 Відправляємо матеріал:', newMaterial); // для перевірки
 
     addMaterialMutation.mutate(newMaterial);
   };
@@ -187,47 +192,62 @@ const AddMaterial = () => {
               label={`Блок #${index + 1} (${block.contentBlockModelType === 0 ? 'текст' : 'зображення'})`}
               color="orange"
             >
-              {block.contentBlockModelType === 0 ? (
-                <Textarea
-                  value={block.value}
-                  onChange={(e) => updateBlockValue(index, e.target.value)}
-                  placeholder="Введіть текст"
-                  minH="150px"
-                />
-              ) : (
-                <Box border="1px solid orange" p={2}>
-                  <Text>{block.title}</Text>
-                  <Image
-                    src={`${'http://localhost:5134/'}${block.value}`}
-                    alt={block.title}
-                    borderRadius="lg"
-                    maxW="100%"
-                    maxH="300px"
-                    objectFit="contain"
-                    mb={4}
-                    boxShadow="md"
+              <Flex flexDir="column" gap={2} w="full">
+                {block.contentBlockModelType === 0 ? (
+                  <Textarea
+                    value={block.value}
+                    onChange={(e) => updateBlockValue(index, e.target.value)}
+                    placeholder="Введіть текст"
+                    minH="150px"
                   />
-                </Box>
-              )}
+                ) : (
+                  <Box border="1px solid orange" p={2}>
+                    <Text fontWeight="medium" mb={2}>
+                      {block.title}
+                    </Text>
+                    <Image
+                      src={`${'http://localhost:5134/'}${block.value}`}
+                      alt={block.title}
+                      borderRadius="lg"
+                      maxW="100%"
+                      maxH="300px"
+                      objectFit="contain"
+                      boxShadow="md"
+                    />
+                  </Box>
+                )}
+
+                <Button
+                  size="sm"
+                  colorScheme="red"
+                  variant="outline"
+                  alignSelf="flex-end"
+                  onClick={() => removeBlock(index)}
+                >
+                  Видалити блок
+                </Button>
+              </Flex>
             </Field>
           ))}
         </VStack>
 
-        {/* Кнопки додавання блоків */}
         <HStack mt={6} gap={4}>
           <Button onClick={addTextBlock}>+ Текстовий блок</Button>
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              if (e.target.files?.[0]) {
-                addImageBlock(e.target.files[0]);
-              }
-            }}
-          />
+          <Button as="label" cursor="pointer" colorScheme="orange" variant="outline">
+            + Додати зображення
+            <Input
+              type="file"
+              accept="image/*"
+              display="none"
+              onChange={(e) => {
+                if (e.target.files?.[0]) {
+                  addImageBlock(e.target.files[0]);
+                }
+              }}
+            />
+          </Button>
         </HStack>
 
-        {/* Кнопка збереження */}
         <Button mt={6} bgColor="orange" onClick={handleAddMaterial}>
           Додати матеріал
         </Button>
