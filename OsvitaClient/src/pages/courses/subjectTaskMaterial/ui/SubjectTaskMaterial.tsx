@@ -121,7 +121,7 @@ const SubjectTaskMaterial = () => {
               ) : (
                 <Image
                   key={block.id}
-                  src={`${'http://localhost:5134/StaticFiles/'}${block.value}`}
+                  src={`${'http://localhost:5134/'}${block.value}`}
                   alt={block.title}
                   borderRadius="lg"
                   maxW="100%"

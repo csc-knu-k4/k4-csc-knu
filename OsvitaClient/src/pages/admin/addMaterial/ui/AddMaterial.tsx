@@ -1,5 +1,15 @@
 import { Button } from '@/components/ui/button';
-import { createListCollection, Flex, HStack, Input, Text, Textarea } from '@chakra-ui/react';
+import {
+  Box,
+  createListCollection,
+  Flex,
+  HStack,
+  Input,
+  Text,
+  Textarea,
+  VStack,
+  Image,
+} from '@chakra-ui/react';
 import { Field } from '@/components/ui/field';
 import {
   SelectContent,
@@ -12,24 +22,20 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useState } from 'react';
 import { getTopics } from '@/shared/api/topicsApi';
 import { Topic } from '@/entities/topics';
-import { addMaterial, getMaterials } from '@/shared/api/materialsApi';
-import { addContentBlock, getContentBlocks } from '@/shared/api/contentBlocksApi';
+import { addMaterial, ContentBlock, getMaterials } from '@/shared/api/materialsApi';
 import { toaster } from '@/components/ui/toaster';
+import { uploadFile } from '@/shared/api/mediaApi';
 
 const AddMaterial = () => {
   const [title, setTitle] = useState('');
   const [topicId, setTopicId] = useState<number | null>(null);
-  const [contentValue, setContentValue] = useState('');
   const queryClient = useQueryClient();
+  const [blocks, setBlocks] = useState<ContentBlock[]>([]);
 
   const { data: topicsData, isLoading: topicsLoading } = useQuery<Topic[]>(['topics'], getTopics);
   const { data: materialsData, isLoading: materialsLoading } = useQuery(
     ['materials'],
     getMaterials,
-  );
-  const { data: contentBlocksData, isLoading: contentBlocksLoading } = useQuery(
-    ['contentBlocks'],
-    getContentBlocks,
   );
 
   const topics = createListCollection({
@@ -41,44 +47,65 @@ const AddMaterial = () => {
       : [],
   });
 
-  const addMaterialMutation = useMutation({
-    mutationFn: addMaterial,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries(['materials']);
-      handleAddContentBlock(data.id);
-    },
-  });
+  const addTextBlock = () => {
+    setBlocks((prev) => [
+      ...prev,
+      {
+        id: 0,
+        title,
+        contentBlockModelType: 0,
+        orderPosition: prev.length + 1,
+        materialId: 0,
+        value: '',
+      },
+    ]);
+  };
 
-  const addContentBlockMutation = useMutation({
-    mutationFn: addContentBlock,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['contentBlocks']);
-      setTitle('');
-      setTopicId(null);
-      setContentValue('');
-    },
-  });
+  const addImageBlock = async (file: File) => {
+    const uploaded = await uploadFile(file);
+    setBlocks((prev) => [
+      ...prev,
+      {
+        id: 0,
+        title: file.name,
+        contentBlockModelType: 1,
+        orderPosition: prev.length + 1,
+        materialId: 0,
+        value: uploaded,
+      },
+    ]);
+  };
 
-  const handleAddContentBlock = (materialId: number) => {
-    if (!contentBlocksData) return;
-
-    const maxOrderPosition = Math.max(
-      ...contentBlocksData.map((block: { orderPosition: number }) => block.orderPosition),
-      0,
-    );
-
-    addContentBlockMutation.mutate({
-      id: 0,
-      title,
-      contentBlockModelType: 0,
-      orderPosition: maxOrderPosition + 1,
-      materialId,
-      value: contentValue,
+  const updateBlockValue = (index: number, value: string) => {
+    setBlocks((prev) => {
+      const copy = [...prev];
+      copy[index].value = value;
+      return copy;
     });
   };
 
+  const addMaterialMutation = useMutation({
+    mutationFn: addMaterial,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['materials']);
+      toaster.create({ title: 'Матеріал створено!', type: 'success' });
+      setTitle('');
+      setTopicId(null);
+      setBlocks([]);
+    },
+  });
+
+  const isFormValid = () => {
+    if (!title.trim() || topicId === null || blocks.length === 0) return false;
+    for (const block of blocks) {
+      if (block.contentBlockModelType === 0 && !block.value.trim()) return false;
+      if (block.contentBlockModelType === 1 && !block.value) return false;
+    }
+    return true;
+  };
+
   const handleAddMaterial = () => {
-    if (!title.trim() || topicId === null || !contentValue.trim()) {
+    if (!isFormValid()) {
       toaster.create({
         title: `Будь ласка, заповніть всі поля!`,
         type: 'error',
@@ -87,74 +114,125 @@ const AddMaterial = () => {
     }
 
     const maxOrderPosition = materialsData
-      ? Math.max(
-          ...materialsData.map((material: { orderPosition: number }) => material.orderPosition),
-          0,
-        )
+      ? Math.max(...materialsData.map((m) => m.orderPosition), 0)
       : 0;
 
-    addMaterialMutation.mutate({
+    const preparedBlocks = blocks.map((block, index) => ({
+      ...block,
+      id: 0,
+      orderPosition: index + 1,
+      materialId: 0, // сервер сам поставить
+    }));
+
+    const newMaterial = {
+      id: 0,
       title: title.trim(),
-      topicId,
+      topicId: topicId!, // `!` бо ми вже перевірили що не null
       orderPosition: maxOrderPosition + 1,
       contentBlocksIds: [],
-    });
+      contentBlocks: preparedBlocks,
+    };
+
+    console.log('🧾 Відправляємо матеріал:', newMaterial); // для перевірки
+
+    addMaterialMutation.mutate(newMaterial);
   };
 
-  if (materialsLoading || topicsLoading || contentBlocksLoading) {
+  if (materialsLoading || topicsLoading) {
     return <Text>Завантаження даних...</Text>;
   }
 
   return (
-    <Flex flexDir="column">
-      <Text mb="2rem" fontSize="2xl" fontWeight="medium">
-        Додати матеріал
-      </Text>
-      <Flex flexDir="row" gap={4}>
-        <Field label="Назва" required mb={3} color="orange">
+    <Box overflowY="auto" h="calc(100dvh - 180px)">
+      <Flex flexDir="column">
+        <Text mb="2rem" fontSize="2xl" fontWeight="medium">
+          Додати матеріал
+        </Text>
+
+        <Flex flexDir="row" gap={4}>
+          <Field label="Назва" required mb={3} color="orange">
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Вкажіть назву"
+              color="orange.placeholder"
+              _placeholder={{ color: 'inherit' }}
+            />
+          </Field>
+
+          <Field label="Тема" required mb={3} color="orange">
+            <SelectRoot
+              collection={topics}
+              onValueChange={(selected) => setTopicId(Number(selected?.value))}
+            >
+              <SelectTrigger>
+                <SelectValueText placeholder="Вкажіть тему" />
+              </SelectTrigger>
+              <SelectContent>
+                {topics.items.map((topic) => (
+                  <SelectItem item={topic} key={topic.value}>
+                    {topic.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </SelectRoot>
+          </Field>
+        </Flex>
+
+        {/* Контент-блоки */}
+        <VStack gap={6} align="stretch" mt={6}>
+          {blocks.map((block, index) => (
+            <Field
+              key={index}
+              label={`Блок #${index + 1} (${block.contentBlockModelType === 0 ? 'текст' : 'зображення'})`}
+              color="orange"
+            >
+              {block.contentBlockModelType === 0 ? (
+                <Textarea
+                  value={block.value}
+                  onChange={(e) => updateBlockValue(index, e.target.value)}
+                  placeholder="Введіть текст"
+                  minH="150px"
+                />
+              ) : (
+                <Box border="1px solid orange" p={2}>
+                  <Text>{block.title}</Text>
+                  <Image
+                    src={`${'http://localhost:5134/'}${block.value}`}
+                    alt={block.title}
+                    borderRadius="lg"
+                    maxW="100%"
+                    maxH="300px"
+                    objectFit="contain"
+                    mb={4}
+                    boxShadow="md"
+                  />
+                </Box>
+              )}
+            </Field>
+          ))}
+        </VStack>
+
+        {/* Кнопки додавання блоків */}
+        <HStack mt={6} gap={4}>
+          <Button onClick={addTextBlock}>+ Текстовий блок</Button>
           <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Вкажіть назву"
-            color="orange.placeholder"
-            _placeholder={{ color: 'inherit' }}
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files?.[0]) {
+                addImageBlock(e.target.files[0]);
+              }
+            }}
           />
-        </Field>
-        <Field label="Тема" required mb={3} color="orange">
-          <SelectRoot
-            collection={topics}
-            onValueChange={(selected) => setTopicId(Number(selected?.value))}
-          >
-            <SelectTrigger>
-              <SelectValueText placeholder="Вкажіть тему" />
-            </SelectTrigger>
-            <SelectContent>
-              {topics.items.map((topic) => (
-                <SelectItem item={topic} key={topic.value}>
-                  {topic.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </SelectRoot>
-        </Field>
+        </HStack>
+
+        {/* Кнопка збереження */}
+        <Button mt={6} bgColor="orange" onClick={handleAddMaterial}>
+          Додати матеріал
+        </Button>
       </Flex>
-      <HStack width="full" mb={3}>
-        <Field color="orange" label="Наповнення" required errorText="Поле обов'язкове">
-          <Textarea
-            _placeholder={{ color: 'inherit' }}
-            minH="450px"
-            color="orange.placeholder"
-            placeholder="Начніть друкувати..."
-            variant="outline"
-            value={contentValue}
-            onChange={(e) => setContentValue(e.target.value)}
-          />
-        </Field>
-      </HStack>
-      <Button bgColor="orange" onClick={handleAddMaterial}>
-        Додати
-      </Button>
-    </Flex>
+    </Box>
   );
 };
 
