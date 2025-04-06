@@ -38,7 +38,7 @@ const OpenAnswerQuestion = ({
       </Text>
       {data.problemDescriptionImage && (
         <Image
-          src={`${window.location.origin}${data.problemDescriptionImage}`}
+          src={`${'http://localhost:5134'}${data.problemDescriptionImage}`}
           alt="зображення до завдання"
           borderRadius="lg"
           maxW="100%"

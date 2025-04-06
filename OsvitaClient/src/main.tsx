@@ -1,3 +1,4 @@
+import { LightMode } from '@/components/ui/color-mode';
 import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
 import { ThemeProvider } from 'next-themes';
 import { StrictMode } from 'react';
@@ -17,10 +18,12 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <ChakraProvider value={system}>
         <ThemeProvider attribute="class" disableTransitionOnChange>
+          <LightMode>
             <ReactQueryProvider>
               <RouterProvider router={router} />
               <Toaster />
             </ReactQueryProvider>
+          </LightMode>
         </ThemeProvider>
       </ChakraProvider>
     </Provider>

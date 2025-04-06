@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getMaterialContentById } from '@/shared/api/materialsApi';
-import { Text, Spinner, Box } from '@chakra-ui/react';
+import { Text, Spinner, Box, Image } from '@chakra-ui/react';
 import { addAssignmentsSets, getAssignmentsSets } from '@/shared/api/assingnmentsSets';
 import { useLocation } from 'react-router-dom';
 import SubjectTaskLayout from '@/app/layouts/SubjectTaskLayout/SubjectTaskLayout';
@@ -21,7 +21,8 @@ const SubjectTaskMaterial = () => {
   const location = useLocation();
   const topicId = location.state?.topicId;
   const { materialId } = useParams<{ materialId: string }>();
-  const [content, setContent] = useState<MaterialContent | null>(null);
+  const [content, setContent] = useState<MaterialContent[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [isTest, setIsTest] = useState(false);
   const [nextTopic, setNextTopic] = useState<any | null>(null);
@@ -86,7 +87,7 @@ const SubjectTaskMaterial = () => {
   useEffect(() => {
     if (materialId) {
       getMaterialContentById(Number(materialId))
-        .then((data) => setContent(data[0]))
+        .then((data) => setContent(data))
         .catch((error) => {
           toaster.create({
             title: `Помилка завантаження матеріалу: ${error}`,
@@ -99,15 +100,44 @@ const SubjectTaskMaterial = () => {
 
   return (
     <SubjectTaskLayout
-      title={content?.title || ''}
+      title={content[0]?.title || ''}
       showTest={isTest}
       onToggleMode={isTest ? () => setIsTest(false) : handleStartTest}
       onNextTopic={() => goToNextMaterialOrTopic(topicId, Number(materialId), navigate)}
       isNextDisabled={!nextTopic}
       nextTopicTitle={nextTopic?.title || ''}
     >
-      <Box height="calc(100vh - 400px)" overflowY="auto">
-        {loading ? <Spinner size="xl" /> : <Text>{content?.value || 'Немає контенту'}</Text>}
+      <Box height="calc(100vh - 400px)" overflowY="auto" px={4} py={2}>
+        {loading ? (
+          <Spinner size="xl" />
+        ) : content.length > 0 ? (
+          content
+            .sort((a: MaterialContent, b: MaterialContent) => a.orderPosition - b.orderPosition)
+            .map((block: MaterialContent) =>
+              block.contentBlockModelType === 0 ? (
+                <Box
+                  key={block.id}
+                  mb={4}
+                  className="quill-content"
+                  dangerouslySetInnerHTML={{ __html: block.value }}
+                />
+              ) : (
+                <Image
+                  key={block.id}
+                  src={`${'http://localhost:5134/'}${block.value}`}
+                  alt={block.title}
+                  borderRadius="lg"
+                  maxW="100%"
+                  maxH="300px"
+                  objectFit="contain"
+                  mb={4}
+                  boxShadow="md"
+                />
+              ),
+            )
+        ) : (
+          <Text>Немає контенту</Text>
+        )}
       </Box>
     </SubjectTaskLayout>
   );
