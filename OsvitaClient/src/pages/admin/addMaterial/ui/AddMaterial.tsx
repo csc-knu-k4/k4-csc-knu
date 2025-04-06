@@ -6,7 +6,6 @@ import {
   HStack,
   Input,
   Text,
-  Textarea,
   VStack,
   Image,
 } from '@chakra-ui/react';
@@ -25,6 +24,9 @@ import { Topic } from '@/entities/topics';
 import { addMaterial, ContentBlock, getMaterials } from '@/shared/api/materialsApi';
 import { toaster } from '@/components/ui/toaster';
 import { uploadFile } from '@/shared/api/mediaApi';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { quillModules } from './quillModules';
 
 const AddMaterial = () => {
   const [title, setTitle] = useState('');
@@ -194,11 +196,11 @@ const AddMaterial = () => {
             >
               <Flex flexDir="column" gap={2} w="full">
                 {block.contentBlockModelType === 0 ? (
-                  <Textarea
+                  <ReactQuill
                     value={block.value}
-                    onChange={(e) => updateBlockValue(index, e.target.value)}
-                    placeholder="Введіть текст"
-                    minH="150px"
+                    onChange={(val) => updateBlockValue(index, val)}
+                    theme="snow"
+                    modules={quillModules}
                   />
                 ) : (
                   <Box border="1px solid orange" p={2}>

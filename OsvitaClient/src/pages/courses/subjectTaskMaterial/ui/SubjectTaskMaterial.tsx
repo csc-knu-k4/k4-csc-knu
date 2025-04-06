@@ -115,9 +115,12 @@ const SubjectTaskMaterial = () => {
             .sort((a: MaterialContent, b: MaterialContent) => a.orderPosition - b.orderPosition)
             .map((block: MaterialContent) =>
               block.contentBlockModelType === 0 ? (
-                <Text key={block.id} mb={4}>
-                  {block.value}
-                </Text>
+                <Box
+                  key={block.id}
+                  mb={4}
+                  className="quill-content"
+                  dangerouslySetInnerHTML={{ __html: block.value }}
+                />
               ) : (
                 <Image
                   key={block.id}
