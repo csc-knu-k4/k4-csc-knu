@@ -36,3 +36,4 @@ export const ClassStudents = lazy(() => import('@/pages/teacher/ClassStudents/ui
 export const ClassMarksDetails = lazy(
   () => import('@/pages/teacher/ClassMarksDetails/ui/ClassMarksDetails'),
 );
+export const Profile = lazy(() => import('@/pages/profile/ui/Profile'));

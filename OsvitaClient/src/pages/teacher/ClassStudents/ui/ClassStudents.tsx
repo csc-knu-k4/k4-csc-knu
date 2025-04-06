@@ -37,6 +37,7 @@ const ClassStudents = () => {
                     borderRadius="1rem"
                     placeholder="Введіть електронну пошту"
                     size="md"
+                    color="black"
                   />
                   <IconButton borderRadius="1rem" aria-label="Invite user" variant="ghost">
                     <IoPaperPlane color="#f97316" size={28} />
