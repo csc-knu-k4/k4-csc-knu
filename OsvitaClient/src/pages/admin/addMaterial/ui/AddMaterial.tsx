@@ -232,7 +232,9 @@ const AddMaterial = () => {
         </VStack>
 
         <HStack mt={6} gap={4}>
-          <Button onClick={addTextBlock}>+ Текстовий блок</Button>
+          <Button colorPalette="orange" onClick={addTextBlock}>
+            + Текстовий блок
+          </Button>
           <Button as="label" cursor="pointer" colorScheme="orange" variant="outline">
             + Додати зображення
             <Input
