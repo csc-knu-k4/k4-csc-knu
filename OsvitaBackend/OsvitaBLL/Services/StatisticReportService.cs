@@ -225,7 +225,7 @@ namespace OsvitaBLL.Services
             return assignmetReportModels;
         }
 
-        private async Task<EducationClassAssignmetSetReportModel> GetEducationClassAssignmetSetReportModelAsync(int educationClassId, int assignmentSetId)
+        public async Task<EducationClassAssignmetSetReportModel> GetEducationClassAssignmetSetReportModelAsync(int educationClassId, int assignmentSetId)
         {
             var educationClass = await unitOfWork.EducationClassRepository.GetByIdWithDetailsAsync(educationClassId);
             var educationClassAssignmetSetReportModel = new EducationClassAssignmetSetReportModel
