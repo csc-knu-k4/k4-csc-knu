@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Text, Highlight, Input } from '@chakra-ui/react';
+import { Text, Highlight, Input, Flex } from '@chakra-ui/react';
 import { Field } from '@/components/ui/field';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -16,8 +16,17 @@ const Register = () => {
   const [firstName, setFirstName] = useState('');
   const [secondName, setSecondName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<'student' | 'teacher' | null>(null);
 
   const handleRegister = async () => {
+    if (!selectedRole) {
+      toaster.error({
+        title: 'Будь ласка, оберіть роль!',
+        type: 'error',
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       await register({
@@ -25,7 +34,7 @@ const Register = () => {
         password,
         firstName,
         secondName,
-        roles: ['student'],
+        roles: [selectedRole],
       });
       toaster.success({
         title: 'Реєстрація успішна',
@@ -35,7 +44,7 @@ const Register = () => {
     } catch (error) {
       toaster.error({
         title: `Помилка при реєстрації ${error}`,
-        type: 'erorr',
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -80,6 +89,29 @@ const Register = () => {
           onChange={(e) => setSecondName(e.target.value)}
         />
       </Field>
+      <Text mt={6} fontSize="lg">
+        Виберіть роль
+      </Text>
+      <Flex mt={3} gap={2} justifyContent="center">
+        <Button
+          colorPalette={selectedRole === 'student' ? 'orange' : 'gray'}
+          variant={selectedRole === 'student' ? 'solid' : 'outline'}
+          fontSize="lg"
+          w="10rem"
+          onClick={() => setSelectedRole('student')}
+        >
+          Учень
+        </Button>
+        <Button
+          colorPalette={selectedRole === 'teacher' ? 'orange' : 'gray'}
+          variant={selectedRole === 'teacher' ? 'solid' : 'outline'}
+          fontSize="lg"
+          w="10rem"
+          onClick={() => setSelectedRole('teacher')}
+        >
+          Вчитель
+        </Button>
+      </Flex>
       <Button
         mt={6}
         fontSize="lg"
