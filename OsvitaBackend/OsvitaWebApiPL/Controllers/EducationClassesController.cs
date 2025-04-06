@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaBLL.Services;
+using OsvitaDAL.Entities;
 using OsvitaWebApiPL.Models;
 
 namespace OsvitaWebApiPL.Controllers
@@ -12,10 +13,12 @@ namespace OsvitaWebApiPL.Controllers
     {
         private readonly IEducationClassService educationClassService;
         private readonly IEducationClassPlanService educationClassPlanService;
-        public EducationClassesController(IEducationClassService educationClassService, IEducationClassPlanService educationClassPlanService)
+        private readonly IStatisticReportService statisticReportService;
+        public EducationClassesController(IEducationClassService educationClassService, IEducationClassPlanService educationClassPlanService, IStatisticReportService statisticReportService)
         {
             this.educationClassService = educationClassService;
             this.educationClassPlanService = educationClassPlanService;
+            this.statisticReportService = statisticReportService;
         }
 
         // GET: api/classes
@@ -189,6 +192,18 @@ namespace OsvitaWebApiPL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // GET api/classes/5/statistic/assignments/5
+        [HttpGet("{id}/statistic/assignments/{assignmentSetId}")]
+        public async Task<ActionResult<EducationClassPlanModel>> GetEducationClassPlan(int id, int assignmentSetId)
+        {
+            var report = await statisticReportService.GetEducationClassAssignmetSetReportModelAsync(id, assignmentSetId);
+            if (report is not null)
+            {
+                return Ok(report);
+            }
+            return NotFound();
         }
     }
 }
