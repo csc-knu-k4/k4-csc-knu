@@ -5,6 +5,7 @@
         OneAnswerAsssignment,
         OpenAnswerAssignment,
         MatchComplianceAssignment,
-        ChildAssignment
+        ChildAssignment,
+        Daily
     }
 }
