@@ -12,6 +12,7 @@ namespace OsvitaDAL.Entities
         Topic,
         AssignmentSet,
         Subject,
-        Diagnostical
+        Diagnostical,
+        Daily
     }
 }

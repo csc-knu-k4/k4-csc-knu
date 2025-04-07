@@ -317,5 +317,37 @@ namespace OsvitaBLL.Services
             await unitOfWork.SaveChangesAsync();
             return assignmentSet.Id;
         }
+
+        private async Task<int> GenerateDailyAssignmentSetAsync(AssignmentSet assignmentSet)
+        {
+            var oneAnswerAssignmentsForTestCount = 1;
+            var openAnswerAssignmentsForTestCount = 1;
+            var matchComplianceAssignmentsForTestCount = 1;
+            var chapterIds = (await unitOfWork.SubjectRepository.GetByIdWithDetailsAsync(assignmentSet.ObjectId)).Chapters.Select(x => x.Id);
+            var topicIds = (await unitOfWork.TopicRepository.GetAllAsync()).Where(x => chapterIds.Contains(x.ChapterId)).Select(x => x.Id);
+            var materialIds = (await unitOfWork.MaterialRepository.GetAllAsync()).Where(x => topicIds.Contains(x.TopicId)).Select(x => x.Id);
+            var assignmentsIds = (await assignmentLinkRepository.GetAllAsync()).Where(x => materialIds.Contains(x.ObjectId) && x.ObjectType == ObjectType.Material).Select(x => x.AssignmentId);
+            var allAssignments = (await assignmentRepository.GetAllWithDetailsAsync()).ToList();
+            var oneAnswerAssignments = allAssignments.Where(x => x.AssignmentType == AssignmentType.OneAnswerAsssignment && assignmentsIds.Contains(x.Id)).ToArray();
+            var openAnswerAssignments = allAssignments.Where(x => x.AssignmentType == AssignmentType.OpenAnswerAssignment && assignmentsIds.Contains(x.Id)).ToArray();
+            var matchComplianceAssignments = allAssignments.Where(x => x.AssignmentType == AssignmentType.MatchComplianceAssignment && assignmentsIds.Contains(x.Id)).ToArray();
+
+            Random rnd = new Random();
+            rnd.Shuffle(oneAnswerAssignments);
+            rnd.Shuffle(openAnswerAssignments);
+            rnd.Shuffle(matchComplianceAssignments);
+            var oneAnswerAssignmentsForTest = oneAnswerAssignments.Take(oneAnswerAssignmentsForTestCount).ToList();
+            var openAnswerAssignmentsForTest = openAnswerAssignments.Take(openAnswerAssignmentsForTestCount).ToList();
+            var matchComplianceAssignmentsForTest = matchComplianceAssignments.Take(matchComplianceAssignmentsForTestCount).ToList();
+            var assignments = oneAnswerAssignmentsForTest.Concat(openAnswerAssignmentsForTest).Concat(matchComplianceAssignmentsForTest);
+
+            var assignmentLinks = assignments.Select(x => new AssignmentLink { AssignmentId = x.Id, ObjectId = assignmentSet.Id, ObjectType = ObjectType.AssignmentSet });
+            foreach (var assignmentLink in assignmentLinks)
+            {
+                await assignmentLinkRepository.AddAsync(assignmentLink);
+            }
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSet.Id;
+        }
     }
 }
