@@ -9,7 +9,7 @@
         Padding="0"
         HeightRequest="200"
         WidthRequest="300"
-        Margin="10,10,10,0"
+        Margin="0,10,0,0"
         x:DataType="om:SubjectObservableModel">
 
     <Border.Shadow>

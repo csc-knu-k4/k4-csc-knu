@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace OsvitaApp.Pages.Controls;
 
-public partial class ChapterView : Border
+public partial class ChapterCard : ContentView
 {
-    public ChapterView()
+    public ChapterCard()
     {
         InitializeComponent();
     }

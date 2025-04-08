@@ -19,6 +19,9 @@ namespace OsvitaApp.Mappers
             CreateMap<TopicModel, TopicObservableModel>().ReverseMap();
             CreateMap<MaterialModel, MaterialObservableModel>().ReverseMap();
             CreateMap<ContentBlockModel, ContentBlockObservableModel>().ReverseMap();
+            CreateMap<AssignmentSetModel, AssignmentSetObservableModel>().ReverseMap();
+            CreateMap<AssignmentModel, AssignmentObservableModel>().ReverseMap();
+            CreateMap<AnswerModel, AnswerObservableModel>().ReverseMap();
         }
     }
 }

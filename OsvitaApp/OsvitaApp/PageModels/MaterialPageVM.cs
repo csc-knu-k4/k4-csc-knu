@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.Input;
+using OsvitaApp.Enums;
 using OsvitaApp.Interfaces;
 using OsvitaApp.Models.Dto;
 using OsvitaApp.Models.ObservableModels;
@@ -41,7 +42,8 @@ namespace OsvitaApp.PageModels
                         Material.ContentBlocks = getContentBlocksResult.Data
                             .Select(_mapper.Map<ContentBlockObservableModel>)
                             .OrderBy(x => x.OrderPosition)
-                            .ThenBy(x => x.Id).ToObservableCollection();
+                            .ThenBy(x => x.Id)
+                            .ToObservableCollection();
                     }
                 }
             }

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xaml-comp compile="true" ?>
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:f="clr-namespace:Fonts"
+                    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls">
+    
+    <ControlTemplate x:Key="PageBaseTemplate">
+        <ScrollView>
+            <Grid Padding="20,20,20,20" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Верхня панель -->
+                <controls:TopPanel Grid.Row="0" />
+
+                <!-- Основний контент -->
+                <Border Grid.Row="1"
+                        Style="{StaticResource BackgroundBorderStyle}" Padding="10">
+                    <ContentPresenter />
+                </Border>
+            </Grid>
+        </ScrollView>
+    </ControlTemplate>
+
+</ResourceDictionary>

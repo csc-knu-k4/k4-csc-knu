@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OsvitaApp.Models.Dto
 {
-    public class ChaptersPageDto
+    public class SubjectPageDto
     {
         public SubjectObservableModel Subject { get; set; }
     }

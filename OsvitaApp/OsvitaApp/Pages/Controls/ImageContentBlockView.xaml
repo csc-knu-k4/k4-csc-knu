@@ -8,10 +8,10 @@
              x:DataType="om:ContentBlockObservableModel">
     <ContentView.Resources>
         <ResourceDictionary>
-            <converters:Base64ToImageConverter x:Key="Base64ToImageConverter" />
+            <converters:ImageFromUriConverter x:Key="ImageFromUriConverter" />
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Image Source="{Binding Value, Converter={StaticResource Base64ToImageConverter}}"
+    <Image Source="{Binding Value, Converter={StaticResource ImageFromUriConverter}}"
            Aspect="Center"/>
 </ContentView>

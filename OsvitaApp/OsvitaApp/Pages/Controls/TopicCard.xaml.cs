@@ -1,8 +1,8 @@
 namespace OsvitaApp.Pages.Controls;
 
-public partial class TopicView : ContentView
+public partial class TopicCard : ContentView
 {
-    public TopicView()
+    public TopicCard()
     {
         InitializeComponent();
     }

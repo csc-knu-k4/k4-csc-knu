@@ -15,27 +15,32 @@ using System.Threading.Tasks;
 
 namespace OsvitaApp.PageModels
 {
-    public partial class SubjectsPageVM : ObservableObject
+    public partial class SubjectPageVM : ObservableObject
     {
         private readonly ISubjectsService _subjectsService;
         private readonly IMapper _mapper;
         private readonly SubjectPageDto _subjectPageDto;
-        [ObservableProperty] private ObservableCollection<SubjectObservableModel> _subjects;
+        private readonly ChapterPageDto _chapterPageDto;
+        [ObservableProperty] private SubjectObservableModel _subject;
+        [ObservableProperty] private ObservableCollection<ChapterObservableModel> _chapters;
 
-        public SubjectsPageVM(ISubjectsService subjectsService, IMapper mapper, SubjectPageDto subjectPageDto)
+        public SubjectPageVM(ISubjectsService subjectsService, IMapper mapper, SubjectPageDto subjectPageDto, ChapterPageDto chapterPageDto)
         {
             _subjectsService = subjectsService;
             _mapper = mapper;
             _subjectPageDto = subjectPageDto;
+            _chapterPageDto = chapterPageDto;
+            Subject = _subjectPageDto.Subject;
         }
+
 
         [RelayCommand]
         private async Task NavigatedTo()
         {
-            var res = await _subjectsService.GetSubjectsAsync();
+            var res = await _subjectsService.GetChaptersAsync(Subject.Id);
             if(res.IsSuccess)
             {
-                Subjects = _mapper.Map<List<SubjectObservableModel>>(res.Data).ToObservableCollection();
+                Chapters = res.Data.Select(_mapper.Map<ChapterObservableModel>).ToObservableCollection();
             }
             else
             {
@@ -44,10 +49,10 @@ namespace OsvitaApp.PageModels
         }
 
         [RelayCommand]
-        private async Task SubjectTapped(SubjectObservableModel subject)
+        private async Task ChapterClicked(ChapterObservableModel chapter)
         {
-            _subjectPageDto.Subject = subject;
-            await Shell.Current.GoToAsync($"subject");
+            _chapterPageDto.Chapter = chapter;
+            await Shell.Current.GoToAsync($"chapter");
         }
     }
 }

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
@@ -8,17 +9,54 @@
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Toolkit.Buttons;assembly=Syncfusion.Maui.Toolkit"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:effectsView="clr-namespace:Syncfusion.Maui.Toolkit.EffectsView;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:selectors="clr-namespace:OsvitaApp.Helpers.TemplateSelectors"
              x:Class="OsvitaApp.Pages.TestPage"
              Title="TestPage"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Flyout"
              BackgroundColor="{x:StaticResource LightBackground}"
-             x:DataType="vm:TestPageVM">
+             x:DataType="vm:TestPageVM"
+             ControlTemplate="{StaticResource PageBaseTemplate}">
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior EventName="NavigatedTo"
+                                    Command="{Binding NavigatedToCommand}" />
+
+    </ContentPage.Behaviors>
+
+    <ContentPage.Resources>
+
+        <DataTemplate x:Key="OneAnswerAsssignmentTemplate">
+            <controls:OneAnswerAsssignment/>
+        </DataTemplate>
+        <DataTemplate x:Key="OpenAnswerAssignmentTemplate">
+            <Label Text="OpenAnswer"></Label>
+        </DataTemplate>
+        <DataTemplate x:Key="MatchComplianceAssignmentTemplate">
+            <Label Text="Match"></Label>
+        </DataTemplate>
+
+        <selectors:AssigmentModelTypeSelector x:Key="AssigmentModelTypeSelector"
+                                              x:DataType="om:AssignmentObservableModel"
+                                              OneAnswerAsssignmentTemplate="{StaticResource OneAnswerAsssignmentTemplate}"
+                                              OpenAnswerAssignmentTemplate="{StaticResource OpenAnswerAssignmentTemplate}"
+                                              MatchComplianceAssignmentTemplate="{StaticResource MatchComplianceAssignmentTemplate}" />
+
+    </ContentPage.Resources>
+
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+
+        <Label Text="{Binding Topic.Title, StringFormat='Тест з теми: {0}'}"
+               FontSize="16"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center" />
+        <CollectionView ItemsSource="{Binding AssignmentSet.Assignments}"
+                        ItemTemplate="{StaticResource AssigmentModelTypeSelector}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical"
+                                   ItemSpacing="7.5" />
+            </CollectionView.ItemsLayout>
+        </CollectionView>
+        
     </VerticalStackLayout>
 </ContentPage>

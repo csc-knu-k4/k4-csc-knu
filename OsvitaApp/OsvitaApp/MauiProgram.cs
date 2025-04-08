@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using OsvitaApp.Helpers.Handlers;
 using OsvitaApp.Interfaces;
 using OsvitaApp.Mappers;
 using OsvitaApp.Models.Dto;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace OsvitaApp
@@ -16,6 +18,8 @@ namespace OsvitaApp
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit(options => options.SetShouldEnableSnackbarOnWindows(true))
                 .ConfigureSyncfusionToolkit()
+                .UseSkiaSharp()
+                .UseAnswerOptionsControl()
                 .ConfigureMauiHandlers(handlers =>
                 {
                 })
@@ -43,16 +47,22 @@ namespace OsvitaApp
             builder.Services.AddSingleton<IChaptersService, ChaptersService>();
             builder.Services.AddSingleton<ITopicsService, TopicsService>();
             builder.Services.AddSingleton<IMaterialService, MaterialService>();
+            builder.Services.AddSingleton<IAssignmentsService, AssignmentsService>();
             
             builder.Services.AddTransient<LoginPage, LoginPageVM>();
             builder.Services.AddTransientWithShellRoute<RegistrationPage, RegistrationPageVM>("registration");
             builder.Services.AddTransientWithShellRoute<SubjectsPage, SubjectsPageVM>("subjects");
-            builder.Services.AddTransientWithShellRoute<ChaptersPage, ChaptersPageVM>("chapters");
+            builder.Services.AddTransientWithShellRoute<SubjectPage, SubjectPageVM>("subject");
+            builder.Services.AddTransientWithShellRoute<ChapterPage, ChapterPageVM>("chapter");
+            builder.Services.AddTransientWithShellRoute<TopicPage, TopicPageVM>("topic");
             builder.Services.AddTransientWithShellRoute<MaterialPage, MaterialPageVM>("material");
             builder.Services.AddTransientWithShellRoute<TestPage, TestPageVM>("test");
 
-            builder.Services.AddSingleton<ChaptersPageDto>();
+            builder.Services.AddSingleton<SubjectPageDto>();
             builder.Services.AddSingleton<MaterialPageDto>();
+            builder.Services.AddSingleton<ChapterPageDto>();
+            builder.Services.AddSingleton<TopicPageDto>();
+            builder.Services.AddSingleton<TestPageDto>();
             return builder.Build();
         }
     }

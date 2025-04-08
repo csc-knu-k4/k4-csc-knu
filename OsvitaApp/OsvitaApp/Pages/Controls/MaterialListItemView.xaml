@@ -5,10 +5,18 @@
              xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
              x:Class="OsvitaApp.Pages.Controls.MaterialListItemView"
              x:DataType="om:MaterialObservableModel">
+    <Border Stroke="#f4f4f4"
+            StrokeThickness="1"
+            BackgroundColor="White"
+            Padding="10"
+            StrokeShape="RoundRectangle 15">
+        <HorizontalStackLayout>
 
-    <HorizontalStackLayout>
-
-        <Image Source="{x:StaticResource MaterialIcon}" HeightRequest="19" WidthRequest="26"/>
-        <Label Text="{Binding Title}" FontSize="14" />
-    </HorizontalStackLayout>
+            <Image Source="{x:StaticResource MaterialIcon}"
+                   HeightRequest="19"
+                   WidthRequest="26" />
+            <Label Text="{Binding Title}"
+                   FontSize="14" />
+        </HorizontalStackLayout>
+    </Border>
 </ContentView>

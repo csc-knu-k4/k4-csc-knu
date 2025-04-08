@@ -2,21 +2,15 @@
 
 namespace OsvitaApp.Helpers.Converters;
 
-public class Base64ToImageConverter : IValueConverter
+public class ImageFromUriConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is string base64String && !string.IsNullOrWhiteSpace(base64String))
+        if (value is string uri && !string.IsNullOrWhiteSpace(uri))
         {
             try
             {
-                byte[] imageBytes = System.Convert.FromBase64String(base64String);
-                MemoryStream stream = new MemoryStream(imageBytes);
-
-                // Оновлено: Оновлення позиції потоку
-                stream.Position = 0;
-
-                return ImageSource.FromStream(() => new MemoryStream(imageBytes)); 
+                return ImageSource.FromUri(new Uri(new Uri(ApiService.BaseUrl), uri));
             }
             catch (Exception ex)
             {

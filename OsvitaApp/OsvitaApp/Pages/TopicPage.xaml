@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
+             xmlns:vm="clr-namespace:OsvitaApp.PageModels"
+             xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
+             xmlns:textInput="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Toolkit.Buttons;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:effectsView="clr-namespace:Syncfusion.Maui.Toolkit.EffectsView;assembly=Syncfusion.Maui.Toolkit"
+             x:Class="OsvitaApp.Pages.TopicPage"
+             x:DataType="vm:TopicPageVM"
+             Shell.NavBarIsVisible="False"
+             ControlTemplate="{StaticResource PageBaseTemplate}">
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior EventName="NavigatedTo"
+                                    Command="{Binding NavigatedToCommand}" />
+
+    </ContentPage.Behaviors>
+
+    <ContentPage.Content>
+        <VerticalStackLayout Spacing="10">
+            <Label Text="{Binding Topic.Title}"
+                   Style="{x:StaticResource PageTitle}" />
+            <controls:RippleButton Text="Пройти тест з теми"
+                                   IsVisible="{Binding IsSelected}"
+                                   Style="{x:StaticResource TopicsTestButton}"
+                                   Command="{Binding TakeTestClickedCommand}"/>
+            <CollectionView ItemsSource="{Binding Materials}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                       ItemSpacing="7.5" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="om:MaterialObservableModel">
+                        <controls:MaterialListItemView>
+                            <ContentView.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding x:DataType='vm:TopicPageVM', Source={RelativeSource AncestorType={x:Type vm:TopicPageVM}}, Path=MaterialClickedCommand}"
+                                    CommandParameter="{Binding .}" />
+
+                            </ContentView.GestureRecognizers>
+                        </controls:MaterialListItemView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>

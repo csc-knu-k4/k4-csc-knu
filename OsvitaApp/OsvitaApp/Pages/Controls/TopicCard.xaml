@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OsvitaApp.Pages.Controls.TopicCard"
+             xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
+             xmlns:vm="clr-namespace:OsvitaApp.PageModels"
+             xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="om:TopicObservableModel">
+
+    <Border Stroke="#f4f4f4"
+            StrokeThickness="1"
+            BackgroundColor="White"
+            Padding="10"
+            StrokeShape="RoundRectangle 15">
+
+        <VerticalStackLayout>
+            <Grid RowSpacing="10"
+                  ColumnSpacing="10"
+                  HorizontalOptions="Fill"
+                  VerticalOptions="Fill">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.1*" />
+                    <ColumnDefinition Width="0.9*" />
+
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Ellipse Stroke="{x:StaticResource GrayD9}"
+                         WidthRequest="26"
+                         HeightRequest="26">
+                    <Ellipse.Triggers>
+                        <DataTrigger TargetType="Ellipse"
+                                     Binding="{Binding IsChecked}"
+                                     Value="True">
+                            <Setter Property="Stroke"
+                                    Value="{x:StaticResource Primary}" />
+                        </DataTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+
+                <Image Grid.Row="0"
+                       Grid.Column="0"
+                       Source="{x:StaticResource CheckMarkPrimary}"
+                       WidthRequest="15"
+                       HeightRequest="10"
+                       IsVisible="{Binding IsChecked}" />
+
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       Text="{Binding Title}"
+                       FontSize="14"
+                       VerticalTextAlignment="Center"
+                       VerticalOptions="Fill"
+                       HorizontalTextAlignment="Start"
+                       HorizontalOptions="Fill" />
+
+            </Grid>
+        </VerticalStackLayout>
+    </Border>
+</ContentView>

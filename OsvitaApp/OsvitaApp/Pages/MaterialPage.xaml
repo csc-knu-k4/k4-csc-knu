@@ -16,7 +16,8 @@
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Flyout"
              BackgroundColor="{x:StaticResource LightBackground}"
-             x:DataType="vm:MaterialPageVM">
+             x:DataType="vm:MaterialPageVM"
+             ControlTemplate="{StaticResource PageBaseTemplate}">
 
     <ContentPage.Behaviors>
         <mct:EventToCommandBehavior EventName="NavigatedTo"
@@ -39,39 +40,19 @@
                                                 ImageContentBlockTemplate="{StaticResource imageContextBlockViewTemplate}" />
 
     </ContentPage.Resources>
-    <ScrollView>
 
-        <Grid Padding="20,60,20,20"
-              RowSpacing="20">
-            <Grid.RowDefinitions>
+    <VerticalStackLayout>
+        <Label Text="{Binding Material.Title}"
+               FontSize="16"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center" />
+        <CollectionView ItemsSource="{Binding Material.ContentBlocks}"
+                        ItemTemplate="{StaticResource ContentBlockTemplateSelector}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical"
+                                   ItemSpacing="7.5" />
+            </CollectionView.ItemsLayout>
 
-                <RowDefinition Height="64" />
-                <RowDefinition Height="*" />
-
-            </Grid.RowDefinitions>
-
-            <controls:TopPanel Grid.Row="0" />
-
-            <Border Grid.Row="1"
-                    Style="{x:StaticResource BackgroundBorderStyle}"
-                    Padding="10">
-                <VerticalStackLayout>
-                    <Label Text="{Binding Material.Title}" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                    <CollectionView ItemsSource="{Binding Material.ContentBlocks}"
-                                    ItemTemplate="{StaticResource ContentBlockTemplateSelector}">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Vertical"
-                                               ItemSpacing="7.5" />
-                        </CollectionView.ItemsLayout>
-
-                    </CollectionView>
-                </VerticalStackLayout>
-
-                
-
-            </Border>
-
-        </Grid>
-
-    </ScrollView>
+        </CollectionView>
+    </VerticalStackLayout>
 </ContentPage>

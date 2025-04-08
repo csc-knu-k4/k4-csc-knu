@@ -14,7 +14,6 @@ namespace OsvitaApp.Models.ObservableModels
         public string Title { get; set; }
         public int SubjectId { get; set; }
         public int OrderPosition { get; set; }
-        [ObservableProperty] public bool _isExpanded;
         [ObservableProperty] public ObservableCollection<TopicObservableModel> _topics;
 
     }

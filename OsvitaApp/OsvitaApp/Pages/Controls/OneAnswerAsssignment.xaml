@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:OsvitaApp.Pages.Controls"
+             xmlns:behaviors="clr-namespace:OsvitaApp.Helpers.Behaviors"
+             xmlns:om="clr-namespace:OsvitaApp.Models.ObservableModels"
+             x:Class="OsvitaApp.Pages.Controls.OneAnswerAsssignment"
+             x:DataType="om:AssignmentObservableModel"
+             x:Name="Root">
+    <ContentView.Resources>
+        <LinearItemsLayout x:Key="HorizontalLayout"
+                           Orientation="Horizontal"
+                           ItemSpacing="7.5" />
+        <LinearItemsLayout x:Key="VerticalLayout"
+                           Orientation="Vertical"
+                           ItemSpacing="7.5" />
+
+    </ContentView.Resources>
+
+    <Border Stroke="#f4f4f4"
+            StrokeThickness="1"
+            BackgroundColor="White"
+            Padding="10"
+            StrokeShape="RoundRectangle 15">
+        <VerticalStackLayout>
+            <Label Text="{Binding ProblemDescription}"/>
+            <CollectionView ItemsSource="{Binding Answers}">
+
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                       ItemSpacing="7.5">
+                    </LinearItemsLayout>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="om:AnswerObservableModel">
+                        <controls:AnswerDescriptionView />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <Label Text="Позначте відповідь" />
+
+            <controls:AnswerOptionsControl Assignment="{Binding .}" PrimaryColor="{StaticResource Primary}" HeightRequest="64" HorizontalOptions="Fill"/>
+
+        </VerticalStackLayout>
+
+    </Border>
+</ContentView>
