@@ -281,9 +281,29 @@ namespace OsvitaBLL.Services
             return todaysAssignmentSetProgressDetails.Any();
         }
 
-        public Task<int> GetDailyAssignmentStreakAsync(int userId)
-        {
-            throw new NotImplementedException();
+        public async Task<int> GetDailyAssignmentStreakAsync(int userId, DateTime? fromDate)
+        { 
+            var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
+            var statistic = await statisticRepository.GetStatisticByUserIdAsync(userId);
+            var assignmentSetProgressDetails = await statisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+            var dailyAssignmentSetProgressDetails = dailyAssignments.Join(assignmentSetProgressDetails,
+                                                                            da => da.AssignmentSetId,
+                                                                            aspd => aspd.AssignmentSetId,
+                                                                            (da, aspd) => new { aspd.CompletedDate })
+                                                                     .OrderByDescending(x => x.CompletedDate)
+                                                                     .ToList();
+            int count = 0;
+            var day = DateTime.Today;
+            foreach (var daspd in dailyAssignmentSetProgressDetails)
+            {
+                if ((fromDate is not null) ? fromDate > day : false) 
+                    break;
+                if (daspd.CompletedDate.Date != day) 
+                    break;
+                day = day.AddDays(-1);
+                count++;
+            }
+            return count;
         }
     }
 }

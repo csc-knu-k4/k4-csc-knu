@@ -12,7 +12,7 @@ namespace OsvitaBLL.Interfaces
         Task<int> UpdateAssignmentSetProgressDetailAsync(AssignmentSetProgressDetailModel model, int userId);
         Task<AssignmentSetProgressDetailModel> GetAssignmentSetProgressDetailAsync(int userId, int assignmentSetProgressDetailId);
         Task<bool> IsDailyAssignmentDoneAsync(int userId);
-        Task<int> GetDailyAssignmentStreakAsync(int userId);
+        Task<int> GetDailyAssignmentStreakAsync(int userId, DateTime? fromDate);
     }
 }
 

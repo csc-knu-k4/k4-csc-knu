@@ -130,11 +130,11 @@ namespace OsvitaWebApiPL.Controllers
 
         // GET api/users/5/statistic/dailyassignment/streak
         [HttpGet("{id}/statistic/dailyassignment/streak")]
-        public async Task<ActionResult<int>> GetDailyAssignmentStreak(int id)
+        public async Task<ActionResult<int>> GetDailyAssignmentStreak(int id, DateTime? fromDate)
         {
             try
             {
-                var dailyAssignmentStreak = await statisticService.GetDailyAssignmentStreakAsync(id);
+                var dailyAssignmentStreak = await statisticService.GetDailyAssignmentStreakAsync(id, fromDate);
                 return Ok(dailyAssignmentStreak);
             }
             catch (Exception ex)
