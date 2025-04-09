@@ -268,6 +268,23 @@ namespace OsvitaBLL.Services
             }
             return result;
         }
+
+        public async Task<bool> IsDailyAssignmentDoneAsync(int userId)
+        {
+            var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
+            var statistic = await statisticRepository.GetStatisticByUserIdAsync(userId);
+            var assignmentSetProgressDetails = await statisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+            var todaysAssignmentSetProgressDetails = assignmentSetProgressDetails
+                .Where(aspd => aspd.CompletedDate.Date == DateTime.Today &&
+                   dailyAssignments.Select(da => da.AssignmentSetId)
+                                   .Contains(aspd.AssignmentSetId));
+            return todaysAssignmentSetProgressDetails.Any();
+        }
+
+        public Task<int> GetDailyAssignmentStreakAsync(int userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

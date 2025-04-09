@@ -1,4 +1,5 @@
-﻿using OsvitaBLL.Models;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using OsvitaBLL.Models;
 
 namespace OsvitaBLL.Interfaces
 {
@@ -10,6 +11,8 @@ namespace OsvitaBLL.Interfaces
         Task<int> AddAssignmentSetProgressDetailAsync(AssignmentSetProgressDetailModel model, int userId);
         Task<int> UpdateAssignmentSetProgressDetailAsync(AssignmentSetProgressDetailModel model, int userId);
         Task<AssignmentSetProgressDetailModel> GetAssignmentSetProgressDetailAsync(int userId, int assignmentSetProgressDetailId);
+        Task<bool> IsDailyAssignmentDoneAsync(int userId);
+        Task<int> GetDailyAssignmentStreakAsync(int userId);
     }
 }
 

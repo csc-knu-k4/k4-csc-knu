@@ -4,6 +4,10 @@ using OsvitaBLL.Models;
 using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
 using OsvitaDAL.Migrations;
+using OsvitaDAL.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OsvitaBLL.Services
 {
@@ -318,6 +322,25 @@ namespace OsvitaBLL.Services
             return assignmentSet.Id;
         }
 
+        public async Task AddDailyAssignmentAsync(int userId)
+        {
+            var assignmentSet = new AssignmentSet
+            {
+                ObjectType = ObjectType.Daily,
+                ObjectId = (await unitOfWork.SubjectRepository.GetAllAsync()).First(x => true).Id, // only math
+            };
+            var assignmentSetId = await GenerateDailyAssignmentSetAsync(assignmentSet);
+            var dailyAssignmentModel = new DailyAssignmentModel
+            {
+                UserId = userId,
+                AssignmentSetId = assignmentSetId,
+                CreationDate = DateTime.Now,
+            };
+            var dailyAssignment = mapper.Map<DailyAssignmentModel, DailyAssignment>(dailyAssignmentModel);
+            await unitOfWork.DailyAssignmentRepository.AddAsync(dailyAssignment);
+            await unitOfWork.SaveChangesAsync();
+        }
+
         private async Task<int> GenerateDailyAssignmentSetAsync(AssignmentSet assignmentSet)
         {
             var oneAnswerAssignmentsForTestCount = 1;
@@ -348,6 +371,21 @@ namespace OsvitaBLL.Services
             }
             await unitOfWork.SaveChangesAsync();
             return assignmentSet.Id;
+        }
+
+        public async Task<AssignmentSetModel> GetDailyAssignmentSetAsync(int userId)
+        {
+            var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
+            var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdAsync(userId);
+            var assignmentSetProgressDetails = await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+            var notStartedAssignmentSetId = from da in dailyAssignments
+                                       where !(from aspd in assignmentSetProgressDetails
+                                               select aspd.AssignmentSetId)
+                                               .Contains(da.AssignmentSetId)
+                                       select da;
+            var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(notStartedAssignmentSetId.First(t => true).AssignmentSetId);
+            var assignmentSetModel = mapper.Map<AssignmentSet, AssignmentSetModel>(assignmentSet);
+            return assignmentSetModel;
         }
     }
 }

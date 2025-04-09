@@ -16,14 +16,15 @@ namespace OsvitaWebApiPL.Controllers
         private readonly IIdentityService identityService;
         private readonly IEducationPlanService educationPlanService;
         private readonly IRecomendationService recomendationService;
-
-        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService)
+        private readonly IAssignmentService assignmentService;
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IAssignmentService assignmentService)
         {
             this.statisticService = statisticService;
             this.userService = userService;
             this.identityService = identityService;
             this.educationPlanService = educationPlanService;
             this.recomendationService = recomendationService;
+            this.assignmentService = assignmentService;
         }
 
         // GET api/users/5/statistic/
@@ -99,12 +100,57 @@ namespace OsvitaWebApiPL.Controllers
         }
 
         [HttpGet("{id}/statistic/assignments/{assignmentSetProgressDetailId}")]
-        public async Task<ActionResult<AssignmentSetProgressDetailModel>> PostAssignmentSetProgressDetail(int id, int assignmentSetProgressDetailId)
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetAssignmentSetProgressDetail(int id, int assignmentSetProgressDetailId)
         {
             try
             {
                 var assignmentSetProgressDetail = await statisticService.GetAssignmentSetProgressDetailAsync(id, assignmentSetProgressDetailId);
                 return Ok(assignmentSetProgressDetail);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/statistic/isdailyassignmentdone
+        [HttpGet("{id}/statistic/isdailyassignmentdone")]
+        public async Task<ActionResult<bool>> IsDailyAssignmentDone(int id)
+        {
+            try
+            {
+                var isDailyAssignmentDone = await statisticService.IsDailyAssignmentDoneAsync(id);
+                return Ok(isDailyAssignmentDone);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/statistic/dailyassignment/streak
+        [HttpGet("{id}/statistic/dailyassignment/streak")]
+        public async Task<ActionResult<int>> GetDailyAssignmentStreak(int id)
+        {
+            try
+            {
+                var dailyAssignmentStreak = await statisticService.GetDailyAssignmentStreakAsync(id);
+                return Ok(dailyAssignmentStreak);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/dailyassignment
+        [HttpGet("{id}/dailyassignmentset")]
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetDailyAssignmentSet(int id)
+        {
+            try
+            {
+                var dailyAssignmentSet = await assignmentService.GetDailyAssignmentSetAsync(id);
+                return Ok(dailyAssignmentSet);
             }
             catch (Exception ex)
             {

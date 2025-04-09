@@ -1,4 +1,5 @@
-﻿using OsvitaBLL.Models;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using OsvitaBLL.Models;
 namespace OsvitaBLL.Interfaces
 {
     public interface IAssignmentService
@@ -11,5 +12,7 @@ namespace OsvitaBLL.Interfaces
         Task UpdateAssignmentAsync(AssignmentModel model);
         Task<int> AddAssignmentSetAsync(AssignmentSetModel optionsModel);
         Task<AssignmentSetModel> GetAssignmentSetByIdAsync(int id);
+        Task AddDailyAssignmentAsync(int userId);
+        Task<AssignmentSetModel> GetDailyAssignmentSetAsync(int userId);
     }
 }
