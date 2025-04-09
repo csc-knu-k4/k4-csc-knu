@@ -28,7 +28,8 @@ namespace OsvitaWebApiPL.Jobs
 
             foreach (var student in students)
             {
-                for (int i = 0; i < 10; i++)
+                int countSetsToAdd =  await assignmentService.CountSetsToAdd(student.Id);
+                for (int i = 0; i < countSetsToAdd; i++)
                 {
                     await assignmentService.AddDailyAssignmentAsync(student.Id);
                 }

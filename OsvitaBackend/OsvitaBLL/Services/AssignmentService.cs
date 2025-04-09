@@ -378,19 +378,41 @@ namespace OsvitaBLL.Services
             return assignmentSet.Id;
         }
 
-        public async Task<AssignmentSetModel> GetDailyAssignmentSetAsync(int userId)
+        public async Task<AssignmentSetModel?> GetDailyAssignmentSetAsync(int userId)
         {
             var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
             var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdAsync(userId);
             var assignmentSetProgressDetails = await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
-            var notStartedAssignmentSetId = from da in dailyAssignments
-                                       where !(from aspd in assignmentSetProgressDetails
-                                               select aspd.AssignmentSetId)
-                                               .Contains(da.AssignmentSetId)
-                                       select da;
-            var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(notStartedAssignmentSetId.First(t => true).AssignmentSetId);
+
+            var notStartedDailyAssignments = from da in dailyAssignments
+                                             where !assignmentSetProgressDetails
+                                                 .Select(aspd => aspd.AssignmentSetId)
+                                                 .Contains(da.AssignmentSetId)
+                                             select da;
+
+            var notStarted = notStartedDailyAssignments.FirstOrDefault();
+            if (notStarted == null)
+                return null;
+
+            var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(notStarted.AssignmentSetId);
             var assignmentSetModel = mapper.Map<AssignmentSet, AssignmentSetModel>(assignmentSet);
             return assignmentSetModel;
+        }
+
+
+        public async Task<int> CountSetsToAdd(int userId)
+        {
+            var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
+            var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdAsync(userId);
+            var assignmentSetProgressDetails = await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+
+            var notStartedDailyAssignments = from da in dailyAssignments
+                                             where !assignmentSetProgressDetails
+                                                 .Select(aspd => aspd.AssignmentSetId)
+                                                 .Contains(da.AssignmentSetId)
+                                             select da;
+            var count = notStartedDailyAssignments.Count();
+            return count;
         }
     }
 }

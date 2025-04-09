@@ -294,7 +294,7 @@ namespace OsvitaBLL.Services
                                                                             (da, aspd) => new { aspd.CompletedDate })
                                                                      .OrderByDescending(x => x.CompletedDate)
                                                                      .ToList();
-            int count = 0;
+            int count = 1;
             var day = DateTime.Today;
             foreach (var daspd in dailyAssignmentSetProgressDetails)
             {
@@ -334,7 +334,7 @@ namespace OsvitaBLL.Services
                 });
             }
             userDailyAssignmentRatingModels.OrderByDescending(x => x.Score);
-            int count = 0;
+            int count = 1;
             foreach (var udarm in userDailyAssignmentRatingModels)
             {
                 udarm.Place = count++;
