@@ -77,7 +77,7 @@ namespace OsvitaBLL.Services
             stringBuilder.AppendLine("Ти вчитель. Проаналізуй статистику проходження тестів за темами при підготовці до іспиту у форматі НМТ і порадь учню навчальний план підготовки:");
             foreach (var model in assignmentSetReportModel.Assignments.GroupBy(x => x.TopicId))
             {
-                stringBuilder.AppendLine($"Тема: \"{model.First().TopicName}\"; Результат: {model.Sum(x => x.MaxPoints)}; Максимальний результат: {model.Sum(x => x.MaxPoints)}; ID теми: {model.Key}");
+                stringBuilder.AppendLine($"Тема: \"{model.First().TopicName}\"; Результат: {model.Sum(x => x.Points)}; Максимальний результат: {model.Sum(x => x.MaxPoints)}; ID теми: {model.Key}");
             }
             stringBuilder.AppendLine($"Розмір відповіді повинна бути не більше 10 рядків тексту. Звертайся до учня. Привітання не потрібне. Відповідь у вигляді списку аналізу тем. В RecomendationText ніколи не згадуй про ID. В TopicIds запиши ID тем, які необхідно вивчити. Не вигадуй власні ID. Бери ID лише з інформації про проходження тем.");
             var messages = new List<ChatMessage>
