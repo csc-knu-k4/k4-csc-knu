@@ -400,7 +400,7 @@ namespace OsvitaBLL.Services
         }
 
 
-        public async Task<int> CountSetsToAdd(int userId)
+        public async Task<int> CountDailySetsToAdd(int userId)
         {
             var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
             var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdAsync(userId);
@@ -411,7 +411,7 @@ namespace OsvitaBLL.Services
                                                  .Select(aspd => aspd.AssignmentSetId)
                                                  .Contains(da.AssignmentSetId)
                                              select da;
-            var count = notStartedDailyAssignments.Count();
+            var count = 10 - notStartedDailyAssignments.Count();
             return count;
         }
     }
