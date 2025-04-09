@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
+using OsvitaBLL.Models.ReportModels;
 using OsvitaBLL.Services;
 using OsvitaDAL.Entities;
+using OsvitaWebApiPL.Identity;
 using OsvitaWebApiPL.Interfaces;
+using OsvitaWebApiPL.Models;
 
 namespace OsvitaWebApiPL.Controllers
 {
@@ -113,8 +116,8 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
-        // GET api/users/5/statistic/isdailyassignmentdone
-        [HttpGet("{id}/statistic/isdailyassignmentdone")]
+        // GET api/users/5/statistic/dailyassignment/isdone
+        [HttpGet("{id}/statistic/dailyassignment/isdone")]
         public async Task<ActionResult<bool>> IsDailyAssignmentDone(int id)
         {
             try
@@ -143,7 +146,7 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
-        // GET api/users/5/dailyassignment
+        // GET api/users/5/dailyassignmentset
         [HttpGet("{id}/dailyassignmentset")]
         public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetDailyAssignmentSet(int id)
         {
@@ -156,6 +159,35 @@ namespace OsvitaWebApiPL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // GET api/users/dailyassignment/rating
+        [HttpGet("dailyassignment/rating")]
+        public async Task<ActionResult<IEnumerable<UserDailyAssignmentRatingModel>>> GetDailyAssignmentRating()
+        {
+            try
+            {
+                var users = await userService.GetAllAsync();
+                foreach (var user in users)
+                {
+                    user.Roles = await identityService.GetUserRoles(user.Email);
+                }
+                var students = users.Where(x => x.Roles.Contains(RoleSettings.StudentRole));
+                var dailyAssignmentRating = await statisticService.GetDailyAssignmentRatingAsync(students);
+                return Ok(dailyAssignmentRating);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POSt api/users/5/statistic/
+        [HttpPost("{id}/dailyassignment")]
+        public async Task<ActionResult<StatisticModel>> PostDailyAssignment(int id)
+        {
+            await assignmentService.AddDailyAssignmentAsync(id);
+            return Ok();
         }
 
         // GET api/users/5

@@ -139,6 +139,10 @@ namespace OsvitaBLL.Services
             {
                 await GenerateDiagnosticalAssignmentSetAsync(assignmentSet);
             }
+            if (assignmentSet.ObjectType == ObjectType.Daily)
+            {
+                await GenerateDailyAssignmentSetAsync(assignmentSet);
+            }
             await unitOfWork.SaveChangesAsync();
             return assignmentSet.Id;
         }
@@ -324,12 +328,13 @@ namespace OsvitaBLL.Services
 
         public async Task AddDailyAssignmentAsync(int userId)
         {
-            var assignmentSet = new AssignmentSet
+            var assignmentSetModel = new AssignmentSetModel
             {
-                ObjectType = ObjectType.Daily,
+                ObjectModelType = ObjectModelType.DailyModel,
                 ObjectId = (await unitOfWork.SubjectRepository.GetAllAsync()).First(x => true).Id, // only math
             };
-            var assignmentSetId = await GenerateDailyAssignmentSetAsync(assignmentSet);
+            var assignmentSetId = await AddAssignmentSetAsync(assignmentSetModel);
+            await unitOfWork.SaveChangesAsync();
             var dailyAssignmentModel = new DailyAssignmentModel
             {
                 UserId = userId,

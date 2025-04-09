@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Spreadsheet;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
+using OsvitaBLL.Models.ReportModels;
 using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
 using OsvitaDAL.Repositories;
@@ -304,6 +306,40 @@ namespace OsvitaBLL.Services
                 count++;
             }
             return count;
+        }
+
+        public async Task<IEnumerable<UserDailyAssignmentRatingModel>> GetDailyAssignmentRatingAsync(IEnumerable<UserModel> students)
+        {
+            var userDailyAssignmentRatingModels = new List<UserDailyAssignmentRatingModel>();
+            foreach (var student in students)
+            {
+                var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(student.Id);
+                var statistic = await statisticRepository.GetStatisticByUserIdAsync(student.Id);
+                var assignmentSetProgressDetails = await statisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+                var score = dailyAssignments
+                    .Join(assignmentSetProgressDetails,
+                        da => da.AssignmentSetId,
+                        aspd => aspd.AssignmentSetId,
+                        (da, aspd) => new
+                        {
+                            Id = aspd.Id,
+                            Score = aspd.Score
+                        })
+                    .Sum(x => x.Score);
+                userDailyAssignmentRatingModels.Add(new UserDailyAssignmentRatingModel
+                {
+                    UserModel = student,
+                    Score = score,
+                    Place = 0
+                });
+            }
+            userDailyAssignmentRatingModels.OrderByDescending(x => x.Score);
+            int count = 0;
+            foreach (var udarm in userDailyAssignmentRatingModels)
+            {
+                udarm.Place = count++;
+            }
+            return userDailyAssignmentRatingModels;
         }
     }
 }
