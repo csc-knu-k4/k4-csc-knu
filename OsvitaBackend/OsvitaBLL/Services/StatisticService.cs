@@ -294,7 +294,7 @@ namespace OsvitaBLL.Services
                                                                             (da, aspd) => new { aspd.CompletedDate })
                                                                      .OrderByDescending(x => x.CompletedDate)
                                                                      .ToList();
-            int count = 1;
+            int count = 0;
             var day = DateTime.Today;
             foreach (var daspd in dailyAssignmentSetProgressDetails)
             {
@@ -311,21 +311,22 @@ namespace OsvitaBLL.Services
         public async Task<IEnumerable<UserDailyAssignmentRatingModel>> GetDailyAssignmentRatingAsync(IEnumerable<UserModel> students)
         {
             var userDailyAssignmentRatingModels = new List<UserDailyAssignmentRatingModel>();
+
             foreach (var student in students)
             {
                 var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(student.Id);
                 var statistic = await statisticRepository.GetStatisticByUserIdAsync(student.Id);
+                if (statistic == null) continue;
+
                 var assignmentSetProgressDetails = await statisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+
                 var score = dailyAssignments
                     .Join(assignmentSetProgressDetails,
                         da => da.AssignmentSetId,
                         aspd => aspd.AssignmentSetId,
-                        (da, aspd) => new
-                        {
-                            Id = aspd.Id,
-                            Score = aspd.Score
-                        })
-                    .Sum(x => x.Score);
+                        (da, aspd) => aspd.Score)
+                    .Sum();
+
                 userDailyAssignmentRatingModels.Add(new UserDailyAssignmentRatingModel
                 {
                     UserModel = student,
@@ -333,14 +334,20 @@ namespace OsvitaBLL.Services
                     Place = 0
                 });
             }
-            userDailyAssignmentRatingModels.OrderByDescending(x => x.Score);
-            int count = 1;
+
+            userDailyAssignmentRatingModels = userDailyAssignmentRatingModels
+                .OrderByDescending(x => x.Score)
+                .ToList();
+
+            int place = 1;
             foreach (var udarm in userDailyAssignmentRatingModels)
             {
-                udarm.Place = count++;
+                udarm.Place = place++;
             }
+
             return userDailyAssignmentRatingModels;
         }
+
     }
 }
 

@@ -182,13 +182,28 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
-        // POSt api/users/5/statistic/
-        [HttpPost("{id}/dailyassignment")]
-        public async Task<ActionResult<StatisticModel>> PostDailyAssignment(int id)
-        {
-            await assignmentService.AddDailyAssignmentAsync(id);
-            return Ok();
-        }
+        // GET api/users/dailyassignment/counttoadd
+        //[HttpGet("dailyassignment/counttoadd")]
+        //public async Task<ActionResult<IEnumerable<UserDailyAssignmentRatingModel>>> GetCountDailySetsToAdd(int id)
+        //{
+        //    try
+        //    {
+        //        var count = await assignmentService.CountDailySetsToAdd(id);
+        //        return Ok(count);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
+        // POST api/users/5/statistic/
+        //[HttpPost("{id}/dailyassignment")]
+        //public async Task<ActionResult<StatisticModel>> PostDailyAssignment(int id)
+        //{
+        //    await assignmentService.AddDailyAssignmentAsync(id);
+        //    return Ok();
+        //}
 
         // GET api/users/5
         [HttpGet("{id}")]

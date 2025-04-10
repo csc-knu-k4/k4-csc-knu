@@ -394,8 +394,7 @@ namespace OsvitaBLL.Services
             if (notStarted == null)
                 return null;
 
-            var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(notStarted.AssignmentSetId);
-            var assignmentSetModel = mapper.Map<AssignmentSet, AssignmentSetModel>(assignmentSet);
+            var assignmentSetModel = await GetAssignmentSetByIdAsync(notStarted.AssignmentSetId);
             return assignmentSetModel;
         }
 
