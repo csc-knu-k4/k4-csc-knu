@@ -121,6 +121,7 @@ namespace OsvitaBLL.Services
                         var assignmentSetVm = new AssignmentSetVm
                         {
                             Id = assignmentSetPlanDetail.Id,
+                            AssignmentSetId = assignmentSetPlanDetail.AssignmentSetId,
                             ObjectModelType = mapper.Map<ObjectModelType>(assignmentSet.ObjectType),
                             Title = title,
                             IsCompleted = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).Select(x => x.AssignmentSetId).Contains(assignmentSetPlanDetail.AssignmentSetId)

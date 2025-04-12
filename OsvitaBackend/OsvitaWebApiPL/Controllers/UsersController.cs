@@ -142,6 +142,18 @@ namespace OsvitaWebApiPL.Controllers
             return NotFound();
         }
 
+        // GET api/users/5/educationplanvm
+        [HttpGet("{id}/educationplanvm")]
+        public async Task<ActionResult<EducationPlanVm>> GetEducationPlanVm(int id)
+        {
+            var educationPlanVm = await educationPlanService.GetEducationPlanVmByUserIdsync(id);
+            if (educationPlanVm is not null)
+            {
+                return Ok(educationPlanVm);
+            }
+            return NotFound();
+        }
+
         //GET api/users/5/educationplan/topics/4
         [HttpGet("{id}/educationplan/topics/{topicId}")]
         public async Task<ActionResult<TopicPlanDetailModel>> GetTopicPlanDetail(int id, int topicId)
