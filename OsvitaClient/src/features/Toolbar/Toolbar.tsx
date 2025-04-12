@@ -40,6 +40,9 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
           <Portal>
             <Menu.Positioner>
               <Menu.Content>
+                <Menu.Item value="profile" onClick={() => navigate('/course/profile')}>
+                  👤️ Профіль
+                </Menu.Item>
                 <Menu.Item value="teacher" onClick={() => navigate('/teacher/class-task')}>
                   👨‍🏫 Викладач
                 </Menu.Item>

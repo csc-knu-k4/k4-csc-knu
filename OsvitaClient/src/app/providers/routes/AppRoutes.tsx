@@ -54,7 +54,7 @@ const router = createBrowserRouter(
           <Route path="diagnostic-test/:testId" element={LazyElement(DiagnosticTest)} />
           <Route path="profile" element={LazyElement(Profile)} />
         </Route>
-        <Route path="/teacher" element={LazyElement(TeacherLayout)}>
+        <Route path="/teacher/:classId" element={LazyElement(TeacherLayout)}>
           <Route path="class-task" element={LazyElement(ClassTabs)} />
           <Route path="class-marks/*" element={LazyElement(ClassTabs)} />
           <Route path="class-students" element={LazyElement(ClassTabs)} />
