@@ -1,9 +1,8 @@
 import { Tabs } from '@chakra-ui/react';
-import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import ClassTask from '../../ClassTask/ui/ClassTask';
 import ClassStudents from '../../ClassStudents/ui/ClassStudents';
 import ClassMarks from '../../ClassMarks/ui/ClassMarks';
-import { ClassMarksDetails } from '@/app/providers/routes/LazyImports';
 
 const getTabFromPath = (path: string): string => {
   if (path.includes('/class-task')) return 'ClassTask';
@@ -40,10 +39,7 @@ const ClassTabs = () => {
         <ClassStudents />
       </Tabs.Content>
       <Tabs.Content value="ClassMarks">
-        <Routes>
-          <Route index element={<ClassMarks />} />
-          <Route path="details/:testId" element={<ClassMarksDetails />} />
-        </Routes>
+        <ClassMarks />
       </Tabs.Content>
     </Tabs.Root>
   );
