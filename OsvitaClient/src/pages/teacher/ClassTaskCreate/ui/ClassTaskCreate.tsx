@@ -49,6 +49,9 @@ const ClassTaskCreate = () => {
   }, []);
 
   useEffect(() => {
+    setSelectedTopics([]);
+    setInitialTopics([]);
+
     if (!classId || taskType !== 2) return;
 
     getClassesEducationPlan(Number(classId))
@@ -72,6 +75,8 @@ const ClassTaskCreate = () => {
   });
 
   const handleToggleTopic = async (topicId: number) => {
+    if (taskType !== 1 && taskType !== 2) return;
+
     const isSelected = selectedTopics.includes(topicId);
     const updated = isSelected
       ? selectedTopics.filter((id) => id !== topicId)
@@ -79,7 +84,6 @@ const ClassTaskCreate = () => {
 
     setSelectedTopics(updated);
 
-    // тільки якщо Опрацювання матеріалу
     if (taskType !== 2) return;
 
     try {
