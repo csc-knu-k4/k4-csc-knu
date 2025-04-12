@@ -11,19 +11,21 @@ namespace OsvitaWebApiPL.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly IEducationClassService educationClassService;
         private readonly IStatisticService statisticService;
         private readonly IUserService userService;
         private readonly IIdentityService identityService;
         private readonly IEducationPlanService educationPlanService;
         private readonly IRecomendationService recomendationService;
 
-        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService)
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IEducationClassService educationClassService)
         {
             this.statisticService = statisticService;
             this.userService = userService;
             this.identityService = identityService;
             this.educationPlanService = educationPlanService;
             this.recomendationService = recomendationService;
+            this.educationClassService = educationClassService;
         }
 
         // GET api/users/5/statistic/
@@ -279,6 +281,30 @@ namespace OsvitaWebApiPL.Controllers
             if (recomendation is not null)
             {
                 return Ok(recomendation);
+            }
+            return NotFound();
+        }
+
+        // GET api/users/5/classes
+        [HttpGet("{id}/classes")]
+        public async Task<ActionResult<IEnumerable<EducationClassModel>>> GetEducationClasses(int id)
+        {
+            var educationClassModels = await educationClassService.GetByStudentIdAsync(id);
+            if (educationClassModels is not null)
+            {
+                return Ok(educationClassModels);
+            }
+            return NotFound();
+        }
+
+        // GET api/users/5/classes/educationplans
+        [HttpGet("{id}/classes/educationplans")]
+        public async Task<ActionResult<IEnumerable<EducationClassPlanVm>>> GetEducationClassPlans(int id)
+        {
+            var educationClassPlansModels = await educationClassService.GetEducationClassPlansByStudentIdAsync(id);
+            if (educationClassPlansModels is not null)
+            {
+                return Ok(educationClassPlansModels);
             }
             return NotFound();
         }

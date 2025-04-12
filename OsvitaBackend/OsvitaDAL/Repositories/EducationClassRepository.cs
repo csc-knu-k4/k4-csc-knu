@@ -18,6 +18,10 @@ namespace OsvitaDAL.Repositories
                 .Include(x => x.Students)
                 .Include(x => x.Teacher)
                 .Include(x => x.EducationClassPlan)
+                .ThenInclude(x => x.TopicPlanDetails)
+                .ThenInclude(x => x.Topic)
+                .Include(x => x.EducationClassPlan)
+                .ThenInclude(x => x.AssignmentSetPlanDetails)
                 .ToListAsync();
         }
 
