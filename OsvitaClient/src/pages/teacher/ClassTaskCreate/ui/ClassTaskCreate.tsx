@@ -102,14 +102,19 @@ const ClassTaskCreate = () => {
   };
 
   const handleAssign = async () => {
-    if (!classId || selectedTopics.length === 0) {
-      toaster.error({ title: 'Оберіть клас та теми' });
+    if (!classId) {
+      toaster.error({ title: 'Клас не обраний' });
       return;
     }
 
     try {
       if (taskType === 2) {
-        // Опрацювання матеріалу
+        // 🟠 Опрацювання матеріалу
+        if (selectedTopics.length === 0) {
+          toaster.error({ title: 'Оберіть теми для призначення' });
+          return;
+        }
+
         for (const topicId of selectedTopics) {
           await addClassesEducationPlanTopics(
             {
@@ -121,13 +126,22 @@ const ClassTaskCreate = () => {
             Number(classId),
           );
         }
+
         toaster.success({ title: 'Матеріали призначено!' });
-      } else if (taskType === 1) {
-        // Проходження тесту
+        setSelectedTopics([]);
+      }
+
+      if (taskType === 1) {
+        // 🟠 Проходження тесту
+        if (selectedTopics.length === 0) {
+          toaster.error({ title: 'Оберіть теми для тестування' });
+          return;
+        }
+
         for (const topicId of selectedTopics) {
           const assignmentSet = await addAssignmentsSets({
             id: 0,
-            objectModelType: 1, // тип "тема"
+            objectModelType: 1, // 🟠 тема
             objectId: topicId,
             assignments: [],
           });
@@ -135,19 +149,42 @@ const ClassTaskCreate = () => {
           await addClassesEducationPlanAssignments(
             {
               id: 0,
-              educationPlanId: 0,
-              assignmentSetId: Number(assignmentSet),
+              assignmentSetId: assignmentSet,
               educationClassPlanId: Number(classId),
             },
             Number(classId),
           );
         }
+
         toaster.success({ title: 'Тести призначено!' });
-      } else {
-        toaster.error({ title: 'Тип завдання не підтримується' });
+        setSelectedTopics([]);
       }
 
-      setSelectedTopics([]);
+      if (taskType === 0) {
+        // 🟠 Загальний тест
+        if (!subjectId) {
+          toaster.error({ title: 'Оберіть предмет для загального тесту' });
+          return;
+        }
+
+        const assignmentSet = await addAssignmentsSets({
+          id: 0,
+          objectModelType: 3, // 🟠 subject
+          objectId: subjectId,
+          assignments: [],
+        });
+
+        await addClassesEducationPlanAssignments(
+          {
+            id: 0,
+            assignmentSetId: assignmentSet,
+            educationClassPlanId: Number(classId),
+          },
+          Number(classId),
+        );
+
+        toaster.success({ title: 'Загальний тест призначено!' });
+      }
     } catch (err) {
       toaster.error({ title: `Помилка збереження: ${err}` });
     }
@@ -196,50 +233,53 @@ const ClassTaskCreate = () => {
       <Stack width="full">
         {selectedSubject && (
           <>
-            <AccordionRoot multiple collapsible>
-              {selectedSubject.chapters.map((chapter) => (
-                <AccordionItem
-                  key={chapter.id}
-                  value={`chapter-${chapter.id}`}
-                  mb={3}
-                  px={4}
-                  py={2}
-                  borderRadius="1rem"
-                  boxShadow="0rem 0.13rem 0.31rem 0rem rgba(0, 0, 0, 0.15);"
-                >
-                  <AccordionItemTrigger>{chapter.title}</AccordionItemTrigger>
-                  <AccordionItemContent>
-                    <Stack mt={2}>
-                      <AccordionRoot multiple collapsible>
-                        {chapter.topics.map((topic) => (
-                          <AccordionItem key={topic.id} value={`topic-${topic.id}`} mb={2} ml={4}>
-                            <Flex align="center" justify="space-between" w="full" mb={2}>
-                              <Text>{topic.title}</Text>
-                              <Checkbox
-                                checked={selectedTopics.includes(topic.id)}
-                                onCheckedChange={() => handleToggleTopic(topic.id)}
-                                colorPalette="orange"
-                              >
-                                {taskType === 2 && initialTopics.includes(topic.id)
-                                  ? 'Додано'
-                                  : 'Додати'}
-                              </Checkbox>
-                            </Flex>
-                          </AccordionItem>
-                        ))}
-                      </AccordionRoot>
-                    </Stack>
-                  </AccordionItemContent>
-                </AccordionItem>
-              ))}
-            </AccordionRoot>
-
+            {(taskType === 1 || taskType === 2) && (
+              <AccordionRoot multiple collapsible>
+                {selectedSubject.chapters.map((chapter) => (
+                  <AccordionItem
+                    key={chapter.id}
+                    value={`chapter-${chapter.id}`}
+                    mb={3}
+                    px={4}
+                    py={2}
+                    borderRadius="1rem"
+                    boxShadow="0rem 0.13rem 0.31rem 0rem rgba(0, 0, 0, 0.15);"
+                  >
+                    <AccordionItemTrigger>{chapter.title}</AccordionItemTrigger>
+                    <AccordionItemContent>
+                      <Stack mt={2}>
+                        <AccordionRoot multiple collapsible>
+                          {chapter.topics.map((topic) => (
+                            <AccordionItem key={topic.id} value={`topic-${topic.id}`} mb={2} ml={4}>
+                              <Flex align="center" justify="space-between" w="full" mb={2}>
+                                <Text>{topic.title}</Text>
+                                {(taskType === 1 || taskType === 2) && (
+                                  <Checkbox
+                                    checked={selectedTopics.includes(topic.id)}
+                                    onCheckedChange={() => handleToggleTopic(topic.id)}
+                                    colorPalette="orange"
+                                  >
+                                    {taskType === 2 && initialTopics.includes(topic.id)
+                                      ? 'Додано'
+                                      : 'Додати'}
+                                  </Checkbox>
+                                )}
+                              </Flex>
+                            </AccordionItem>
+                          ))}
+                        </AccordionRoot>
+                      </Stack>
+                    </AccordionItemContent>
+                  </AccordionItem>
+                ))}
+              </AccordionRoot>
+            )}
             <Button
+              m="0 auto"
               onClick={handleAssign}
               colorPalette="orange"
               borderRadius="1rem"
               maxW="20rem"
-              mt={6}
             >
               Призначити завдання
             </Button>

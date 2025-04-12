@@ -17,7 +17,6 @@ export type EducationPlan = {
 
 export type EducationPlanAssignment = {
   id: number;
-  educationPlanId: number;
   assignmentSetId: number;
   educationClassPlanId: number;
 };
