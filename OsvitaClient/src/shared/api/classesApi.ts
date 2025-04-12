@@ -8,6 +8,13 @@ export type Class = {
   studentsIds: number[];
 };
 
+export type EducationPlan = {
+  id: number;
+  educationPlanId: number;
+  topicId: number;
+  educationClassPlanId: number;
+};
+
 export const getClasses = async (): Promise<Class[]> => {
   const response = await api.get('/classes');
   return response.data;
@@ -29,5 +36,13 @@ export const deleteClass = async (id: number) => {
 
 export const getClassById = async (id: number) => {
   const response = await api.get(`/classes/${id}`);
+  return response.data;
+};
+
+export const addClassesEducationPlanTopics = async (
+  educationPlan: EducationPlan,
+  classid: number,
+) => {
+  const response = await api.post(`/classes/${classid}/educationplan/topics`, educationPlan);
   return response.data;
 };
