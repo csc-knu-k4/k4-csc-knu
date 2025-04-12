@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 const ClassMarks = () => {
   const navigate = useNavigate();
   const { classId } = useParams<{ classId: string }>();
+  const testId = 1;
+
   return (
     <>
       <Table.Root size="sm" showColumnBorder>
