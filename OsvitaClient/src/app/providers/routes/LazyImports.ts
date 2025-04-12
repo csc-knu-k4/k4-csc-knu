@@ -37,3 +37,6 @@ export const ClassMarksDetails = lazy(
   () => import('@/pages/teacher/ClassMarksDetails/ui/ClassMarksDetails'),
 );
 export const Profile = lazy(() => import('@/pages/profile/ui/Profile'));
+export const ClassTaskCreate = lazy(
+  () => import('@/pages/teacher/ClassTaskCreate/ui/ClassTaskCreate'),
+);

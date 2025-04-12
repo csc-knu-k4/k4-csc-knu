@@ -2,11 +2,19 @@ import { Button, Flex, VStack, Text, Menu } from '@chakra-ui/react';
 import { BsFileEarmarkCheckFill } from 'react-icons/bs';
 import { LuPlus } from 'react-icons/lu';
 import { HiDotsVertical } from 'react-icons/hi';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ClassTask = () => {
+  const navigate = useNavigate();
+  const { classId } = useParams<{ classId: string }>();
+
+  const handleCreateTask = () => {
+    navigate(`/teacher/${classId}/class-task/create`);
+  };
+
   return (
     <>
-      <Button borderRadius="1rem" colorPalette="orange">
+      <Button borderRadius="1rem" colorPalette="orange" onClick={handleCreateTask}>
         <LuPlus /> Призначити завдання
       </Button>
       <VStack gap={4} mt={6}>
