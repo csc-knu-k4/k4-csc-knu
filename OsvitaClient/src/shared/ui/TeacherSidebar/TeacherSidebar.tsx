@@ -5,7 +5,6 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getClasses, addClasses } from '@/shared/api/classesApi';
 import { useState } from 'react';
 import { toaster } from '@/components/ui/toaster';
-import { CloseButton } from '@/components/ui/close-button';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -103,10 +102,8 @@ export function TeacherSidebar({ onClose }: SidebarProps) {
               <Dialog.Content>
                 <Dialog.Header>
                   <Dialog.Title>Створити новий клас</Dialog.Title>
-                  <Dialog.CloseTrigger asChild>
-                    <CloseButton size="sm" />
-                  </Dialog.CloseTrigger>
                 </Dialog.Header>
+
                 <Dialog.Body>
                   <Input
                     placeholder="Назва класу"
