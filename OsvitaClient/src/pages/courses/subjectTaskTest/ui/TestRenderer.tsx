@@ -12,9 +12,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 interface TestRendererProps {
   testId: number;
   onFinish?: (assignmentSetProgressDetailId: number) => void;
+  showCorrectAnswers?: boolean;
 }
 
-const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish }) => {
+const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish, showCorrectAnswers }) => {
   const [assignments, setAssignments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
@@ -26,7 +27,7 @@ const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish }) => {
   const isStudentTestPage = location.pathname.startsWith('/course/student/test/');
 
   const containerHeight =
-    isDiagnosticTestPage || isStudentTestPage ? 'calc(100vh - 200px)' : 'calc(100vh - 350px)';
+    isDiagnosticTestPage || isStudentTestPage ? 'calc(100vh - 220px)' : 'calc(100vh - 350px)';
 
   const userId = Number(localStorage.getItem('userId'));
 
@@ -136,6 +137,7 @@ const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish }) => {
       isFinished,
       userAnswers,
       onAnswer: handleAnswer,
+      showCorrectAnswers,
     };
 
     switch (question.assignmentModelType) {
