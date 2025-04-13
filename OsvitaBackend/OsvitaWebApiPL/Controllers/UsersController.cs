@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
+using OsvitaBLL.Models.ReportModels;
 using OsvitaBLL.Services;
 using OsvitaDAL.Entities;
+using OsvitaWebApiPL.Identity;
 using OsvitaWebApiPL.Interfaces;
+using OsvitaWebApiPL.Models;
 
 namespace OsvitaWebApiPL.Controllers
 {
@@ -17,14 +20,16 @@ namespace OsvitaWebApiPL.Controllers
         private readonly IIdentityService identityService;
         private readonly IEducationPlanService educationPlanService;
         private readonly IRecomendationService recomendationService;
+        private readonly IAssignmentService assignmentService;
 
-        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IEducationClassService educationClassService)
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IAssignmentService assignmentService, IEducationClassService educationClassService)
         {
             this.statisticService = statisticService;
             this.userService = userService;
             this.identityService = identityService;
             this.educationPlanService = educationPlanService;
             this.recomendationService = recomendationService;
+            this.assignmentService = assignmentService;
             this.educationClassService = educationClassService;
         }
 
@@ -101,12 +106,78 @@ namespace OsvitaWebApiPL.Controllers
         }
 
         [HttpGet("{id}/statistic/assignments/{assignmentSetProgressDetailId}")]
-        public async Task<ActionResult<AssignmentSetProgressDetailModel>> PostAssignmentSetProgressDetail(int id, int assignmentSetProgressDetailId)
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetAssignmentSetProgressDetail(int id, int assignmentSetProgressDetailId)
         {
             try
             {
                 var assignmentSetProgressDetail = await statisticService.GetAssignmentSetProgressDetailAsync(id, assignmentSetProgressDetailId);
                 return Ok(assignmentSetProgressDetail);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/statistic/dailyassignment/isdone
+        [HttpGet("{id}/statistic/dailyassignment/isdone")]
+        public async Task<ActionResult<bool>> IsDailyAssignmentDone(int id)
+        {
+            try
+            {
+                var isDailyAssignmentDone = await statisticService.IsDailyAssignmentDoneAsync(id);
+                return Ok(isDailyAssignmentDone);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/statistic/dailyassignment/streak
+        [HttpGet("{id}/statistic/dailyassignment/streak")]
+        public async Task<ActionResult<int>> GetDailyAssignmentStreak(int id, DateTime? fromDate)
+        {
+            try
+            {
+                var dailyAssignmentStreak = await statisticService.GetDailyAssignmentStreakAsync(id, fromDate);
+                return Ok(dailyAssignmentStreak);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/dailyassignmentset
+        [HttpGet("{id}/dailyassignmentset")]
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetDailyAssignmentSet(int id)
+        {
+            try
+            {
+                var dailyAssignmentSet = await assignmentService.GetDailyAssignmentSetAsync(id);
+                return Ok(dailyAssignmentSet);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/dailyassignment/rating
+        [HttpGet("dailyassignment/rating")]
+        public async Task<ActionResult<IEnumerable<UserDailyAssignmentRatingModel>>> GetDailyAssignmentRating()
+        {
+            try
+            {
+                var users = await userService.GetAllAsync();
+                foreach (var user in users)
+                {
+                    user.Roles = await identityService.GetUserRoles(user.Email);
+                }
+                var students = users.Where(x => x.Roles.Contains(RoleSettings.StudentRole));
+                var dailyAssignmentRating = await statisticService.GetDailyAssignmentRatingAsync(students);
+                return Ok(dailyAssignmentRating);
             }
             catch (Exception ex)
             {

@@ -4,6 +4,10 @@ using OsvitaBLL.Models;
 using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
 using OsvitaDAL.Migrations;
+using OsvitaDAL.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OsvitaBLL.Services
 {
@@ -134,6 +138,10 @@ namespace OsvitaBLL.Services
             if (assignmentSet.ObjectType == ObjectType.Diagnostical)
             {
                 await GenerateDiagnosticalAssignmentSetAsync(assignmentSet);
+            }
+            if (assignmentSet.ObjectType == ObjectType.Daily)
+            {
+                await GenerateDailyAssignmentSetAsync(assignmentSet);
             }
             await unitOfWork.SaveChangesAsync();
             return assignmentSet.Id;
@@ -316,6 +324,94 @@ namespace OsvitaBLL.Services
             }
             await unitOfWork.SaveChangesAsync();
             return assignmentSet.Id;
+        }
+
+        public async Task AddDailyAssignmentAsync(int userId)
+        {
+            var assignmentSetModel = new AssignmentSetModel
+            {
+                ObjectModelType = ObjectModelType.DailyModel,
+                ObjectId = (await unitOfWork.SubjectRepository.GetAllAsync()).First(x => true).Id, // only math
+            };
+            var assignmentSetId = await AddAssignmentSetAsync(assignmentSetModel);
+            await unitOfWork.SaveChangesAsync();
+            var dailyAssignmentModel = new DailyAssignmentModel
+            {
+                UserId = userId,
+                AssignmentSetId = assignmentSetId,
+                CreationDate = DateTime.Now,
+            };
+            var dailyAssignment = mapper.Map<DailyAssignmentModel, DailyAssignment>(dailyAssignmentModel);
+            await unitOfWork.DailyAssignmentRepository.AddAsync(dailyAssignment);
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task<int> GenerateDailyAssignmentSetAsync(AssignmentSet assignmentSet)
+        {
+            var oneAnswerAssignmentsForTestCount = 1;
+            var openAnswerAssignmentsForTestCount = 1;
+            var matchComplianceAssignmentsForTestCount = 1;
+            var chapterIds = (await unitOfWork.SubjectRepository.GetByIdWithDetailsAsync(assignmentSet.ObjectId)).Chapters.Select(x => x.Id);
+            var topicIds = (await unitOfWork.TopicRepository.GetAllAsync()).Where(x => chapterIds.Contains(x.ChapterId)).Select(x => x.Id);
+            var materialIds = (await unitOfWork.MaterialRepository.GetAllAsync()).Where(x => topicIds.Contains(x.TopicId)).Select(x => x.Id);
+            var assignmentsIds = (await assignmentLinkRepository.GetAllAsync()).Where(x => materialIds.Contains(x.ObjectId) && x.ObjectType == ObjectType.Material).Select(x => x.AssignmentId);
+            var allAssignments = (await assignmentRepository.GetAllWithDetailsAsync()).ToList();
+            var oneAnswerAssignments = allAssignments.Where(x => x.AssignmentType == AssignmentType.OneAnswerAsssignment && assignmentsIds.Contains(x.Id)).ToArray();
+            var openAnswerAssignments = allAssignments.Where(x => x.AssignmentType == AssignmentType.OpenAnswerAssignment && assignmentsIds.Contains(x.Id)).ToArray();
+            var matchComplianceAssignments = allAssignments.Where(x => x.AssignmentType == AssignmentType.MatchComplianceAssignment && assignmentsIds.Contains(x.Id)).ToArray();
+
+            Random rnd = new Random();
+            rnd.Shuffle(oneAnswerAssignments);
+            rnd.Shuffle(openAnswerAssignments);
+            rnd.Shuffle(matchComplianceAssignments);
+            var oneAnswerAssignmentsForTest = oneAnswerAssignments.Take(oneAnswerAssignmentsForTestCount).ToList();
+            var openAnswerAssignmentsForTest = openAnswerAssignments.Take(openAnswerAssignmentsForTestCount).ToList();
+            var matchComplianceAssignmentsForTest = matchComplianceAssignments.Take(matchComplianceAssignmentsForTestCount).ToList();
+            var assignments = oneAnswerAssignmentsForTest.Concat(openAnswerAssignmentsForTest).Concat(matchComplianceAssignmentsForTest);
+
+            var assignmentLinks = assignments.Select(x => new AssignmentLink { AssignmentId = x.Id, ObjectId = assignmentSet.Id, ObjectType = ObjectType.AssignmentSet });
+            foreach (var assignmentLink in assignmentLinks)
+            {
+                await assignmentLinkRepository.AddAsync(assignmentLink);
+            }
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSet.Id;
+        }
+
+        public async Task<AssignmentSetModel?> GetDailyAssignmentSetAsync(int userId)
+        {
+            var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
+            var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdAsync(userId);
+            var assignmentSetProgressDetails = await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+
+            var notStartedDailyAssignments = from da in dailyAssignments
+                                             where !assignmentSetProgressDetails
+                                                 .Select(aspd => aspd.AssignmentSetId)
+                                                 .Contains(da.AssignmentSetId)
+                                             select da;
+
+            var notStarted = notStartedDailyAssignments.FirstOrDefault();
+            if (notStarted == null)
+                return null;
+
+            var assignmentSetModel = await GetAssignmentSetByIdAsync(notStarted.AssignmentSetId);
+            return assignmentSetModel;
+        }
+
+
+        public async Task<int> CountDailySetsToAdd(int userId)
+        {
+            var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
+            var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdAsync(userId);
+            var assignmentSetProgressDetails = await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+
+            var notStartedDailyAssignments = from da in dailyAssignments
+                                             where !assignmentSetProgressDetails
+                                                 .Select(aspd => aspd.AssignmentSetId)
+                                                 .Contains(da.AssignmentSetId)
+                                             select da;
+            var count = 10 - notStartedDailyAssignments.Count();
+            return count;
         }
     }
 }
