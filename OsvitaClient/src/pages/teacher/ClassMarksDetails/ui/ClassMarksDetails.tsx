@@ -55,57 +55,61 @@ const ClassMarksDetails = () => {
 
   return (
     <>
-      <Table.Root size="sm" showColumnBorder>
-        <Table.Header>
-          <Table.Row>
-            <Table.ColumnHeader fontSize="md">ПІБ</Table.ColumnHeader>
-            {Array.from({ length: maxAssignments }, (_, index) => (
-              <Table.ColumnHeader fontSize="md" key={index}>
-                {index + 1}
-              </Table.ColumnHeader>
-            ))}
-            <Table.ColumnHeader fontSize="md">Сума</Table.ColumnHeader>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {data.map((item) => (
-            <Table.Row key={item.userId}>
-              <Table.Cell
-                fontSize="md"
-                display="flex"
-                gap={2}
-                justifyContent="flex-start"
-                alignItems="center"
-              >
-                <UserAvatar />
-                {`${item.userSecondName} ${item.userFirstName}`}
-              </Table.Cell>
-              {item.assignments.map((assignment, index) => {
-                let bgColor = '';
-                if (assignment.isCorrect) {
-                  bgColor = 'green.100';
-                } else if (assignment.points > 0) {
-                  bgColor = 'yellow.100';
-                } else {
-                  bgColor = 'red.100';
-                }
-                return (
-                  <Table.Cell fontSize="md" key={index} bg={bgColor} textAlign="center">
-                    {`${assignment.points}/${assignment.maxPoints}`}
-                  </Table.Cell>
-                );
-              })}
-              {/* Fill in empty cells if assignments are fewer than maxAssignments */}
-              {Array.from({ length: maxAssignments - item.assignments.length }).map((_, index) => (
-                <Table.Cell fontSize="md" key={`empty-${index}`} />
+      <Table.ScrollArea w="full" maxW="calc(100vw - 100px)" overflowX="auto">
+        <Table.Root size="sm" showColumnBorder>
+          <Table.Header>
+            <Table.Row>
+              <Table.ColumnHeader fontSize="md">ПІБ</Table.ColumnHeader>
+              {Array.from({ length: maxAssignments }, (_, index) => (
+                <Table.ColumnHeader fontSize="md" key={index}>
+                  {index + 1}
+                </Table.ColumnHeader>
               ))}
-              <Table.Cell fontSize="md" textAlign="center">
-                {`${item.score}/${item.maxScore}`}
-              </Table.Cell>
+              <Table.ColumnHeader fontSize="md">Сума</Table.ColumnHeader>
             </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
+          </Table.Header>
+          <Table.Body>
+            {data.map((item) => (
+              <Table.Row key={item.userId}>
+                <Table.Cell
+                  fontSize="md"
+                  display="flex"
+                  gap={2}
+                  justifyContent="flex-start"
+                  alignItems="center"
+                >
+                  <UserAvatar />
+                  {`${item.userSecondName} ${item.userFirstName}`}
+                </Table.Cell>
+                {item.assignments.map((assignment, index) => {
+                  let bgColor = '';
+                  if (assignment.isCorrect) {
+                    bgColor = 'green.100';
+                  } else if (assignment.points > 0) {
+                    bgColor = 'yellow.100';
+                  } else {
+                    bgColor = 'red.100';
+                  }
+                  return (
+                    <Table.Cell fontSize="md" key={index} bg={bgColor} textAlign="center">
+                      {`${assignment.points}/${assignment.maxPoints}`}
+                    </Table.Cell>
+                  );
+                })}
+                {/* Fill in empty cells if assignments are fewer than maxAssignments */}
+                {Array.from({ length: maxAssignments - item.assignments.length }).map(
+                  (_, index) => (
+                    <Table.Cell fontSize="md" key={`empty-${index}`} />
+                  ),
+                )}
+                <Table.Cell fontSize="md" textAlign="center">
+                  {`${item.score}/${item.maxScore}`}
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Root>
+      </Table.ScrollArea>
     </>
   );
 };

@@ -66,59 +66,61 @@ const ClassMarks = () => {
   }
 
   return (
-    <Table.Root size="sm" showColumnBorder>
-      <Table.Header>
-        <Table.Row>
-          <Table.ColumnHeader fontSize="md">ПІБ</Table.ColumnHeader>
-          {assignmentSets.map((assignmentSetId, index) => (
-            <Table.ColumnHeader key={assignmentSetId} fontSize="md">
-              <Flex flexDir="row" alignItems="center">
-                Тест {index + 1}
-                <Menu.Root>
-                  <Menu.Trigger asChild>
-                    <Button variant="plain">
-                      <HiDotsVertical size="20px" />
-                    </Button>
-                  </Menu.Trigger>
-                  <Menu.Positioner>
-                    <Menu.Content>
-                      <Menu.Item
-                        value="View"
-                        onClick={() =>
-                          navigate(`/teacher/${classId}/class-marks/details/${assignmentSetId}`)
-                        }
-                      >
-                        Переглянути детальніше
-                      </Menu.Item>
-                      <Menu.Item
-                        value="DownloadPDF"
-                        onClick={() =>
-                          downloadClassAssignmentReportPdf(Number(classId), assignmentSetId)
-                        }
-                      >
-                        Вивантажити статистику PDF
-                      </Menu.Item>
-                    </Menu.Content>
-                  </Menu.Positioner>
-                </Menu.Root>
-              </Flex>
-            </Table.ColumnHeader>
-          ))}
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {studentsData.map((student) => (
-          <Table.Row key={student.id}>
-            <Table.Cell fontSize="md">{student.name}</Table.Cell>
-            {assignmentSets.map((assignmentSetId) => (
-              <Table.Cell key={assignmentSetId} fontSize="md">
-                {student.marks[assignmentSetId] || 'Немає'}
-              </Table.Cell>
+    <Table.ScrollArea w="full" maxW="calc(100vw - 100px)" overflowX="auto">
+      <Table.Root size="sm" showColumnBorder>
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeader fontSize="md">ПІБ</Table.ColumnHeader>
+            {assignmentSets.map((assignmentSetId, index) => (
+              <Table.ColumnHeader key={assignmentSetId} fontSize="md">
+                <Flex flexDir="row" alignItems="center">
+                  Тест {index + 1}
+                  <Menu.Root>
+                    <Menu.Trigger asChild>
+                      <Button variant="plain">
+                        <HiDotsVertical size="20px" />
+                      </Button>
+                    </Menu.Trigger>
+                    <Menu.Positioner>
+                      <Menu.Content>
+                        <Menu.Item
+                          value="View"
+                          onClick={() =>
+                            navigate(`/teacher/${classId}/class-marks/details/${assignmentSetId}`)
+                          }
+                        >
+                          Переглянути детальніше
+                        </Menu.Item>
+                        <Menu.Item
+                          value="DownloadPDF"
+                          onClick={() =>
+                            downloadClassAssignmentReportPdf(Number(classId), assignmentSetId)
+                          }
+                        >
+                          Вивантажити статистику PDF
+                        </Menu.Item>
+                      </Menu.Content>
+                    </Menu.Positioner>
+                  </Menu.Root>
+                </Flex>
+              </Table.ColumnHeader>
             ))}
           </Table.Row>
-        ))}
-      </Table.Body>
-    </Table.Root>
+        </Table.Header>
+        <Table.Body>
+          {studentsData.map((student) => (
+            <Table.Row key={student.id}>
+              <Table.Cell fontSize="md">{student.name}</Table.Cell>
+              {assignmentSets.map((assignmentSetId) => (
+                <Table.Cell key={assignmentSetId} fontSize="md">
+                  {student.marks[assignmentSetId] || 'Немає'}
+                </Table.Cell>
+              ))}
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table.Root>
+    </Table.ScrollArea>
   );
 };
 
