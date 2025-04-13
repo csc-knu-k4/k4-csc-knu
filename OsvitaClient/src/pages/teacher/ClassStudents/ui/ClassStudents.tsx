@@ -27,8 +27,8 @@ const ClassStudents = () => {
   const queryClient = useQueryClient();
   const [studentUsers, setStudentUsers] = useState<User[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
-
-  const { data: classes } = useQuery(['classes'], getClasses);
+  const teacherId = Number(localStorage.getItem('userId'));
+  const { data: classes } = useQuery(['classes', teacherId], () => getClasses(teacherId));
 
   const { mutate: inviteStudent } = useMutation({
     mutationFn: () => addStudentToClass(email, Number(classId)),

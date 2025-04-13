@@ -19,3 +19,8 @@ export const getUserEducationPlanById = async (userId: number) => {
   const response = await api.get(`/users/${userId}/educationplanvm`);
   return response.data;
 };
+
+export const getUserClassEducationPlansById = async (userId: number) => {
+  const response = await api.get(`/users/${userId}/classes/educationplans`);
+  return response.data;
+};

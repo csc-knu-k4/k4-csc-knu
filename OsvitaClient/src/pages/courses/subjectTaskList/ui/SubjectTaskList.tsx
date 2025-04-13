@@ -199,7 +199,14 @@ const SubjectTaskList = () => {
                         <AccordionItem key={topic.id} value={`topic-${topic.id}`} mb={2}>
                           <AccordionItemTrigger>
                             <Flex align="center" justify="space-between" w="full">
-                              <Text>{topic.title}</Text>
+                              <Text
+                                cursor="pointer"
+                                _hover={{ textDecoration: 'underline' }}
+                                fontWeight="medium"
+                                onClick={() => navigate(`/course/subject-topic/${topic.id}`)}
+                              >
+                                {topic.title}
+                              </Text>
                               <Checkbox
                                 checked={topicProgress[topic.id]?.isCompleted || false}
                                 onChange={() => handleTopicCheckboxChange(topic.id)}
