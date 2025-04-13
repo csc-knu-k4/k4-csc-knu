@@ -44,21 +44,25 @@ const StudentEducationPlan = () => {
           <>
             {/* Вивід тем */}
             {topics.map((topic) => (
-              <Flex
-                key={`topic-${topic.id}`}
-                borderRadius="1rem"
-                w="full"
-                boxShadow="sm"
-                p="1rem"
-                flexDir="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Flex gap={4} alignItems="center">
-                  <BsBookFill size="28px" color="rgb(234, 88, 12)" />
-                  <Text fontSize="md">{topic.title}</Text>
-                </Flex>
-              </Flex>
+              <Box w="full" key={`topic-${topic.id}`}>
+                <Link to={`/course/topic/${topic.topicId}`}>
+                  <Flex
+                    borderRadius="1rem"
+                    w="100%"
+                    boxShadow="sm"
+                    p="1rem"
+                    flexDir="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    _hover={{ bg: 'gray.50' }}
+                  >
+                    <Flex gap={4} alignItems="center">
+                      <BsBookFill size="28px" color="rgb(234, 88, 12)" />
+                      <Text fontSize="md">{topic.title}</Text>
+                    </Flex>
+                  </Flex>
+                </Link>
+              </Box>
             ))}
 
             {/* Вивід тестів */}
