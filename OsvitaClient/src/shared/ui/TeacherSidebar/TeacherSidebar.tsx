@@ -13,8 +13,11 @@ interface SidebarProps {
 export function TeacherSidebar({ onClose }: SidebarProps) {
   const queryClient = useQueryClient();
   const [newClassName, setNewClassName] = useState('');
+  const teacherId = Number(localStorage.getItem('userId'));
 
-  const { data: classes, isLoading } = useQuery(['classes'], getClasses);
+  const { data: classes, isLoading } = useQuery(['classes', teacherId], () =>
+    getClasses(teacherId),
+  );
 
   const createClassMutation = useMutation({
     mutationFn: () => {

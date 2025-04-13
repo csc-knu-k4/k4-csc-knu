@@ -21,8 +21,10 @@ export type EducationPlanAssignment = {
   educationClassPlanId: number;
 };
 
-export const getClasses = async (): Promise<Class[]> => {
-  const response = await api.get('/classes');
+export const getClasses = async (teacherId?: number): Promise<Class[]> => {
+  const response = await api.get('/classes', {
+    params: teacherId ? { teacherId } : {},
+  });
   return response.data;
 };
 
