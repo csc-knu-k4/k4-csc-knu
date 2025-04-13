@@ -6,6 +6,7 @@ import {
   getClassesEducationPlan,
   getClassesStatisticAssignmentsByAssingmentSetId,
 } from '@/shared/api/classesApi';
+import { downloadClassAssignmentReportPdf } from '@/shared/api/reportsApi';
 
 const ClassMarks = () => {
   const navigate = useNavigate();
@@ -89,8 +90,14 @@ const ClassMarks = () => {
                       >
                         Переглянути детальніше
                       </Menu.Item>
-                      <Menu.Item value="DownloadPDF">Вивантажити статистику PDF</Menu.Item>
-                      <Menu.Item value="delete">Видалити</Menu.Item>
+                      <Menu.Item
+                        value="DownloadPDF"
+                        onClick={() =>
+                          downloadClassAssignmentReportPdf(Number(classId), assignmentSetId)
+                        }
+                      >
+                        Вивантажити статистику PDF
+                      </Menu.Item>
                     </Menu.Content>
                   </Menu.Positioner>
                 </Menu.Root>
