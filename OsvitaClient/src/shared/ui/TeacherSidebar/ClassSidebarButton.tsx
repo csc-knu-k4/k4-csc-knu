@@ -1,5 +1,5 @@
 import { Avatar } from '@/components/ui/avatar';
-import { Button, Flex } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarButtonProps {
@@ -14,20 +14,22 @@ export function ClassSidebarButton({ label, image, path }: SidebarButtonProps) {
 
   return (
     <Link to={path}>
-      <Flex flexDir="row" justifyContent="flex-start" alignItems="center">
+      <Flex
+        align="center"
+        gap={3}
+        h="3.5rem"
+        px={4}
+        cursor="pointer"
+        bg={isActive ? 'orange.200' : 'white'}
+        color={isActive ? 'orange.800' : 'black'}
+        _hover={{ bg: 'orange.100' }}
+        borderRight={isActive ? '3px solid' : 'none'}
+        borderRightColor={isActive ? 'orange' : 'none'}
+      >
         <Avatar name={label} src={image} />
-        <Button
-          borderRadius="none"
-          bgColor={isActive ? 'orange.200' : 'white'}
-          color={isActive ? 'orange' : 'black'}
-          borderRight={isActive ? '3px solid' : 'none'}
-          borderRightColor={isActive ? 'orange' : 'none'}
-          justifyContent="flex-start"
-          fontSize="xl"
-          h="3.5rem"
-        >
+        <Text fontSize="lg" fontWeight="medium">
           {label}
-        </Button>
+        </Text>
       </Flex>
     </Link>
   );

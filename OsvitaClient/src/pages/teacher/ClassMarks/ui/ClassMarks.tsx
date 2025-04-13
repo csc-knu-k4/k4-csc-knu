@@ -1,9 +1,11 @@
 import { Button, Flex, Menu, Table } from '@chakra-ui/react';
 import { HiDotsVertical } from 'react-icons/hi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ClassMarks = () => {
   const navigate = useNavigate();
+  const { classId } = useParams<{ classId: string }>();
+  const testId = 1;
 
   return (
     <>
@@ -24,7 +26,9 @@ const ClassMarks = () => {
                     <Menu.Content>
                       <Menu.Item
                         value="View"
-                        onClick={() => navigate(`/teacher/class-marks/details/1`)}
+                        onClick={() =>
+                          navigate(`/teacher/${classId}/class-marks/details/${testId}`)
+                        }
                       >
                         Переглянути детальніше
                       </Menu.Item>
@@ -92,7 +96,7 @@ const ClassMarks = () => {
 
 const items = [
   { id: 1, name: 'Петренко Олександр', mark1: '20/20', mark2: '18/20', mark3: '15/20' },
-  { id: 2, name: 'Ковальчук Ірина', mark1: '20/20', mark2: '18/20', mark3: '15/20' },
+  { id: 2, name: 'Ковальчук Ірина', mark1: 'Немає', mark2: '18/20', mark3: '15/20' },
   { id: 3, name: 'Мельник Сергій', mark1: '20/20', mark2: '18/20', mark3: '15/20' },
 ];
 

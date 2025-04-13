@@ -42,3 +42,8 @@ export const getAssignmentById = async (id: number) => {
   const response = await api.get(`/assignments/${id}`);
   return response.data;
 };
+
+export const getAssignmentSetById = async (id: number) => {
+  const response = await api.get(`/assignments/sets/${id}`);
+  return response.data;
+};
