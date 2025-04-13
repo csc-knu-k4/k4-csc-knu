@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Flex, VStack, Text } from '@chakra-ui/react';
+import { Flex, VStack, Text, Box } from '@chakra-ui/react';
 import { BsBookFill, BsFileEarmarkCheckFill } from 'react-icons/bs';
 import { getUserEducationPlanById } from '@/shared/api/userApi';
+import { Link } from 'react-router-dom';
 
 const StudentEducationPlan = () => {
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,7 @@ const StudentEducationPlan = () => {
       <Text color="orange" fontSize="xl" fontWeight="bold" textAlign="center">
         Мій навчальний план
       </Text>
-      <VStack gap={4} mt={6}>
+      <VStack gap={4} mt={6} w="full">
         {loading ? (
           <Text>Завантаження...</Text>
         ) : tests.length === 0 && topics.length === 0 ? (
@@ -41,7 +42,7 @@ const StudentEducationPlan = () => {
           </Text>
         ) : (
           <>
-            {/* 🔹 Вивід тем */}
+            {/* Вивід тем */}
             {topics.map((topic) => (
               <Flex
                 key={`topic-${topic.id}`}
@@ -60,25 +61,29 @@ const StudentEducationPlan = () => {
               </Flex>
             ))}
 
-            {/* 🔹 Вивід тестів */}
+            {/* Вивід тестів */}
             {tests.map((test) => (
-              <Flex
-                key={`test-${test.id}`}
-                borderRadius="1rem"
-                w="full"
-                boxShadow="sm"
-                p="1rem"
-                flexDir="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Flex gap={4} alignItems="center">
-                  <BsFileEarmarkCheckFill size="28px" color="rgb(234, 88, 12)" />
-                  <Text fontSize="md">
-                    {test.title || `Тест ${test.assignmentSetId}`} {test.isCompleted && '✓'}
-                  </Text>
-                </Flex>
-              </Flex>
+              <Box w="full" key={`test-${test.assignmentSetId}`}>
+                <Link to={`/course/student/test/${test.assignmentSetId}`}>
+                  <Flex
+                    borderRadius="1rem"
+                    w="100%"
+                    boxShadow="sm"
+                    p="1rem"
+                    flexDir="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    _hover={{ bg: 'gray.50' }}
+                  >
+                    <Flex gap={4} alignItems="center">
+                      <BsFileEarmarkCheckFill size="28px" color="rgb(234, 88, 12)" />
+                      <Text fontSize="md">
+                        {`Тест: ${test.title || test.assignmentSetId}`} {test.isCompleted && '✓'}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Link>
+              </Box>
             ))}
           </>
         )}

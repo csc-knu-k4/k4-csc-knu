@@ -44,3 +44,7 @@ export const ClassTaskCreate = lazy(
 export const StudentEducationPlan = lazy(
   () => import('@/pages/StudentEducationPlan/ui/StudentEducationPlan'),
 );
+
+export const StudentTestPage = lazy(
+  () => import('@/pages/StudentEducationPlan/ui/StudentTestPage'),
+);
