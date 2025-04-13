@@ -48,3 +48,7 @@ export const StudentEducationPlan = lazy(
 export const StudentTestPage = lazy(
   () => import('@/pages/StudentEducationPlan/ui/StudentTestPage'),
 );
+
+export const SubjectTaskTopic = lazy(
+  () => import('@/pages/courses/subjectTaskTopic/ui/SubjectTaskTopic'),
+);

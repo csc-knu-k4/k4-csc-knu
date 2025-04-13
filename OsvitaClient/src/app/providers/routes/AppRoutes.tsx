@@ -28,6 +28,7 @@ import {
   ClassMarksDetails,
   StudentEducationPlan,
   StudentTestPage,
+  SubjectTaskTopic,
 } from './LazyImports';
 import LazyElement from './LazyElement';
 
@@ -59,6 +60,7 @@ const router = createBrowserRouter(
           <Route path="profile" element={LazyElement(Profile)} />
           <Route path="student-education-plan" element={LazyElement(StudentEducationPlan)} />
           <Route path="student/test/:assignmentSetId" element={LazyElement(StudentTestPage)} />
+          <Route path="subject-topic/:topicId" element={LazyElement(SubjectTaskTopic)} />
         </Route>
         <Route path="/teacher/:classId" element={LazyElement(TeacherLayout)}>
           <Route path="class-task" element={LazyElement(ClassTabs)} />
