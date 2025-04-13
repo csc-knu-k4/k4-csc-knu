@@ -73,6 +73,11 @@ export const getClassesEducationPlan = async (classid: number) => {
   return response.data;
 };
 
+export const getClassesEducationPlanVm = async (classid: number) => {
+  const response = await api.get(`/classes/${classid}/educationplanvm`);
+  return response.data;
+};
+
 export const addStudentToClass = async (studentEmail: string, classid: number) => {
   const response = await api.post(`/classes/${classid}/students`, { email: studentEmail });
   return response.data;

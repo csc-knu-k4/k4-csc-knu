@@ -93,6 +93,43 @@ namespace OsvitaBLL.Services
             return educationClassesModels;
         }
 
+        public async Task<EducationClassPlanVm> GetEducationClassPlanByEducationClassIdAsync(int id)
+        {
+            var educationClass = await educationClassRepository.GetByIdWithDetailsAsync(id);
+            var educationClassPlan = new EducationClassPlanVm
+            {
+                Id = educationClass.EducationClassPlan.Id,
+                EducationClassId = educationClass.Id,
+                EducationClassName = educationClass.Name,
+                Topics = new List<TopicVm>(),
+                AssignmentSets = new List<AssignmentSetVm>()
+            };
+            foreach (var topicPlanDetail in educationClass.EducationClassPlan.TopicPlanDetails)
+            {
+                var topicPlanVm = new TopicVm
+                {
+                    Id = topicPlanDetail.Id,
+                    TopicId = topicPlanDetail.TopicId,
+                    Title = topicPlanDetail.Topic.Title
+                };
+                educationClassPlan.Topics.Add(topicPlanVm);
+            }
+            foreach (var assignmentSetPlanDetail in educationClass.EducationClassPlan.AssignmentSetPlanDetails)
+            {
+                var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(assignmentSetPlanDetail.AssignmentSetId);
+                var title = await GetAssignmentSetTitleAsync(assignmentSet.ObjectId, assignmentSet.ObjectType);
+                var assignmentSetVm = new AssignmentSetVm
+                {
+                    Id = assignmentSetPlanDetail.Id,
+                    AssignmentSetId = assignmentSetPlanDetail.AssignmentSetId,
+                    ObjectModelType = mapper.Map<ObjectModelType>(assignmentSet.ObjectType),
+                    Title = title
+                };
+                educationClassPlan.AssignmentSets.Add(assignmentSetVm);
+            }
+            return educationClassPlan;
+        }
+
         public async Task<IEnumerable<EducationClassPlanVm>> GetEducationClassPlansByStudentIdAsync(int studentId)
         {
             var educationClassPlans = new List<EducationClassPlanVm>();

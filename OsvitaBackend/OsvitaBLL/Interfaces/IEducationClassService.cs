@@ -10,6 +10,7 @@ namespace OsvitaBLL.Interfaces
         Task<IEnumerable<EducationClassModel>> GetByStudentIdAsync(int studentId);
         Task<IEnumerable<EducationClassPlanVm>> GetEducationClassPlansByStudentIdAsync(int studentId);
         Task<IEnumerable<EducationClassModel>> GetByTeacherIdAsync(int teacherId);
+        Task<EducationClassPlanVm> GetEducationClassPlanByEducationClassIdAsync(int id);
     }
 }
 

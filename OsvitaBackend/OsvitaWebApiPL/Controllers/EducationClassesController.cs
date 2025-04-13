@@ -214,5 +214,17 @@ namespace OsvitaWebApiPL.Controllers
             }
             return NotFound();
         }
+
+        // GET api/classes/5/educationplanvm
+        [HttpGet("{id}/educationplanvm")]
+        public async Task<ActionResult<EducationClassPlanVm>> GetEducationClassPlanVm(int id)
+        {
+            var educationClassPlansModel = await educationClassService.GetEducationClassPlanByEducationClassIdAsync(id);
+            if (educationClassPlansModel is not null)
+            {
+                return Ok(educationClassPlansModel);
+            }
+            return NotFound();
+        }
     }
 }

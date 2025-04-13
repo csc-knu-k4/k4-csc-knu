@@ -3,7 +3,7 @@ import { Button, Flex, VStack, Text } from '@chakra-ui/react';
 import { BsBookFill, BsFileEarmarkCheckFill } from 'react-icons/bs';
 import { LuPlus } from 'react-icons/lu';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getClassesEducationPlan } from '@/shared/api/classesApi';
+import { getClassesEducationPlan, getClassesEducationPlanVm } from '@/shared/api/classesApi';
 import { getAssignmentSetById } from '@/shared/api/testsApi';
 import { getTopicById } from '@/shared/api/topicsApi';
 
@@ -13,6 +13,8 @@ const ClassTask = () => {
   const [loading, setLoading] = useState(true);
   const [topics, setTopics] = useState<any[]>([]);
   const [tests, setTests] = useState<any[]>([]);
+  const [topicsVms, setTopicsVms] = useState<any[]>([]);
+  const [testsVms, setTestsVms] = useState<any[]>([]);
 
   useEffect(() => {
     if (!classId) return;
@@ -20,6 +22,7 @@ const ClassTask = () => {
     const loadData = async () => {
       try {
         const plan = await getClassesEducationPlan(Number(classId));
+        const planvm = await getClassesEducationPlanVm(Number(classId));
 
         const validTestIds = plan.assignmentSetPlanDetails
           .map((a: any) => a.assignmentSetId)
@@ -33,6 +36,8 @@ const ClassTask = () => {
 
         setTopics(topicsData);
         setTests(testData);
+        setTopicsVms(planvm.topics);
+        setTestsVms(planvm.assignmentSets);
       } catch (err) {
         console.error('❌ Error loading plan:', err);
       } finally {
@@ -63,7 +68,7 @@ const ClassTask = () => {
         ) : (
           <>
             {/* 🔹 Вивід тем */}
-            {topics.map((topic) => (
+            {topicsVms.map((topic) => (
               <Flex
                 key={`topic-${topic.id}`}
                 borderRadius="1rem"
@@ -82,7 +87,7 @@ const ClassTask = () => {
             ))}
 
             {/* 🔹 Вивід тестів */}
-            {tests.map((test) => (
+            {testsVms.map((test) => (
               <Flex
                 key={`test-${test.id}`}
                 borderRadius="1rem"
@@ -97,7 +102,7 @@ const ClassTask = () => {
                   <BsFileEarmarkCheckFill size="28px" color="rgb(234, 88, 12)" />
                   <Text fontSize="md">
                     Тест {test.id}:{' '}
-                    {test.assignments?.[0]?.problemDescription?.slice(0, 50) || 'Без опису'}
+                    {test.title || 'Без опису'}
                   </Text>
                 </Flex>
               </Flex>
