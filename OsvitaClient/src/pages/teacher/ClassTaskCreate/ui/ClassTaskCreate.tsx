@@ -21,14 +21,13 @@ import { useParams } from 'react-router-dom';
 import {
   addClassesEducationPlanAssignments,
   addClassesEducationPlanTopics,
-  deleteClassesEducationPlanTopicsById,
   getClassesEducationPlan,
 } from '@/shared/api/classesApi';
 import { addAssignmentsSets } from '@/shared/api/assingnmentsSets';
 
 const ClassTaskCreate = () => {
   const [subjectId, setSubjectId] = useState<number | null>(null);
-  const [taskType, setTaskType] = useState<number | null>(null); // "0" | "1" | "2"
+  const [taskType, setTaskType] = useState<number | null>(null);
   const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
   const { classId } = useParams<{ classId: string }>();
   const [initialTopics, setInitialTopics] = useState<number[]>([]);
@@ -74,35 +73,13 @@ const ClassTaskCreate = () => {
     })),
   });
 
-  const handleToggleTopic = async (topicId: number) => {
-    if (taskType !== 1 && taskType !== 2) return;
-
+  const handleToggleTopic = (topicId: number) => {
     const isSelected = selectedTopics.includes(topicId);
     const updated = isSelected
       ? selectedTopics.filter((id) => id !== topicId)
       : [...selectedTopics, topicId];
 
     setSelectedTopics(updated);
-
-    if (taskType !== 2) return;
-
-    try {
-      if (isSelected) {
-        await deleteClassesEducationPlanTopicsById(topicId, Number(classId));
-      } else {
-        await addClassesEducationPlanTopics(
-          {
-            id: 0,
-            educationPlanId: 0,
-            topicId,
-            educationClassPlanId: Number(classId),
-          },
-          Number(classId),
-        );
-      }
-    } catch (error) {
-      toaster.error({ title: `Помилка при оновленні теми ${error}` });
-    }
   };
 
   const handleAssign = async () => {
@@ -113,7 +90,6 @@ const ClassTaskCreate = () => {
 
     try {
       if (taskType === 2) {
-        // 🟠 Опрацювання матеріалу
         if (selectedTopics.length === 0) {
           toaster.error({ title: 'Оберіть теми для призначення' });
           return;
@@ -136,7 +112,6 @@ const ClassTaskCreate = () => {
       }
 
       if (taskType === 1) {
-        // 🟠 Проходження тесту
         if (selectedTopics.length === 0) {
           toaster.error({ title: 'Оберіть теми для тестування' });
           return;
@@ -145,7 +120,7 @@ const ClassTaskCreate = () => {
         for (const topicId of selectedTopics) {
           const assignmentSet = await addAssignmentsSets({
             id: 0,
-            objectModelType: 1, // 🟠 тема
+            objectModelType: 1,
             objectId: topicId,
             assignments: [],
           });
@@ -165,7 +140,6 @@ const ClassTaskCreate = () => {
       }
 
       if (taskType === 0) {
-        // 🟠 Загальний тест
         if (!subjectId) {
           toaster.error({ title: 'Оберіть предмет для загального тесту' });
           return;
@@ -173,7 +147,7 @@ const ClassTaskCreate = () => {
 
         const assignmentSet = await addAssignmentsSets({
           id: 0,
-          objectModelType: 3, // 🟠 subject
+          objectModelType: 3,
           objectId: subjectId,
           assignments: [],
         });
