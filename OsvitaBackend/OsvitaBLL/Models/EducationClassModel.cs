@@ -10,6 +10,7 @@ namespace OsvitaBLL.Models
         public int TeacherId { get; set; }
         public int EducationClassPlanId { get; set; }
 
+        public EducationClassPlanModel? EducationClassPlan { get; set; }
         public List<int> StudentsIds { get; set; }
     }
 }
