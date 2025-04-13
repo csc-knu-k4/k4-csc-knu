@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Підтвердженння запрошення</title>
+    <script>function getUrlParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    window.onload = function() {
+      const id = getUrlParam('id');
+      const userId = getUrlParam('userId');
+      const guid = getUrlParam('guid');
+
+      if (id && userId && guid) {
+          const url = `/api/classes/${id}/students/${userId}/confirmations/${guid}`;
+
+        fetch(url)
+
+      } else {
+        console.error("Invalid params");
+      }
+    };</script>
+</head>
+<body>
+    <h1>Вас додано до класу!</h1>
+    <p>Можете повернутися до виконання завдань</p>
+</body>
+</html>
