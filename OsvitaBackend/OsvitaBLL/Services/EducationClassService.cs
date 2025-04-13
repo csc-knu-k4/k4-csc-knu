@@ -86,6 +86,13 @@ namespace OsvitaBLL.Services
             return educationClassesModels;
         }
 
+        public async Task<IEnumerable<EducationClassModel>> GetByTeacherIdAsync(int teacherId)
+        {
+            var educationClasses = (await educationClassRepository.GetAllWithDetailsAsync()).Where(x => x.TeacherId == teacherId);
+            var educationClassesModels = mapper.Map<IEnumerable<EducationClass>, IEnumerable<EducationClassModel>>(educationClasses);
+            return educationClassesModels;
+        }
+
         public async Task<IEnumerable<EducationClassPlanVm>> GetEducationClassPlansByStudentIdAsync(int studentId)
         {
             var educationClassPlans = new List<EducationClassPlanVm>();
