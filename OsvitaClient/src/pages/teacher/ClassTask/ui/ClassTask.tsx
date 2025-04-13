@@ -3,9 +3,7 @@ import { Button, Flex, VStack, Text } from '@chakra-ui/react';
 import { BsBookFill, BsFileEarmarkCheckFill } from 'react-icons/bs';
 import { LuPlus } from 'react-icons/lu';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getClassesEducationPlan, getClassesEducationPlanVm } from '@/shared/api/classesApi';
-import { getAssignmentSetById } from '@/shared/api/testsApi';
-import { getTopicById } from '@/shared/api/topicsApi';
+import { getClassesEducationPlanVm } from '@/shared/api/classesApi';
 
 const ClassTask = () => {
   const navigate = useNavigate();
@@ -13,31 +11,15 @@ const ClassTask = () => {
   const [loading, setLoading] = useState(true);
   const [topics, setTopics] = useState<any[]>([]);
   const [tests, setTests] = useState<any[]>([]);
-  const [topicsVms, setTopicsVms] = useState<any[]>([]);
-  const [testsVms, setTestsVms] = useState<any[]>([]);
 
   useEffect(() => {
     if (!classId) return;
 
     const loadData = async () => {
       try {
-        const plan = await getClassesEducationPlan(Number(classId));
-        const planvm = await getClassesEducationPlanVm(Number(classId));
-
-        const validTestIds = plan.assignmentSetPlanDetails
-          .map((a: any) => a.assignmentSetId)
-          .filter((id: number) => id !== 0);
-
-        const testRequests = validTestIds.map((id: number) => getAssignmentSetById(id));
-        const testData = await Promise.all(testRequests);
-
-        const topicRequests = plan.topicPlanDetails.map((t: any) => getTopicById(t.topicId));
-        const topicsData = await Promise.all(topicRequests);
-
-        setTopics(topicsData);
-        setTests(testData);
-        setTopicsVms(planvm.topics);
-        setTestsVms(planvm.assignmentSets);
+        const planVm = await getClassesEducationPlanVm(Number(classId));
+        setTopics(planVm.topics || []);
+        setTests(planVm.assignmentSets || []);
       } catch (err) {
         console.error('❌ Error loading plan:', err);
       } finally {
@@ -67,8 +49,8 @@ const ClassTask = () => {
           </Text>
         ) : (
           <>
-            {/* 🔹 Вивід тем */}
-            {topicsVms.map((topic) => (
+            {/* Вивід тем */}
+            {topics.map((topic) => (
               <Flex
                 key={`topic-${topic.id}`}
                 borderRadius="1rem"
@@ -86,8 +68,8 @@ const ClassTask = () => {
               </Flex>
             ))}
 
-            {/* 🔹 Вивід тестів */}
-            {testsVms.map((test) => (
+            {/* Вивід тестів */}
+            {tests.map((test) => (
               <Flex
                 key={`test-${test.id}`}
                 borderRadius="1rem"
@@ -101,8 +83,7 @@ const ClassTask = () => {
                 <Flex gap={4} alignItems="center">
                   <BsFileEarmarkCheckFill size="28px" color="rgb(234, 88, 12)" />
                   <Text fontSize="md">
-                    Тест {test.id}:{' '}
-                    {test.title || 'Без опису'}
+                    Тест {test.id}: {test.title || 'Без опису'}
                   </Text>
                 </Flex>
               </Flex>
