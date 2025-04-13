@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table } from '@chakra-ui/react';
+import { Table, Text } from '@chakra-ui/react';
 import { UserAvatar } from '@/shared/ui/Avatar';
 import { useParams } from 'react-router-dom';
 import { getClassesStatisticAssignmentsByAssingmentSetId } from '@/shared/api/classesApi';
@@ -55,6 +55,9 @@ const ClassMarksDetails = () => {
 
   return (
     <>
+      <Text fontSize="xl" fontWeight="bold" mb={4}>
+        {data[0].objectName}
+      </Text>
       <Table.ScrollArea w="full" maxW="calc(100vw - 100px)" overflowX="auto">
         <Table.Root size="sm" showColumnBorder>
           <Table.Header>

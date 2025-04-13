@@ -196,7 +196,7 @@ const SubjectTaskList = () => {
                     {/* Вкладений акордеон для тем */}
                     <AccordionRoot multiple collapsible>
                       {chapter.topics.map((topic) => (
-                        <AccordionItem key={topic.id} value={`topic-${topic.id}`} mb={2}>
+                        <AccordionItem key={topic.id} value={`topic-${topic.id}`} mb={2} ml={4}>
                           <AccordionItemTrigger>
                             <Flex align="center" justify="space-between" w="full">
                               <Text
@@ -216,7 +216,7 @@ const SubjectTaskList = () => {
                               </Checkbox>
                             </Flex>
                           </AccordionItemTrigger>
-                          <AccordionItemContent>
+                          <AccordionItemContent ml={4}>
                             <Stack mt={2}>
                               {[...topic.materials]
                                 .sort((a, b) => a.orderPosition - b.orderPosition)
