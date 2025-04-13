@@ -36,3 +36,19 @@ export const ClassStudents = lazy(() => import('@/pages/teacher/ClassStudents/ui
 export const ClassMarksDetails = lazy(
   () => import('@/pages/teacher/ClassMarksDetails/ui/ClassMarksDetails'),
 );
+export const Profile = lazy(() => import('@/pages/profile/ui/Profile'));
+export const ClassTaskCreate = lazy(
+  () => import('@/pages/teacher/ClassTaskCreate/ui/ClassTaskCreate'),
+);
+
+export const StudentEducationPlan = lazy(
+  () => import('@/pages/StudentEducationPlan/ui/StudentEducationPlan'),
+);
+
+export const StudentTestPage = lazy(
+  () => import('@/pages/StudentEducationPlan/ui/StudentTestPage'),
+);
+
+export const SubjectTaskTopic = lazy(
+  () => import('@/pages/courses/subjectTaskTopic/ui/SubjectTaskTopic'),
+);

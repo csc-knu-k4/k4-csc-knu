@@ -14,13 +14,15 @@ namespace OsvitaWebApiPL.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly IEducationClassService educationClassService;
         private readonly IStatisticService statisticService;
         private readonly IUserService userService;
         private readonly IIdentityService identityService;
         private readonly IEducationPlanService educationPlanService;
         private readonly IRecomendationService recomendationService;
         private readonly IAssignmentService assignmentService;
-        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IAssignmentService assignmentService)
+
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IAssignmentService assignmentService, IEducationClassService educationClassService)
         {
             this.statisticService = statisticService;
             this.userService = userService;
@@ -28,6 +30,7 @@ namespace OsvitaWebApiPL.Controllers
             this.educationPlanService = educationPlanService;
             this.recomendationService = recomendationService;
             this.assignmentService = assignmentService;
+            this.educationClassService = educationClassService;
         }
 
         // GET api/users/5/statistic/
@@ -210,6 +213,18 @@ namespace OsvitaWebApiPL.Controllers
             return NotFound();
         }
 
+        // GET api/users/5/educationplanvm
+        [HttpGet("{id}/educationplanvm")]
+        public async Task<ActionResult<EducationPlanVm>> GetEducationPlanVm(int id)
+        {
+            var educationPlanVm = await educationPlanService.GetEducationPlanVmByUserIdsync(id);
+            if (educationPlanVm is not null)
+            {
+                return Ok(educationPlanVm);
+            }
+            return NotFound();
+        }
+
         //GET api/users/5/educationplan/topics/4
         [HttpGet("{id}/educationplan/topics/{topicId}")]
         public async Task<ActionResult<TopicPlanDetailModel>> GetTopicPlanDetail(int id, int topicId)
@@ -349,6 +364,30 @@ namespace OsvitaWebApiPL.Controllers
             if (recomendation is not null)
             {
                 return Ok(recomendation);
+            }
+            return NotFound();
+        }
+
+        // GET api/users/5/classes
+        [HttpGet("{id}/classes")]
+        public async Task<ActionResult<IEnumerable<EducationClassModel>>> GetEducationClasses(int id)
+        {
+            var educationClassModels = await educationClassService.GetByStudentIdAsync(id);
+            if (educationClassModels is not null)
+            {
+                return Ok(educationClassModels);
+            }
+            return NotFound();
+        }
+
+        // GET api/users/5/classes/educationplans
+        [HttpGet("{id}/classes/educationplans")]
+        public async Task<ActionResult<IEnumerable<EducationClassPlanVm>>> GetEducationClassPlans(int id)
+        {
+            var educationClassPlansModels = await educationClassService.GetEducationClassPlansByStudentIdAsync(id);
+            if (educationClassPlansModels is not null)
+            {
+                return Ok(educationClassPlansModels);
             }
             return NotFound();
         }

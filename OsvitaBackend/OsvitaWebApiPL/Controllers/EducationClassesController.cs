@@ -23,9 +23,18 @@ namespace OsvitaWebApiPL.Controllers
 
         // GET: api/classes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EducationClassModel>>> Get()
+        public async Task<ActionResult<IEnumerable<EducationClassModel>>> Get([FromQuery] int? teacherId)
         {
-            var educationClassesModels = await educationClassService.GetAllAsync();
+            IEnumerable<EducationClassModel> educationClassesModels;
+            if (teacherId is not null)
+            {
+                educationClassesModels = await educationClassService.GetByTeacherIdAsync((int)teacherId);
+            }
+            else
+            {
+                educationClassesModels = await educationClassService.GetAllAsync();
+            }
+            
             if (educationClassesModels is not null)
             {
                 return Ok(educationClassesModels);
@@ -202,6 +211,18 @@ namespace OsvitaWebApiPL.Controllers
             if (report is not null)
             {
                 return Ok(report);
+            }
+            return NotFound();
+        }
+
+        // GET api/classes/5/educationplanvm
+        [HttpGet("{id}/educationplanvm")]
+        public async Task<ActionResult<EducationClassPlanVm>> GetEducationClassPlanVm(int id)
+        {
+            var educationClassPlansModel = await educationClassService.GetEducationClassPlanByEducationClassIdAsync(id);
+            if (educationClassPlansModel is not null)
+            {
+                return Ok(educationClassPlansModel);
             }
             return NotFound();
         }

@@ -7,6 +7,10 @@ namespace OsvitaBLL.Interfaces
         Task DeleteStudentByIdAsync(int id, int educationClassId);
         Task InviteStudentByEmailAsync(string email, int educationClassId);
         Task ConfirmStudentAsync(int id, int educationClassId, string guid);
+        Task<IEnumerable<EducationClassModel>> GetByStudentIdAsync(int studentId);
+        Task<IEnumerable<EducationClassPlanVm>> GetEducationClassPlansByStudentIdAsync(int studentId);
+        Task<IEnumerable<EducationClassModel>> GetByTeacherIdAsync(int teacherId);
+        Task<EducationClassPlanVm> GetEducationClassPlanByEducationClassIdAsync(int id);
     }
 }
 
