@@ -169,7 +169,7 @@ namespace OsvitaBLL.Services
                 };
                 await educationClassRepository.AddEducationClassInvitationAsync(invitation);
                 var subject = "Запрошення до навчального класу";
-                var message = $"Щоб прийняти запрошення, перейдіть за посиланням: <a href=\"{settings.BaseUrl}/invitationAccept.html?id={educationClassId}&userId={user.Id}&guid={invitation.Guid}\">Посилання</a>";
+                var message = $"Щоб прийняти запрошення, перейдіть за посиланням: {settings.BaseUrl}/invitationAccept.html?id={educationClassId}&userId={user.Id}&guid={invitation.Guid}";
                 await emailService.SendEmailAsync(email, subject, message);
             }
             await unitOfWork.SaveChangesAsync();
