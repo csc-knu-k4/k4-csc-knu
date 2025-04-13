@@ -86,6 +86,13 @@ namespace OsvitaBLL.Services
             return educationClassesModels;
         }
 
+        public async Task<IEnumerable<EducationClassModel>> GetByTeacherIdAsync(int teacherId)
+        {
+            var educationClasses = (await educationClassRepository.GetAllWithDetailsAsync()).Where(x => x.TeacherId == teacherId);
+            var educationClassesModels = mapper.Map<IEnumerable<EducationClass>, IEnumerable<EducationClassModel>>(educationClasses);
+            return educationClassesModels;
+        }
+
         public async Task<IEnumerable<EducationClassPlanVm>> GetEducationClassPlansByStudentIdAsync(int studentId)
         {
             var educationClassPlans = new List<EducationClassPlanVm>();
@@ -162,7 +169,7 @@ namespace OsvitaBLL.Services
                 };
                 await educationClassRepository.AddEducationClassInvitationAsync(invitation);
                 var subject = "Запрошення до навчального класу";
-                var message = $"Щоб прийняти запрошення, перейдіть за посиланням: {settings.BaseUrl}/invitationAccept.html?id={educationClassId}&userId={user.Id}&guid={invitation.Guid}";
+                var message = $"Щоб прийняти запрошення, перейдіть за посиланням: <a href=\"{settings.BaseUrl}/invitationAccept.html?id={educationClassId}&userId={user.Id}&guid={invitation.Guid}\">Посилання</a>";
                 await emailService.SendEmailAsync(email, subject, message);
             }
             await unitOfWork.SaveChangesAsync();
