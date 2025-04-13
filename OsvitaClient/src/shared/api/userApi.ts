@@ -14,3 +14,8 @@ export const getUserById = async (userId: number): Promise<User> => {
   const response = await api.get(`/users/${userId}`);
   return response.data;
 };
+
+export const getUserEducationPlanById = async (userId: number) => {
+  const response = await api.get(`/users/${userId}/educationplanvm`);
+  return response.data;
+};

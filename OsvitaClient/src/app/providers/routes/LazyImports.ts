@@ -40,3 +40,7 @@ export const Profile = lazy(() => import('@/pages/profile/ui/Profile'));
 export const ClassTaskCreate = lazy(
   () => import('@/pages/teacher/ClassTaskCreate/ui/ClassTaskCreate'),
 );
+
+export const StudentEducationPlan = lazy(
+  () => import('@/pages/StudentEducationPlan/ui/StudentEducationPlan'),
+);
