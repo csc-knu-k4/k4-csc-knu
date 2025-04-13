@@ -161,8 +161,8 @@ namespace OsvitaBLL.Services
                     CreatedDate = DateTime.Now
                 };
                 await educationClassRepository.AddEducationClassInvitationAsync(invitation);
-                var subject = "Invitation to class";
-                var message = $"Your invitation link is {settings.BaseUrl}/api/classes/{educationClassId}/students/{user.Id}/confirmations/{invitation.Guid}";
+                var subject = "Запрошення до навчального класу";
+                var message = $"Щоб прийняти запрошення, перейдіть за посиланням: {settings.BaseUrl}/invitationAccept.html?id={educationClassId}&userId={user.Id}&guid={invitation.Guid}";
                 await emailService.SendEmailAsync(email, subject, message);
             }
             await unitOfWork.SaveChangesAsync();
