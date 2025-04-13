@@ -11,6 +11,11 @@ interface ToolbarProps {
 export function Toolbar({ onMenuToggle }: ToolbarProps) {
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
+  };
+
   return (
     <Box bg="white" p={{ base: 2, md: 4 }} borderRadius="1rem" w="full">
       <Flex justifyContent="space-between" alignItems="center">
@@ -53,6 +58,9 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
                 </Menu.Item>
                 <Menu.Item value="course" onClick={() => navigate('/course')}>
                   📚 Курси
+                </Menu.Item>
+                <Menu.Item value="logout" onClick={handleLogout}>
+                  🚪 Вийти
                 </Menu.Item>
               </Menu.Content>
             </Menu.Positioner>
