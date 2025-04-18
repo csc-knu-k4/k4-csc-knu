@@ -89,6 +89,23 @@ namespace OsvitaBLL.Services
 
             return result;
         }
+
+        public async Task<AssistantResponseModel> GetChatAssistantResponseAsync(AssistantRequestModel assistantRequestModel)
+        {
+            ChatClient client = new(model: openAISettings.Model, apiKey: openAISettings.ApiKey);
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Ти вчитель. Учень готується до іспиту. Учень питає визначення терміну. Поясни визначення терміну. Якщо терміну не існує або питання немає, надсилай відповідь 'На жаль, я не можу Вам допогти.' Питання учня:");
+            stringBuilder.AppendLine($"{assistantRequestModel.RequestText}");
+            ChatCompletion completion = await client.CompleteChatAsync(stringBuilder.ToString());
+            var assistantResponseModel = new AssistantResponseModel
+            {
+                UserId = assistantRequestModel.UserId,
+                CreationDate = DateTime.Now,
+                RequestText = assistantRequestModel.RequestText,
+                ResponseText = completion.Content[0].Text
+            };
+            return assistantResponseModel;
+        }
     }
 }
 
