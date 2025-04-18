@@ -62,6 +62,13 @@ namespace OsvitaBLL.Services
             }
         }
 
+        public async Task<RecomendationMessageModel> GetTodayRecomendationMessageAsync(int userId)
+        {
+            var recomendationMessage = (await recomendationMessageRepository.GetAllAsync()).FirstOrDefault(x => x.UserId == userId && x.CreationDate.Date == DateTime.Today.Date);
+            var recomendationMessagesModel = mapper.Map<RecomendationMessageModel> (recomendationMessage);
+            return recomendationMessagesModel;
+        }
+
         public async Task<IEnumerable<RecomendationMessageModel>> GetRecomendationMessagesByUserIdAsync(int userId)
         {
             var recomendationMessages = (await recomendationMessageRepository.GetAllAsync()).Where(x => x.UserId == userId).ToList();

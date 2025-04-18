@@ -341,6 +341,18 @@ namespace OsvitaWebApiPL.Controllers
             return NotFound();
         }
 
+        //GET api/users/5/recomendationmessages/
+        [HttpGet("{id}/dailyrecomendationmessage/")]
+        public async Task<ActionResult<RecomendationMessageModel>> IsTodayRecomendationMessageRead(int id)
+        {
+            var message = await recomendationService.GetTodayRecomendationMessageAsync(id);
+            if (message is not null)
+            {
+                return Ok(message);
+            }
+            return NotFound();
+        }
+
         // PUT: api/users/5/recomendationmessages/3
         [HttpPut("{id}/recomendationmessages/{recomendationMessageId}")]
         public async Task<ActionResult> PutRecomendationMessage(int id, int recomendationMessageId, [FromBody] RecomendationMessageModel model)
