@@ -11,10 +11,11 @@ namespace OsvitaWebApiPL.Jobs
         private readonly IUserService userService;
         private readonly IIdentityService identityService;
         private readonly IAssignmentService assignmentService;
-        public AddDailyAssignmentJob(IUserService userService, IIdentityService identityService)
+        public AddDailyAssignmentJob(IUserService userService, IIdentityService identityService, IAssignmentService assignmentService)
         {
             this.userService = userService;
             this.identityService = identityService;
+            this.assignmentService = assignmentService;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -28,7 +29,7 @@ namespace OsvitaWebApiPL.Jobs
 
             foreach (var student in students)
             {
-                int count =  await assignmentService.CountDailySetsToAdd(student.Id);
+                int count = await assignmentService.CountDailySetsToAdd(student.Id);
                 for (int i = 0; i < count; i++)
                 {
                     await assignmentService.AddDailyAssignmentAsync(student.Id);
