@@ -3,6 +3,7 @@ import { Table, Text } from '@chakra-ui/react';
 import { UserAvatar } from '@/shared/ui/Avatar';
 import { useParams } from 'react-router-dom';
 import { getClassesStatisticAssignmentsByAssingmentSetId } from '@/shared/api/classesApi';
+import { AssignmentDrawer } from './AssignmentDrawer';
 
 interface Assignment {
   assignmentId: number;
@@ -32,6 +33,8 @@ interface AssignmetSetReportModel {
 const ClassMarksDetails = () => {
   const { classId, testId } = useParams<{ classId: string; testId: string }>();
   const [data, setData] = useState<AssignmetSetReportModel[]>([]);
+  const [open, setOpen] = useState(false);
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,7 +59,7 @@ const ClassMarksDetails = () => {
   return (
     <>
       <Text fontSize="xl" fontWeight="bold" mb={4}>
-        {data[0].objectName}
+        {data[0]?.objectName}
       </Text>
       <Table.ScrollArea w="full" maxW="calc(100vw - 100px)" overflowX="auto">
         <Table.Root size="sm" showColumnBorder>
@@ -94,12 +97,21 @@ const ClassMarksDetails = () => {
                     bgColor = 'red.100';
                   }
                   return (
-                    <Table.Cell fontSize="md" key={index} bg={bgColor} textAlign="center">
+                    <Table.Cell
+                      fontSize="md"
+                      key={index}
+                      bg={bgColor}
+                      textAlign="center"
+                      cursor="pointer"
+                      onClick={() => {
+                        setSelectedAssignmentId(assignment.assignmentId);
+                        setOpen(true);
+                      }}
+                    >
                       {`${assignment.points}/${assignment.maxPoints}`}
                     </Table.Cell>
                   );
                 })}
-                {/* Fill in empty cells if assignments are fewer than maxAssignments */}
                 {Array.from({ length: maxAssignments - item.assignments.length }).map(
                   (_, index) => (
                     <Table.Cell fontSize="md" key={`empty-${index}`} />
@@ -113,6 +125,17 @@ const ClassMarksDetails = () => {
           </Table.Body>
         </Table.Root>
       </Table.ScrollArea>
+
+      {selectedAssignmentId !== null && (
+        <AssignmentDrawer
+          assignmentId={selectedAssignmentId}
+          open={open}
+          onClose={() => {
+            setSelectedAssignmentId(null);
+            setOpen(false);
+          }}
+        />
+      )}
     </>
   );
 };
