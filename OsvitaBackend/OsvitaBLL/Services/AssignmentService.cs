@@ -384,11 +384,11 @@ namespace OsvitaBLL.Services
             var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdAsync(userId);
             var assignmentSetProgressDetails = await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
 
-            var notStartedDailyAssignments = from da in dailyAssignments
-                                             where !assignmentSetProgressDetails
-                                                 .Select(aspd => aspd.AssignmentSetId)
-                                                 .Contains(da.AssignmentSetId)
-                                             select da;
+            var notStartedDailyAssignments = dailyAssignments
+                .Where(da => !assignmentSetProgressDetails
+                .Select(aspd => aspd.AssignmentSetId)
+                .Contains(da.AssignmentSetId));
+
 
             var notStarted = notStartedDailyAssignments.FirstOrDefault();
             if (notStarted == null)
@@ -404,11 +404,11 @@ namespace OsvitaBLL.Services
             var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdAsync(userId);
             var assignmentSetProgressDetails = await unitOfWork.StatisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
 
-            var notStartedDailyAssignments = from da in dailyAssignments
-                                             where !assignmentSetProgressDetails
-                                                 .Select(aspd => aspd.AssignmentSetId)
-                                                 .Contains(da.AssignmentSetId)
-                                             select da;
+            var notStartedDailyAssignments = dailyAssignments
+                .Where(da => !assignmentSetProgressDetails
+                .Select(aspd => aspd.AssignmentSetId)
+                .Contains(da.AssignmentSetId));
+
             var count = 10 - notStartedDailyAssignments.Count();
             return count;
         }
