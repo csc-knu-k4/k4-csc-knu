@@ -1,6 +1,7 @@
 import { getRecomendationMessages } from '@/shared/api/recomendationMessagesApi';
-import { Drawer, Portal, Button, Text, VStack, Box } from '@chakra-ui/react';
+import { Drawer, Portal, Button, Text, VStack, Box, Flex, IconButton } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
+import { MdError, MdDeleteOutline } from 'react-icons/md';
 
 interface Props {
   open: boolean;
@@ -22,29 +23,45 @@ export const MessagesDrawer = ({ open, onClose }: Props) => {
         <Drawer.Backdrop />
         <Drawer.Positioner>
           <Drawer.Content>
-            <Drawer.Body pt="6" px="5" pb="8" bgColor="white">
-              <Text color="black" fontSize="xl" fontWeight="bold" mb={4}>
+            <Drawer.Body pt="6" px={0} pb="8" bgColor="white">
+              <Text ml={4} color="black" fontSize="xl" fontWeight="bold" mb={4}>
                 📩 Повідомлення
               </Text>
 
               {messages && messages.length > 0 ? (
-                <VStack align="start" gap={4}>
+                <VStack align="start" gap={0}>
                   {messages.map((msg, idx) => (
                     <Box
                       key={idx}
                       p={3}
-                      border="1px solid"
-                      borderColor={msg.isRead ? 'gray.200' : 'orange.300'}
-                      borderRadius="md"
+                      borderLeft="3px solid"
+                      borderColor={msg.isRead ? 'transperent' : 'orange.300'}
                       bg={msg.isRead ? 'gray.50' : 'orange.50'}
                       w="100%"
                     >
-                      <Text fontSize="sm" color="black">
-                        {new Date(msg.creationDate).toLocaleString()}
-                      </Text>
-                      <Text color="gray.600" fontWeight={msg.isRead ? 'normal' : 'semibold'}>
-                        {msg.recomendationText}
-                      </Text>
+                      <Flex flexDir="column" gap={2}>
+                        <Flex flexDir="row" alignItems="center" gap={2}>
+                          <MdError color="#F97316" size="1.5rem" />
+                          <Text fontSize="lg" fontWeight="bold" color="black">
+                            Непрочитане повідомлення
+                          </Text>
+                          <IconButton
+                            aria-label="Delete notification"
+                            variant="ghost"
+                            colorPalette="red"
+                            ml="auto"
+                            mr={2}
+                          >
+                            <MdDeleteOutline size="1.5rem" />
+                          </IconButton>
+                        </Flex>
+                        <Text color="black" fontWeight={msg.isRead ? 'normal' : 'normal'}>
+                          {msg.recomendationText}
+                        </Text>
+                        <Text fontSize="sm" color="gray.600">
+                          {new Date(msg.creationDate).toLocaleString()}
+                        </Text>
+                      </Flex>
                     </Box>
                   ))}
                 </VStack>
