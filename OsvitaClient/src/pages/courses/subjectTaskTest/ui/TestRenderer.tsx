@@ -25,9 +25,12 @@ const TestRenderer: React.FC<TestRendererProps> = ({ testId, onFinish, showCorre
   const navigate = useNavigate();
   const isDiagnosticTestPage = location.pathname.startsWith('/course/diagnostic-test/');
   const isStudentTestPage = location.pathname.startsWith('/course/student/test/');
+  const isStudentDailyTestPage = location.pathname.startsWith('/course/daily-assignment/');
 
   const containerHeight =
-    isDiagnosticTestPage || isStudentTestPage ? 'calc(100vh - 220px)' : 'calc(100vh - 350px)';
+    isDiagnosticTestPage || isStudentTestPage || isStudentDailyTestPage
+      ? 'calc(100vh - 220px)'
+      : 'calc(100vh - 350px)';
 
   const userId = Number(localStorage.getItem('userId'));
 

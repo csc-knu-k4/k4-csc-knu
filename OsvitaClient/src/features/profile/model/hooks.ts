@@ -1,6 +1,7 @@
 import {
   getDailyAssignmentIsDone,
   getDailyAssignmentRating,
+  getDailyAssignmentSet,
   getDailyAssignmentStreak,
   RatingItem,
 } from '@/shared/api/dailyAssignmentApt';
@@ -49,5 +50,16 @@ export const useRating = () => {
     queryKey: ['dailyRating'],
     queryFn: getDailyAssignmentRating,
     staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useDailyAssignmentSet = () => {
+  const userId = getUserIdFromStorage();
+
+  return useQuery({
+    queryKey: ['dailyAssignmentSet', userId],
+    queryFn: () => getDailyAssignmentSet(userId!),
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 5,
   });
 };

@@ -52,3 +52,5 @@ export const StudentTestPage = lazy(
 export const SubjectTaskTopic = lazy(
   () => import('@/pages/courses/subjectTaskTopic/ui/SubjectTaskTopic'),
 );
+
+export const DailyAssignmentPage = lazy(() => import('@/pages/profile/ui/DailyAssignmentPage'));
