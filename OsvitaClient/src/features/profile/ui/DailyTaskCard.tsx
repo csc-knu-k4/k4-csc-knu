@@ -52,7 +52,6 @@ export const DailyTaskCard = () => {
       </Button>
 
       <Flex justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={4}>
-        {/* Статус */}
         <Flex gap={1} alignItems="center">
           {isStatusLoading ? (
             <Skeleton h="20px" w="200px" />
@@ -61,17 +60,20 @@ export const DailyTaskCard = () => {
           ) : isDone ? (
             <>
               <FaRegCheckCircle size="1.5rem" color="green" />
-              <Text color="gray">Сьогоднішнє завдання виконане</Text>
+              <Text color="gray" mt={1}>
+                Сьогоднішнє завдання виконане
+              </Text>
             </>
           ) : (
             <>
               <FaRegCheckCircle size="1.5rem" color="gray" />
-              <Text color="gray">Сьогоднішнє завдання ще не виконане</Text>
+              <Text color="gray" mt={1}>
+                Сьогоднішнє завдання ще не виконане
+              </Text>
             </>
           )}
         </Flex>
 
-        {/* Стік */}
         <Flex gap={1} alignItems="center">
           {isStreakLoading ? (
             <Skeleton h="20px" w="80px" />
