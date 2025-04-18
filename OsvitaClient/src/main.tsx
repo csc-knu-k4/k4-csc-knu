@@ -10,6 +10,7 @@ import { ReactQueryProvider } from './app/providers/ReactQueryProvider';
 import { Provider } from 'react-redux';
 import store from './processes/store';
 import { Toaster } from './components/ui/toaster';
+import { AssistantDrawer } from './widgets/assistantDrawer/AssistantDrawer';
 
 const system = createSystem(defaultConfig, config);
 
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')!).render(
             <ReactQueryProvider>
               <RouterProvider router={router} />
               <Toaster />
+              <AssistantDrawer />
             </ReactQueryProvider>
           </LightMode>
         </ThemeProvider>
