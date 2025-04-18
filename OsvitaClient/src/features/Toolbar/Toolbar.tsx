@@ -3,6 +3,9 @@ import { UserAvatar } from '@/shared/ui/Avatar';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { useNavigate } from 'react-router-dom';
 import { SiteLogo } from '@/shared/ui/SiteLogo';
+import { MessagesDrawer } from './MessagesDrawer';
+import { useState } from 'react';
+import { FaRegBell } from 'react-icons/fa';
 
 interface ToolbarProps {
   onMenuToggle?: () => void;
@@ -15,6 +18,11 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
     localStorage.clear();
     navigate('/');
   };
+  const [open, setOpen] = useState(false);
+  const roles: string[] = JSON.parse(localStorage.getItem('userRoles') || '[]');
+  const isTeacher = roles.includes('teacher');
+  const isStudent = roles.includes('student');
+  const isAdmin = roles.includes('admin');
 
   return (
     <Box bg="white" p={{ base: 2, md: 4 }} borderRadius="1rem" w="full">
@@ -31,7 +39,16 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
           </IconButton>
           <SiteLogo />
         </HStack>
-
+        <IconButton
+          aria-label="Notifications"
+          variant="ghost"
+          onClick={() => setOpen(true)}
+          colorPalette="orange"
+          ml="auto"
+          mr={2}
+        >
+          <FaRegBell />
+        </IconButton>
         <Menu.Root>
           <Menu.Trigger asChild>
             <Button maxW="3rem" variant="plain">
@@ -44,18 +61,24 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
                 <Menu.Item value="profile" onClick={() => navigate('/course/profile')}>
                   👤️ Профіль
                 </Menu.Item>
-                <Menu.Item
-                  value="education-plan"
-                  onClick={() => navigate('/course/student-education-plan')}
-                >
-                  📝 Навчальний план
-                </Menu.Item>
-                <Menu.Item value="teacher" onClick={() => navigate('/teacher/class-task')}>
-                  👨‍🏫 Викладач
-                </Menu.Item>
-                <Menu.Item value="admin" onClick={() => navigate('/admin/subjects')}>
-                  🛠 Адмін-панель
-                </Menu.Item>
+                {isStudent && (
+                  <Menu.Item
+                    value="education-plan"
+                    onClick={() => navigate('/course/student-education-plan')}
+                  >
+                    📝 Навчальний план
+                  </Menu.Item>
+                )}
+                {isTeacher && (
+                  <Menu.Item value="teacher" onClick={() => navigate('/teacher/class-task')}>
+                    👨‍🏫 Викладач
+                  </Menu.Item>
+                )}
+                {isAdmin && (
+                  <Menu.Item value="admin" onClick={() => navigate('/admin/subjects')}>
+                    🛠 Адмін-панель
+                  </Menu.Item>
+                )}
                 <Menu.Item value="course" onClick={() => navigate('/course')}>
                   📚 Курси
                 </Menu.Item>
@@ -67,6 +90,7 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
           </Portal>
         </Menu.Root>
       </Flex>
+      <MessagesDrawer open={open} onClose={() => setOpen(false)} />
     </Box>
   );
 }
