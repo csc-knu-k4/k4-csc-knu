@@ -151,7 +151,7 @@ namespace OsvitaWebApiPL.Controllers
 
         // GET api/users/5/dailyassignmentset
         [HttpGet("{id}/dailyassignmentset")]
-        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetDailyAssignmentSet(int id)
+        public async Task<ActionResult<AssignmentSetModel>> GetDailyAssignmentSet(int id)
         {
             try
             {
@@ -178,6 +178,23 @@ namespace OsvitaWebApiPL.Controllers
                 var students = users.Where(x => x.Roles.Contains(RoleSettings.StudentRole));
                 var dailyAssignmentRating = await statisticService.GetDailyAssignmentRatingAsync(students);
                 return Ok(dailyAssignmentRating);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/dailyassignment/rating
+        [HttpGet("{id}/dailyassignment/rating")]
+        public async Task<ActionResult<UserDailyAssignmentRatingModel>> GetDailyAssignmentRatingForUser(int id)
+        {
+            try
+            {
+                var user = await userService.GetByIdAsync(id);
+                var students = new List<UserModel> { user };
+                var dailyAssignmentRating = await statisticService.GetDailyAssignmentRatingAsync(students);
+                return Ok(dailyAssignmentRating.FirstOrDefault());
             }
             catch (Exception ex)
             {
