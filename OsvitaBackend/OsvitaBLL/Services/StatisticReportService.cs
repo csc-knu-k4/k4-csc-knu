@@ -1,4 +1,10 @@
+using System.Text;
+using OsvitaBLL.Interfaces;
 ﻿using System.Text;
+using Microsoft.Extensions.Options;
+using OpenAI;
+using OpenAI.Chat;
+using OsvitaBLL.Configurations;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaBLL.Models.ReportModels;
@@ -15,11 +21,47 @@ namespace OsvitaBLL.Services
         private readonly IUnitOfWork unitOfWork;
         private readonly IAIService aiService;
         public StatisticReportService(IStatisticService statisticService, IUnitOfWork unitOfWork, IAssignmentService assignmentService, IAIService aiService)
+        private readonly OpenAISettings openAISettings;
+        public StatisticReportService(IStatisticService statisticService, IUnitOfWork unitOfWork, IAssignmentService assignmentService, IOptions<OpenAISettings> openAISettings)
         {
             this.statisticService = statisticService;
             this.unitOfWork = unitOfWork;
             this.assignmentService = assignmentService;
             this.aiService = aiService;
+            this.openAISettings = openAISettings.Value;
+        }
+
+        public async Task<string> GenerateAssignmetSetsReportAIAsync(int userId, int assignmentSetProgressDetailId)
+        {
+            var models = new List<AssignmentSetReportModel>();
+            if (assignmentSetProgressDetailId > 0)
+            {
+                var model = await GetAssignmetSetReportModelAsync(userId, assignmentSetProgressDetailId);
+                models.Add(model);
+            }
+            else
+            {
+                var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
+                var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).Select(x => x.Id).ToList();
+                foreach (var id in assignmentSetProgressDetailsIds)
+                {
+                    var model = await GetAssignmetSetReportModelAsync(userId, id);
+                    models.Add(model);
+                }
+            }
+
+            ChatClient client = new(model: openAISettings.Model, apiKey: openAISettings.ApiKey);
+            
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Проаналізуй статистику проходження тестів за темами при підготовці до НМТ і порадь учню теми для вивчення:");
+            foreach (var model in models)
+            {
+                stringBuilder.AppendLine($"Тема: \"{model.ObjectName}\"; Результат: {model.Score}; Максимальний результат: {model.MaxScore}");
+            }
+            ChatCompletion completion = client.CompleteChat(stringBuilder.ToString());
+
+            return completion.Content[0].Text; 
+>>>>>>> Stashed changes
         }
 
         public async Task<byte[]> GenerateAssignmetSetsReportAsync(int userId, int assignmentSetProgressDetailId)
