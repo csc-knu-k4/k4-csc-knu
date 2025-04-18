@@ -20,7 +20,6 @@ namespace OsvitaBLL.Services
         private readonly IAssignmentService assignmentService;
         private readonly IUnitOfWork unitOfWork;
         private readonly IAIService aiService;
-        public StatisticReportService(IStatisticService statisticService, IUnitOfWork unitOfWork, IAssignmentService assignmentService, IAIService aiService)
         private readonly OpenAISettings openAISettings;
         public StatisticReportService(IStatisticService statisticService, IUnitOfWork unitOfWork, IAssignmentService assignmentService, IOptions<OpenAISettings> openAISettings)
         {
@@ -61,7 +60,6 @@ namespace OsvitaBLL.Services
             ChatCompletion completion = client.CompleteChat(stringBuilder.ToString());
 
             return completion.Content[0].Text; 
->>>>>>> Stashed changes
         }
 
         public async Task<byte[]> GenerateAssignmetSetsReportAsync(int userId, int assignmentSetProgressDetailId)
