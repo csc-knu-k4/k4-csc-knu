@@ -46,6 +46,7 @@ export const DailyTaskCard = () => {
         colorPalette="orange"
         justifyContent="start"
         onClick={handleStartTest}
+        disabled={isDone}
       >
         <CiCalendar size="1.5rem" />
         Щоденні Завдання
