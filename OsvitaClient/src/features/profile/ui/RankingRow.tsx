@@ -5,33 +5,36 @@ import { UserAvatar } from '@/shared/ui/Avatar';
 type Props = {
   place: number;
   name: string;
-  points: number;
+  score: number;
+  highlight?: boolean;
 };
 
-export const RankingRow = ({ place, name, points }: Props) => (
+export const RankingRow = ({ place, name, score, highlight }: Props) => (
   <Flex
     borderRadius="1rem"
-    borderColor="orange"
+    borderColor={highlight ? 'orange.400' : 'orange'}
     borderWidth="1px"
     justifyContent="space-between"
     alignItems="center"
     h="45px"
     px={4}
+    bg={highlight ? 'orange' : 'transparent'}
+    my={1}
   >
     <Flex alignItems="center" gap={2}>
-      <Text color="orange.200" fontSize="lg">
+      <Text color={highlight ? 'white' : 'orange.200'} fontSize="lg">
         {place}
       </Text>
       <UserAvatar />
-      <Text color="orange.200" fontSize="lg">
+      <Text color={highlight ? 'white' : 'orange.200'} fontSize="lg">
         {name}
       </Text>
     </Flex>
     <Flex gap={1} alignItems="center">
-      <Text fontSize="md" fontWeight="semibold" color="orange.200">
-        {points} балів
+      <Text fontSize="md" fontWeight="semibold" color={highlight ? 'white' : 'orange.200'}>
+        {score} балів
       </Text>
-      <PiMedal color="rgb(255, 109, 24)" />
+      <PiMedal color={highlight ? 'white' : 'rgb(255, 109, 24)'} />
     </Flex>
   </Flex>
 );

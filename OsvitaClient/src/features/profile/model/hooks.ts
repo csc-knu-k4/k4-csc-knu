@@ -1,11 +1,13 @@
 import {
   getDailyAssignmentIsDone,
+  getDailyAssignmentRating,
   getDailyAssignmentStreak,
+  RatingItem,
 } from '@/shared/api/dailyAssignmentApt';
 import { getUserById, User } from '@/shared/api/userApi';
 import { useQuery } from 'react-query';
 
-const getUserIdFromStorage = (): number | null => {
+export const getUserIdFromStorage = (): number | null => {
   const raw = localStorage.getItem('userId');
   return raw ? Number(raw) : null;
 };
@@ -40,5 +42,12 @@ export const useDailyStreak = () => {
     queryFn: () => getDailyAssignmentStreak(userId!),
     enabled: !!userId,
     staleTime: 1000 * 60 * 5,
+  });
+};
+export const useRating = () => {
+  return useQuery<RatingItem[]>({
+    queryKey: ['dailyRating'],
+    queryFn: getDailyAssignmentRating,
+    staleTime: 5 * 60 * 1000,
   });
 };
