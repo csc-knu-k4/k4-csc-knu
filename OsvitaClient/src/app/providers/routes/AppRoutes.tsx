@@ -32,6 +32,7 @@ import {
   DailyAssignmentPage,
 } from './LazyImports';
 import LazyElement from './LazyElement';
+import RoleProtectedRoute from './RoleProtectedRoute';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -59,17 +60,24 @@ const router = createBrowserRouter(
           <Route path="subject-test/:testId" element={LazyElement(SubjectTaskTest)} />
           <Route path="diagnostic-test/:testId" element={LazyElement(DiagnosticTest)} />
           <Route path="profile" element={LazyElement(Profile)} />
-          <Route path="student-education-plan" element={LazyElement(StudentEducationPlan)} />
+          <Route element={<RoleProtectedRoute allowedRoles={['student']} />}>
+            <Route
+              path="/course/student-education-plan"
+              element={LazyElement(StudentEducationPlan)}
+            />
+          </Route>
           <Route path="student/test/:assignmentSetId" element={LazyElement(StudentTestPage)} />
           <Route path="subject-topic/:topicId" element={LazyElement(SubjectTaskTopic)} />
           <Route path="daily-assignment/:id" element={<DailyAssignmentPage />} />
         </Route>
-        <Route path="/teacher/:classId" element={LazyElement(TeacherLayout)}>
-          <Route path="class-task" element={LazyElement(ClassTabs)} />
-          <Route path="class-task/create" element={LazyElement(ClassTaskCreate)} />
-          <Route path="class-marks" element={LazyElement(ClassTabs)} />
-          <Route path="class-students" element={LazyElement(ClassTabs)} />
-          <Route path="class-marks/details/:testId" element={LazyElement(ClassMarksDetails)} />
+        <Route element={<RoleProtectedRoute allowedRoles={['teacher']} />}>
+          <Route path="/teacher/:classId" element={LazyElement(TeacherLayout)}>
+            <Route path="class-task" element={LazyElement(ClassTabs)} />
+            <Route path="class-task/create" element={LazyElement(ClassTaskCreate)} />
+            <Route path="class-marks" element={LazyElement(ClassTabs)} />
+            <Route path="class-students" element={LazyElement(ClassTabs)} />
+            <Route path="class-marks/details/:testId" element={LazyElement(ClassMarksDetails)} />
+          </Route>
         </Route>
       </Route>
     </>,

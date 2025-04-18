@@ -16,6 +16,11 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
     navigate('/');
   };
 
+  const roles: string[] = JSON.parse(localStorage.getItem('userRoles') || '[]');
+  const isTeacher = roles.includes('teacher');
+  const isStudent = roles.includes('student');
+  const isAdmin = roles.includes('admin');
+
   return (
     <Box bg="white" p={{ base: 2, md: 4 }} borderRadius="1rem" w="full">
       <Flex justifyContent="space-between" alignItems="center">
@@ -44,18 +49,24 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
                 <Menu.Item value="profile" onClick={() => navigate('/course/profile')}>
                   👤️ Профіль
                 </Menu.Item>
-                <Menu.Item
-                  value="education-plan"
-                  onClick={() => navigate('/course/student-education-plan')}
-                >
-                  📝 Навчальний план
-                </Menu.Item>
-                <Menu.Item value="teacher" onClick={() => navigate('/teacher/class-task')}>
-                  👨‍🏫 Викладач
-                </Menu.Item>
-                <Menu.Item value="admin" onClick={() => navigate('/admin/subjects')}>
-                  🛠 Адмін-панель
-                </Menu.Item>
+                {isStudent && (
+                  <Menu.Item
+                    value="education-plan"
+                    onClick={() => navigate('/course/student-education-plan')}
+                  >
+                    📝 Навчальний план
+                  </Menu.Item>
+                )}
+                {isTeacher && (
+                  <Menu.Item value="teacher" onClick={() => navigate('/teacher/class-task')}>
+                    👨‍🏫 Викладач
+                  </Menu.Item>
+                )}
+                {isAdmin && (
+                  <Menu.Item value="admin" onClick={() => navigate('/admin/subjects')}>
+                    🛠 Адмін-панель
+                  </Menu.Item>
+                )}
                 <Menu.Item value="course" onClick={() => navigate('/course')}>
                   📚 Курси
                 </Menu.Item>
