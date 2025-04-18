@@ -16,13 +16,14 @@ namespace OsvitaWebApiPL.Controllers
     {
         private readonly IEducationClassService educationClassService;
         private readonly IStatisticService statisticService;
+        private readonly IStatisticReportService statisticReportService;
         private readonly IUserService userService;
         private readonly IIdentityService identityService;
         private readonly IEducationPlanService educationPlanService;
         private readonly IRecomendationService recomendationService;
         private readonly IAssignmentService assignmentService;
 
-        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IAssignmentService assignmentService, IEducationClassService educationClassService)
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IAssignmentService assignmentService, IEducationClassService educationClassService, IStatisticReportService statisticReportService)
         {
             this.statisticService = statisticService;
             this.userService = userService;
@@ -31,6 +32,7 @@ namespace OsvitaWebApiPL.Controllers
             this.recomendationService = recomendationService;
             this.assignmentService = assignmentService;
             this.educationClassService = educationClassService;
+            this.statisticReportService = statisticReportService;
         }
 
         // GET api/users/5/statistic/
@@ -105,6 +107,7 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
+        // GET api/users/5/statistic/assignments/5
         [HttpGet("{id}/statistic/assignments/{assignmentSetProgressDetailId}")]
         public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetAssignmentSetProgressDetail(int id, int assignmentSetProgressDetailId)
         {
@@ -419,6 +422,21 @@ namespace OsvitaWebApiPL.Controllers
                 return Ok(educationClassPlansModels);
             }
             return NotFound();
+        }
+
+        // GET api/users/5/statistic/charts/subjects
+        [HttpGet("{id}/statistic/charts/subjects")]
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetAssignmetSetSubjectProgressesChartModel(int id)
+        {
+            try
+            {
+                var assignmentSetProgressDetail = await statisticReportService.GetAssignmetSetSubjectProgressesChartModelAsync(id);
+                return Ok(assignmentSetProgressDetail);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

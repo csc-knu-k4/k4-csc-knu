@@ -11,6 +11,8 @@ using OsvitaBLL.Models.ReportModels;
 using OsvitaDAL.Interfaces;
 using QuestPDF.Fluent;
 using OsvitaDAL.Entities;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace OsvitaBLL.Services
 {
@@ -91,11 +93,18 @@ namespace OsvitaBLL.Services
             if (assignmentSetsCount > 0)
             {
                 var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
-                var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).OrderBy(x => x.CompletedDate).Take(assignmentSetsCount).Select(x => x.Id).ToList();
+                var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).OrderBy(x => x.CompletedDate).Select(x => x.Id).ToList();
                 foreach (var id in assignmentSetProgressDetailsIds)
                 {
                     var model = await GetAssignmetSetReportModelAsync(userId, id);
-                    models.Add(model);
+                    if (model.ObjectType == ObjectModelType.TopicModel)
+                    {
+                        models.Add(model);
+                    }
+                    if (models.Count >= assignmentSetsCount)
+                    {
+                        break;
+                    }
                 }
             }
             return models;
@@ -287,6 +296,31 @@ namespace OsvitaBLL.Services
             }
 
             return educationClassAssignmetSetReportModel;
+        }
+
+        public async Task<IEnumerable<AssignmetSetProgressChartModel>> GetAssignmetSetSubjectProgressesChartModelAsync(int userId)
+        {
+            var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
+            var assignmentSets = (await unitOfWork.AssignmentSetRepository.GetAllAsync()).Where(x => statistic.AssignmentSetProgressDetails.Select(d => d.AssignmentSetId).Contains(x.Id));
+            var assignmetSetProgressChartModels = new List<AssignmetSetProgressChartModel>();
+            var subjects = await unitOfWork.SubjectRepository.GetAllWithDetailsAsync();
+            foreach (var subject in subjects)
+            {
+                var topicIds = subject.Chapters.SelectMany(c => c.Topics).Select(x => x.Id);
+                var subjectAssignmentSetsIds = assignmentSets.Where(x => x.ObjectType == ObjectType.Topic && topicIds.Contains(x.ObjectId))
+                    .Concat(assignmentSets.Where(x => (x.ObjectType == ObjectType.Subject || x.ObjectType == ObjectType.Diagnostical) && x.ObjectId == subject.Id)).Select(x => x.Id);
+                var subjectAssignmentSetsByUser = statistic.AssignmentSetProgressDetails.Where(x => subjectAssignmentSetsIds.Contains(x.AssignmentSetId));
+                var assignmetSetProgressChartModel = new AssignmetSetProgressChartModel
+                {
+                    ObjectId = subject.Id,
+                    ObjectName = subject.Title,
+                    Score = subjectAssignmentSetsByUser.Sum(x => x.Score),
+                    MaxScore = subjectAssignmentSetsByUser.Sum(x => x.MaxScore)
+                };
+                assignmetSetProgressChartModels.Add(assignmetSetProgressChartModel);
+            }
+            
+            return assignmetSetProgressChartModels;
         }
     }
 }

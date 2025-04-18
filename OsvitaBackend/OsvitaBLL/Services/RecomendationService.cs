@@ -27,7 +27,7 @@ namespace OsvitaBLL.Services
 
         public async Task AddRecomendationMessageAsync(int userId)
         {
-            var assignmentSetsCount = 2;
+            var assignmentSetsCount = 5;
             var assignmentSetReportModels = await statisticReportService.GetLastAssignmetSetsReportsAsync(userId, assignmentSetsCount);
             var assignmentReportModels = assignmentSetReportModels.SelectMany(x => x.Assignments).ToList();
             var recomendationMesageText = string.Empty;
