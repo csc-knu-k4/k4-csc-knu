@@ -56,7 +56,7 @@ const ClassMarksDetails = () => {
   return (
     <>
       <Text fontSize="xl" fontWeight="bold" mb={4}>
-        {data[0].objectName}
+        {data[0]?.objectName}
       </Text>
       <Table.ScrollArea w="full" maxW="calc(100vw - 100px)" overflowX="auto">
         <Table.Root size="sm" showColumnBorder>
