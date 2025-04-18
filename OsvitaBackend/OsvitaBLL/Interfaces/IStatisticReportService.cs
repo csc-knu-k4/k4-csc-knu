@@ -14,5 +14,6 @@ namespace OsvitaBLL.Interfaces
         Task<EducationClassAssignmetSetReportModel> GetEducationClassAssignmetSetReportModelAsync(int educationClassId, int assignmentSetId);
         Task<string> GenerateAssignmetSetsReportAIAsync(int userId, int assignmentSetProgressDetailId);
         Task<IEnumerable<AssignmetSetProgressChartModel>> GetAssignmetSetSubjectProgressesChartModelAsync(int userId);
+        Task<IEnumerable<AssignmetSetProgressChartModel>> GetAssignmetSetTopicProgressesChartModelAsync(int userId, int? subjectId);
     }
 }

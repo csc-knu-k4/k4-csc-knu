@@ -11,8 +11,6 @@ using OsvitaBLL.Models.ReportModels;
 using OsvitaDAL.Interfaces;
 using QuestPDF.Fluent;
 using OsvitaDAL.Entities;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace OsvitaBLL.Services
 {
@@ -320,6 +318,40 @@ namespace OsvitaBLL.Services
                 assignmetSetProgressChartModels.Add(assignmetSetProgressChartModel);
             }
             
+            return assignmetSetProgressChartModels;
+        }
+
+        public async Task<IEnumerable<AssignmetSetProgressChartModel>> GetAssignmetSetTopicProgressesChartModelAsync(int userId, int? subjectId)
+        {
+            var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
+            var assignmentSets = (await unitOfWork.AssignmentSetRepository.GetAllAsync()).Where(x => x.ObjectType == ObjectType.Topic && statistic.AssignmentSetProgressDetails.Select(d => d.AssignmentSetId).Contains(x.Id));
+            var assignmetSetProgressChartModels = new List<AssignmetSetProgressChartModel>();
+            var topics = new List<Topic>();
+            if (subjectId is not null)
+            {
+                topics = (await unitOfWork.SubjectRepository.GetByIdWithDetailsAsync(subjectId.Value)).Chapters.SelectMany(c => c.Topics).ToList();
+            }
+            else
+            {
+                topics = (await unitOfWork.TopicRepository.GetAllAsync()).ToList();
+            }
+            foreach (var topic in topics)
+            {
+                var topicAssignmentSetsIds = assignmentSets.Where(x => x.ObjectType == ObjectType.Topic && x.ObjectId == topic.Id).Select(x => x.Id);
+                var topicAssignmentSetsByUser = statistic.AssignmentSetProgressDetails.Where(x => topicAssignmentSetsIds.Contains(x.AssignmentSetId));
+                var assignmetSetProgressChartModel = new AssignmetSetProgressChartModel
+                {
+                    ObjectId = topic.Id,
+                    ObjectName = topic.Title,
+                    Score = topicAssignmentSetsByUser.Sum(x => x.Score),
+                    MaxScore = topicAssignmentSetsByUser.Sum(x => x.MaxScore)
+                };
+                if (assignmetSetProgressChartModel.MaxScore > 0)
+                {
+                    assignmetSetProgressChartModels.Add(assignmetSetProgressChartModel);
+                }
+            }
+
             return assignmetSetProgressChartModels;
         }
     }

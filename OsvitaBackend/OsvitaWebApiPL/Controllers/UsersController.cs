@@ -438,5 +438,20 @@ namespace OsvitaWebApiPL.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // GET api/users/5/statistic/charts/topics
+        [HttpGet("{id}/statistic/charts/topics")]
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetAssignmetSetTopicProgressesChartModel(int id, int? subjectId)
+        {
+            try
+            {
+                var assignmentSetProgressDetail = await statisticReportService.GetAssignmetSetTopicProgressesChartModelAsync(id, subjectId);
+                return Ok(assignmentSetProgressDetail);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

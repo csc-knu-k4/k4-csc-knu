@@ -398,7 +398,6 @@ namespace OsvitaBLL.Services
             return assignmentSetModel;
         }
 
-
         public async Task<int> CountDailySetsToAdd(int userId)
         {
             var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
