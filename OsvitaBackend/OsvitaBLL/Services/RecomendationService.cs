@@ -27,7 +27,7 @@ namespace OsvitaBLL.Services
 
         public async Task AddRecomendationMessageAsync(int userId)
         {
-            var assignmentSetsCount = 2;
+            var assignmentSetsCount = 5;
             var assignmentSetReportModels = await statisticReportService.GetLastAssignmetSetsReportsAsync(userId, assignmentSetsCount);
             var assignmentReportModels = assignmentSetReportModels.SelectMany(x => x.Assignments).ToList();
             var recomendationMesageText = string.Empty;
@@ -60,6 +60,13 @@ namespace OsvitaBLL.Services
                     Console.WriteLine(ex.Message);
                 }
             }
+        }
+
+        public async Task<RecomendationMessageModel> GetTodayRecomendationMessageAsync(int userId)
+        {
+            var recomendationMessage = (await recomendationMessageRepository.GetAllAsync()).FirstOrDefault(x => x.UserId == userId && x.CreationDate.Date == DateTime.Today.Date);
+            var recomendationMessagesModel = mapper.Map<RecomendationMessageModel> (recomendationMessage);
+            return recomendationMessagesModel;
         }
 
         public async Task<IEnumerable<RecomendationMessageModel>> GetRecomendationMessagesByUserIdAsync(int userId)
