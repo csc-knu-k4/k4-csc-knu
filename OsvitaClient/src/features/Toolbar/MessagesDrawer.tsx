@@ -1,6 +1,11 @@
-import { getRecomendationMessages } from '@/shared/api/recomendationMessagesApi';
+import {
+  deleteRecomendationMessage,
+  getRecomendationMessages,
+  RecomendationMessage,
+  updateRecomendationMessage,
+} from '@/shared/api/recomendationMessagesApi';
 import { Drawer, Portal, Button, Text, VStack, Box, Flex, IconButton } from '@chakra-ui/react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { MdError, MdDeleteOutline } from 'react-icons/md';
 
 interface Props {
@@ -10,15 +15,60 @@ interface Props {
 
 export const MessagesDrawer = ({ open, onClose }: Props) => {
   const userId = Number(localStorage.getItem('userId'));
-
+  const queryClient = useQueryClient();
   const { data: messages } = useQuery({
     queryKey: ['messages', userId],
     queryFn: () => getRecomendationMessages(userId),
     enabled: open && !!userId,
   });
 
+  const updateMessageMutation = useMutation({
+    mutationFn: ({
+      messageId,
+      messageData,
+    }: {
+      messageId: string;
+      messageData: RecomendationMessage;
+    }) => updateRecomendationMessage(userId, messageId, messageData),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['messages', userId]);
+    },
+  });
+
+  const deleteMessageMutation = useMutation({
+    mutationFn: ({ messageId }: { messageId: string }) =>
+      deleteRecomendationMessage(userId, messageId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['messages', userId]);
+    },
+  });
+
+  const handleClose = async () => {
+    if (messages) {
+      const unreadMessages = messages.filter((msg) => !msg.isRead);
+      await Promise.all(
+        unreadMessages.map((msg) =>
+          updateMessageMutation.mutateAsync({
+            messageId: String(msg.id),
+            messageData: msg,
+          }),
+        ),
+      );
+    }
+
+    onClose();
+  };
+
   return (
-    <Drawer.Root size="sm" open={open} onOpenChange={(e) => !e.open && onClose()}>
+    <Drawer.Root
+      size="sm"
+      open={open}
+      onOpenChange={async (e) => {
+        if (!e.open) {
+          await handleClose();
+        }
+      }}
+    >
       <Portal>
         <Drawer.Backdrop />
         <Drawer.Positioner>
@@ -43,7 +93,7 @@ export const MessagesDrawer = ({ open, onClose }: Props) => {
                         <Flex flexDir="row" alignItems="center" gap={2}>
                           <MdError color="#F97316" size="1.5rem" />
                           <Text fontSize="lg" fontWeight="bold" color="black">
-                            Непрочитане повідомлення
+                            {msg.isRead ? 'Прочитане повідомлення' : 'Непрочитане повідомлення'}
                           </Text>
                           <IconButton
                             aria-label="Delete notification"
@@ -51,6 +101,9 @@ export const MessagesDrawer = ({ open, onClose }: Props) => {
                             colorPalette="red"
                             ml="auto"
                             mr={2}
+                            onClick={() =>
+                              deleteMessageMutation.mutate({ messageId: String(msg.id) })
+                            }
                           >
                             <MdDeleteOutline size="1.5rem" />
                           </IconButton>
@@ -71,7 +124,7 @@ export const MessagesDrawer = ({ open, onClose }: Props) => {
             </Drawer.Body>
             <Drawer.CloseTrigger asChild>
               <Button
-                onClick={onClose}
+                onClick={handleClose}
                 color="white"
                 fontWeight="bold"
                 fontSize="lg"
