@@ -34,7 +34,7 @@ export const TopicBarChart = ({ data }: { data: TopicStat[] }) => {
       fontWeight="semibold"
       w="100%"
       h="280px"
-      maxW="710px"
+      maxW={{ base: '280px', md: '710px' }}
       flexDir="column"
       position="relative"
       bg="white"
