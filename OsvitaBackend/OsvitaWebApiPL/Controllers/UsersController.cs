@@ -22,8 +22,9 @@ namespace OsvitaWebApiPL.Controllers
         private readonly IEducationPlanService educationPlanService;
         private readonly IRecomendationService recomendationService;
         private readonly IAssignmentService assignmentService;
+        private readonly IDailyAssignmentService dailyAssignmentService;
 
-        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IAssignmentService assignmentService, IEducationClassService educationClassService, IStatisticReportService statisticReportService)
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IAssignmentService assignmentService, IEducationClassService educationClassService, IStatisticReportService statisticReportService, IDailyAssignmentService dailyAssignmentService)
         {
             this.statisticService = statisticService;
             this.userService = userService;
@@ -33,6 +34,8 @@ namespace OsvitaWebApiPL.Controllers
             this.assignmentService = assignmentService;
             this.educationClassService = educationClassService;
             this.statisticReportService = statisticReportService;
+            this.dailyAssignmentService = dailyAssignmentService;
+
         }
 
         // GET api/users/5/statistic/
@@ -158,7 +161,7 @@ namespace OsvitaWebApiPL.Controllers
         {
             try
             {
-                var dailyAssignmentSet = await assignmentService.GetDailyAssignmentSetAsync(id);
+                var dailyAssignmentSet = await dailyAssignmentService.GetDailyAssignmentSetAsync(id);
                 return Ok(dailyAssignmentSet);
             }
             catch (Exception ex)

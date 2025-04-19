@@ -12,8 +12,5 @@ namespace OsvitaBLL.Interfaces
         Task UpdateAssignmentAsync(AssignmentModel model);
         Task<int> AddAssignmentSetAsync(AssignmentSetModel optionsModel);
         Task<AssignmentSetModel> GetAssignmentSetByIdAsync(int id);
-        Task AddDailyAssignmentAsync(int userId);
-        Task<AssignmentSetModel> GetDailyAssignmentSetAsync(int userId);
-        Task<int> CountDailySetsToAdd(int userId);
     }
 }

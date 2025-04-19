@@ -59,6 +59,7 @@ public class Program
         builder.Services.AddTransient<IMaterialService, MaterialService>();
         builder.Services.AddTransient<IContentBlockService, ContentBlockService>();
         builder.Services.AddTransient<IAssignmentService, AssignmentService>();
+        builder.Services.AddTransient<IDailyAssignmentService, DailyAssignmentService>();
         builder.Services.AddTransient<IUserService, UserService>();
         builder.Services.AddTransient<IEducationClassService, EducationClassService>();
         builder.Services.AddTransient<IStatisticService, StatisticService>();
