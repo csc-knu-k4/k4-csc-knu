@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Text } from '@chakra-ui/react';
+import { Flex, Table, Text } from '@chakra-ui/react';
 import { UserAvatar } from '@/shared/ui/Avatar';
 import { useParams } from 'react-router-dom';
 import { getClassesStatisticAssignmentsByAssingmentSetId } from '@/shared/api/classesApi';
@@ -57,7 +57,7 @@ const ClassMarksDetails = () => {
   const maxAssignments = Math.max(...data.map((item) => item.assignments.length), 0);
 
   return (
-    <>
+    <Flex overflowY="auto" flexDir="column" p={2} height="calc(100vh - 160px)">
       <Text fontSize="xl" fontWeight="bold" mb={4}>
         {data[0]?.objectName}
       </Text>
@@ -136,7 +136,7 @@ const ClassMarksDetails = () => {
           }}
         />
       )}
-    </>
+    </Flex>
   );
 };
 
