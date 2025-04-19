@@ -43,7 +43,7 @@ export const AssistantDrawer = () => {
           <Drawer.Positioner>
             <Drawer.Content>
               <Drawer.Header bgColor="white" color="black" fontSize="lg" fontWeight="bold">
-                🧠 AI-Помічник
+                🧠 Асистент
               </Drawer.Header>
               <Drawer.Body bgColor="white">
                 <VStack gap={2}>
