@@ -351,7 +351,7 @@ namespace OsvitaBLL.Services
                 ObjectModelType = ObjectModelType.DailyModel,
                 ObjectId = (await unitOfWork.SubjectRepository.GetAllAsync()).First(x => true).Id, // only math
             };
-            var assignmentSetId = await AddAssignmentSetAsync(assignmentSetModel);
+            var assignmentSetId = await AddDailyAssignmentSetAsync(assignmentSetModel, userId);
             await unitOfWork.SaveChangesAsync();
             var dailyAssignmentModel = new DailyAssignmentModel
             {
