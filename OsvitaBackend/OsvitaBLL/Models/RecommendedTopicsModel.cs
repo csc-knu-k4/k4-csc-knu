@@ -1,6 +1,6 @@
 ﻿namespace OsvitaBLL.Models
 {
-    public class RecommendedTopicsAIModel
+    public class RecommendedTopicsModel
     {
         public List<int> TopicIds { get; set; }
     }

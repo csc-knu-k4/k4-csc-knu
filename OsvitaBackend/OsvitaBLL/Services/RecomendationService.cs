@@ -62,6 +62,26 @@ namespace OsvitaBLL.Services
             }
         }
 
+        public async Task<List<int>> GetRecommendedTopicIdsAsync(int userId)
+        {
+            var assignmentSetsCount = 7;
+            var assignmentSetReportModels = await statisticReportService.GetLastAssignmetSetsReportsAsync(userId, assignmentSetsCount);
+            var assignmentReportModels = assignmentSetReportModels.SelectMany(x => x.Assignments).ToList();
+            try
+            {
+                if (assignmentReportModels.Count > 0)
+                {
+                    var recommendedTopicsModel = await aiService.GetRecommendedTopicsByAssignmentsResult(assignmentReportModels);
+                    return recommendedTopicsModel.TopicIds;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return new List<int>();
+        }
+
         public async Task<RecomendationMessageModel> GetTodayRecomendationMessageAsync(int userId)
         {
             var recomendationMessage = (await recomendationMessageRepository.GetAllAsync()).FirstOrDefault(x => x.UserId == userId && x.CreationDate.Date == DateTime.Today.Date);

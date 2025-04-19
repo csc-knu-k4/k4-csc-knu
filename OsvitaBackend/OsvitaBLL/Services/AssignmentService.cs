@@ -19,15 +19,18 @@ namespace OsvitaBLL.Services
         private readonly IAssignmentSetRepository assignmentSetRepository;
         private readonly IAnswerRepository answerRepository;
         private readonly IAssignmentLinkRepository assignmentLinkRepository;
+        private readonly IRecomendationService recommendationService;
+        private readonly ITopicService topicService;
         private readonly IMapper mapper;
 
-        public AssignmentService(IUnitOfWork unitOfWork, IMapper mapper)
+        public AssignmentService(IUnitOfWork unitOfWork, IRecomendationService recommendationService, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             assignmentRepository = unitOfWork.AssignmentRepository;
             assignmentSetRepository = unitOfWork.AssignmentSetRepository;
             answerRepository = unitOfWork.AnswerRepository;
             assignmentLinkRepository = unitOfWork.AssignmentLinkRepository;
+            this.recommendationService = recommendationService;
             this.mapper = mapper;
         }
 
@@ -139,9 +142,24 @@ namespace OsvitaBLL.Services
             {
                 await GenerateDiagnosticalAssignmentSetAsync(assignmentSet);
             }
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSet.Id;
+        }
+
+        public async Task<int> AddDailyAssignmentSetAsync(AssignmentSetModel model, int userId)
+        {
+            var assignmentSet = mapper.Map<AssignmentSetModel, AssignmentSet>(model);
+            await assignmentSetRepository.AddAsync(assignmentSet);
+            await unitOfWork.SaveChangesAsync();
             if (assignmentSet.ObjectType == ObjectType.Daily)
             {
-                await GenerateDailyAssignmentSetAsync(assignmentSet);
+                var topicIds = await recommendationService.GetRecommendedTopicIdsAsync(userId);
+                if (topicIds.Count == 0)
+                {
+                    var topics = await topicService.GetAllAsync(); // incorrect if subjects aren't only math :(
+                    topicIds = topics.Select(x => x.Id).ToList();
+                }
+                await GenerateDailyAssignmentSetAsync(assignmentSet, topicIds);
             }
             await unitOfWork.SaveChangesAsync();
             return assignmentSet.Id;
@@ -346,13 +364,12 @@ namespace OsvitaBLL.Services
             await unitOfWork.SaveChangesAsync();
         }
 
-        private async Task<int> GenerateDailyAssignmentSetAsync(AssignmentSet assignmentSet)
+        private async Task<int> GenerateDailyAssignmentSetAsync(AssignmentSet assignmentSet, List<int> topicIds)
         {
             var oneAnswerAssignmentsForTestCount = 1;
             var openAnswerAssignmentsForTestCount = 1;
             var matchComplianceAssignmentsForTestCount = 1;
             var chapterIds = (await unitOfWork.SubjectRepository.GetByIdWithDetailsAsync(assignmentSet.ObjectId)).Chapters.Select(x => x.Id);
-            var topicIds = (await unitOfWork.TopicRepository.GetAllAsync()).Where(x => chapterIds.Contains(x.ChapterId)).Select(x => x.Id);
             var materialIds = (await unitOfWork.MaterialRepository.GetAllAsync()).Where(x => topicIds.Contains(x.TopicId)).Select(x => x.Id);
             var assignmentsIds = (await assignmentLinkRepository.GetAllAsync()).Where(x => materialIds.Contains(x.ObjectId) && x.ObjectType == ObjectType.Material).Select(x => x.AssignmentId);
             var allAssignments = (await assignmentRepository.GetAllWithDetailsAsync()).ToList();
