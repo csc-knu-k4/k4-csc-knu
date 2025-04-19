@@ -90,6 +90,45 @@ namespace OsvitaBLL.Services
             return result;
         }
 
+        public async Task<RecommendedTopicsAIModel> GetRecommendedTopicsByAssignmentsResult(List<AssignmentReportModel> assignmentReportModels)
+        {
+            ChatClient client = new(model: openAISettings.Model, apiKey: openAISettings.ApiKey);
+            ChatCompletionOptions options = new()
+            {
+                ResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
+                    jsonSchemaFormatName: "math_reasoning",
+                    jsonSchema: BinaryData.FromBytes("""
+                        {
+                            "type": "object",
+                            "properties": {
+                                "TopicIds": {
+                                    "type": "array",
+                                    "items": { "type": "number" }
+                                }
+                            },
+                            "required": ["TopicIds"],
+                            "additionalProperties": false
+                        }
+                        """u8.ToArray()),
+                    jsonSchemaIsStrict: true)
+            };
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Ти вчитель. Проаналізуй статистику проходження тестів за темами при підготовці до іспиту у форматі НМТ і порадь учню навчальний план підготовки:");
+            foreach (var model in assignmentReportModels.GroupBy(x => x.TopicId))
+            {
+                stringBuilder.AppendLine($"Тема: \"{model.First().TopicName}\"; Результат: {model.Sum(x => x.Points)}; Максимальний результат: {model.Sum(x => x.MaxPoints)}; ID теми: {model.Key}");
+            }
+            stringBuilder.AppendLine($"Відповідь у вигляді списку аналізу тем. В TopicIds запиши ID тем, які необхідно вивчити. Не вигадуй власні ID. Бери ID лише з інформації про проходження тем.");
+            var messages = new List<ChatMessage>
+            {
+                new UserChatMessage(stringBuilder.ToString())
+            };
+            ChatCompletion completion = await client.CompleteChatAsync(messages, options);
+            var result = JsonSerializer.Deserialize<RecommendedTopicsAIModel>(completion.Content[0].Text);
+
+            return result;
+        }
+
         public async Task<AssistantResponseModel> GetChatAssistantResponseAsync(AssistantRequestModel assistantRequestModel)
         {
             ChatClient client = new(model: openAISettings.Model, apiKey: openAISettings.ApiKey);
