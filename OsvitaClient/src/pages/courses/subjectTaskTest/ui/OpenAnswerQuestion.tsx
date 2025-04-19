@@ -38,7 +38,7 @@ const OpenAnswerQuestion = ({
       </Text>
       {data.problemDescriptionImage && (
         <Image
-          src={`${'http://localhost:5134'}${data.problemDescriptionImage}`}
+          src={`${import.meta.env.VITE_IMG_URL}${data.problemDescriptionImage}`}
           alt="зображення до завдання"
           borderRadius="lg"
           maxW="100%"

@@ -109,7 +109,7 @@ const SubjectTaskTopic = () => {
                     ) : (
                       <Image
                         key={block.id}
-                        src={`${'http://localhost:5134/'}${block.value}`}
+                        src={`${import.meta.env.VITE_IMG_URL}${block.value}`}
                         alt={block.title}
                         borderRadius="lg"
                         maxW="100%"
