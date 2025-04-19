@@ -90,7 +90,7 @@ namespace OsvitaBLL.Services
             return result;
         }
 
-        public async Task<RecommendedTopicsAIModel> GetRecommendedTopicsByAssignmentsResult(List<AssignmentReportModel> assignmentReportModels)
+        public async Task<RecommendedTopicsModel> GetRecommendedTopicsByAssignmentsResult(List<AssignmentReportModel> assignmentReportModels)
         {
             ChatClient client = new(model: openAISettings.Model, apiKey: openAISettings.ApiKey);
             ChatCompletionOptions options = new()
@@ -124,7 +124,7 @@ namespace OsvitaBLL.Services
                 new UserChatMessage(stringBuilder.ToString())
             };
             ChatCompletion completion = await client.CompleteChatAsync(messages, options);
-            var result = JsonSerializer.Deserialize<RecommendedTopicsAIModel>(completion.Content[0].Text);
+            var result = JsonSerializer.Deserialize<RecommendedTopicsModel>(completion.Content[0].Text);
 
             return result;
         }
