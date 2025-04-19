@@ -72,7 +72,7 @@ const MatchAssignment = ({
 
       {data.problemDescriptionImage && (
         <Image
-          src={`${'http://localhost:5134'}${data.problemDescriptionImage}`}
+          src={`${import.meta.env.VITE_IMG_URL}${data.problemDescriptionImage}`}
           alt="зображення до завдання"
           borderRadius="lg"
           maxW="100%"
@@ -113,7 +113,7 @@ const MatchAssignment = ({
               </Text>
               {v.valueImage ? (
                 <Image
-                  src={`${'http://localhost:5134'}${v.valueImage}`}
+                  src={`${import.meta.env.VITE_IMG_URL}${v.valueImage}`}
                   alt={`Варіант ${alphabet[i]}`}
                   borderRadius="md"
                   maxW="140px"

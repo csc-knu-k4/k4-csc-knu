@@ -41,8 +41,8 @@ export const TopicBarChart = ({ data }: { data: TopicStat[] }) => {
     >
       <NativeSelect.Root size="sm" width="100%" maxW="320px" mb={4}>
         <NativeSelect.Field
-          value={selected.objectId}
-          onChange={(value) => setSelectedTopicId(Number(value))}
+          value={selectedTopicId ?? ''}
+          onChange={(e) => setSelectedTopicId(Number(e.currentTarget.value))}
         >
           {topics.map((topic) => (
             <option key={topic.objectId} value={topic.objectId}>

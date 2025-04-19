@@ -1,6 +1,7 @@
 import { sendAssistantMessage } from '@/shared/api/assistantApt';
-import { Button, Drawer, Input, Text, VStack, Spinner, Portal } from '@chakra-ui/react';
+import { Button, Drawer, Input, VStack, Spinner, Portal, Box } from '@chakra-ui/react';
 import { useState } from 'react';
+import './assistant.styles.scss';
 
 export const AssistantDrawer = () => {
   const [open, setOpen] = useState(false);
@@ -43,7 +44,7 @@ export const AssistantDrawer = () => {
           <Drawer.Positioner>
             <Drawer.Content>
               <Drawer.Header bgColor="white" color="black" fontSize="lg" fontWeight="bold">
-                🧠 AI-Помічник
+                🧠 Асистент
               </Drawer.Header>
               <Drawer.Body bgColor="white">
                 <VStack gap={2}>
@@ -68,9 +69,12 @@ export const AssistantDrawer = () => {
 
                   {loading && <Spinner />}
                   {response && (
-                    <Text color="black" whiteSpace="pre-wrap">
-                      {response}
-                    </Text>
+                    <Box
+                      whiteSpace="pre-wrap"
+                      mb={4}
+                      className="quill-content"
+                      dangerouslySetInnerHTML={{ __html: response }}
+                    />
                   )}
                 </VStack>
               </Drawer.Body>
