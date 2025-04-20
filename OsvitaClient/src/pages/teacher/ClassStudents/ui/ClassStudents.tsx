@@ -3,7 +3,6 @@ import {
   Flex,
   VStack,
   Text,
-  Menu,
   Portal,
   Popover,
   IconButton,
@@ -11,7 +10,6 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import { LuPlus } from 'react-icons/lu';
-import { HiDotsVertical } from 'react-icons/hi';
 import { IoPaperPlane } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -120,39 +118,27 @@ const ClassStudents = () => {
           У класі поки немає учнів
         </Text>
       ) : (
-        <VStack gap={4} mt={6}>
-          {studentUsers.map((user) => (
-            <Flex
-              key={user.id}
-              borderRadius="1rem"
-              w="full"
-              boxShadow="sm"
-              p="1rem"
-              flexDir="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Flex gap={4} flexDir="row" alignItems="center">
-                <Avatar name={`${user.firstName} ${user.secondName}`} />
-                <Text fontSize="md">{`${user.secondName} ${user.firstName}`}</Text>
+        <Flex overflowY="auto" flexDir="column" p={2} height="calc(100vh - 260px)">
+          <VStack gap={4} mt={6}>
+            {studentUsers.map((user) => (
+              <Flex
+                key={user.id}
+                borderRadius="1rem"
+                w="full"
+                boxShadow="sm"
+                p="1rem"
+                flexDir="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Flex gap={4} flexDir="row" alignItems="center">
+                  <Avatar name={`${user.firstName} ${user.secondName}`} />
+                  <Text fontSize="md">{`${user.secondName} ${user.firstName}`}</Text>
+                </Flex>
               </Flex>
-              <Menu.Root>
-                <Menu.Trigger asChild>
-                  <Button maxW="3rem" variant="plain">
-                    <HiDotsVertical size="42px" color="rgb(234, 88, 12)" />
-                  </Button>
-                </Menu.Trigger>
-                <Portal>
-                  <Menu.Positioner>
-                    <Menu.Content>
-                      <Menu.Item value="delete">Видалити</Menu.Item>
-                    </Menu.Content>
-                  </Menu.Positioner>
-                </Portal>
-              </Menu.Root>
-            </Flex>
-          ))}
-        </VStack>
+            ))}
+          </VStack>
+        </Flex>
       )}
     </>
   );

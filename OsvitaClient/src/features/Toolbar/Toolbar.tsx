@@ -71,7 +71,7 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
                 )}
                 {isTeacher && (
                   <Menu.Item value="teacher" onClick={() => navigate('/teacher/class-task')}>
-                    👨‍🏫 Викладач
+                    👨‍🏫 Вчитель
                   </Menu.Item>
                 )}
                 {isAdmin && (
