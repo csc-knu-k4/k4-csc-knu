@@ -1,7 +1,7 @@
 import { Box, Flex, HStack, IconButton, Menu, Portal, Button } from '@chakra-ui/react';
 import { UserAvatar } from '@/shared/ui/Avatar';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SiteLogo } from '@/shared/ui/SiteLogo';
 import { MessagesDrawer } from './MessagesDrawer';
 import { useState } from 'react';
@@ -13,7 +13,9 @@ interface ToolbarProps {
 
 export function Toolbar({ onMenuToggle }: ToolbarProps) {
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const isAdminOrTeacherRoute =
+    location.pathname.startsWith('/admin') || location.pathname.startsWith('/teacher');
   const handleLogout = () => {
     localStorage.clear();
     navigate('/');
@@ -28,15 +30,17 @@ export function Toolbar({ onMenuToggle }: ToolbarProps) {
     <Box bg="white" p={{ base: 2, md: 4 }} borderRadius="1rem" w="full">
       <Flex justifyContent="space-between" alignItems="center">
         <HStack>
-          <IconButton
-            aria-label="Toggle Sidebar"
-            display={{ base: 'flex', md: 'none' }}
-            onClick={onMenuToggle}
-            colorPalette="orange"
-            variant="outline"
-          >
-            <GiHamburgerMenu />
-          </IconButton>
+          {isAdminOrTeacherRoute && (
+            <IconButton
+              aria-label="Toggle Sidebar"
+              display={{ base: 'flex', md: 'none' }}
+              onClick={onMenuToggle}
+              colorPalette="orange"
+              variant="outline"
+            >
+              <GiHamburgerMenu />
+            </IconButton>
+          )}
           <SiteLogo />
         </HStack>
         <IconButton
