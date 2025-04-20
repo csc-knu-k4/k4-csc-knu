@@ -8,23 +8,25 @@ using OsvitaDAL.Repositories;
 
 namespace OsvitaBLL.Services
 {
-    public class DailyAssignmentService : AssignmentService, IDailyAssignmentService
+    public class DailyAssignmentService : IDailyAssignmentService
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAssignmentRepository assignmentRepository;
         private readonly IAssignmentSetRepository assignmentSetRepository;
         private readonly IAssignmentLinkRepository assignmentLinkRepository;
         private readonly IRecomendationService recommendationService;
+        private readonly IAssignmentService assignmentService;
         private readonly ITopicService topicService;
         private readonly IMapper mapper;
 
-        public DailyAssignmentService(IUnitOfWork unitOfWork, IRecomendationService recommendationService, ITopicService topicService, IMapper mapper) : base(unitOfWork, mapper)
+        public DailyAssignmentService(IUnitOfWork unitOfWork, IRecomendationService recommendationService, IAssignmentService assignmentService, ITopicService topicService, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.assignmentRepository = unitOfWork.AssignmentRepository;
             this.assignmentSetRepository = unitOfWork.AssignmentSetRepository;
             this.assignmentLinkRepository = unitOfWork.AssignmentLinkRepository;
             this.recommendationService = recommendationService;
+            this.assignmentService = assignmentService;
             this.topicService = topicService;
             this.mapper = mapper;
         }
@@ -130,7 +132,7 @@ namespace OsvitaBLL.Services
             if (notStarted == null)
                 return null;
 
-            var assignmentSetModel = await GetAssignmentSetByIdAsync(notStarted.AssignmentSetId);
+            var assignmentSetModel = await assignmentService.GetAssignmentSetByIdAsync(notStarted.AssignmentSetId);
 
             return assignmentSetModel;
         }
