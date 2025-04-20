@@ -2,6 +2,7 @@ import { lazy } from 'react';
 
 export const BaseLayout = lazy(() => import('@/app/layouts/BaseLayout/BaseLayout'));
 export const CourseLayout = lazy(() => import('@/app/layouts/CourseLayout/CourseLayout'));
+export const TeacherLayout = lazy(() => import('@/app/layouts/TeacherLayout/TeacherLayout'));
 export const AddMaterial = lazy(() => import('@/pages/admin/addMaterial/ui/AddMaterial'));
 export const AddChapter = lazy(() => import('@/pages/admin/addSection/ui/AddChapter'));
 export const AddSubject = lazy(() => import('@/pages/admin/addSubject/ui/AddSubject'));
@@ -28,3 +29,28 @@ export const SubjectTaskMaterial = lazy(
 export const SubjectTaskTest = lazy(
   () => import('@/pages/courses/subjectTaskTest/ui/SubjectTaskTest'),
 );
+export const ClassTabs = lazy(() => import('@/pages/teacher/Tabs/ui/ClassTabs'));
+export const ClassTask = lazy(() => import('@/pages/teacher/ClassTask/ui/ClassTask'));
+export const ClassMarks = lazy(() => import('@/pages/teacher/ClassMarks/ui/ClassMarks'));
+export const ClassStudents = lazy(() => import('@/pages/teacher/ClassStudents/ui/ClassStudents'));
+export const ClassMarksDetails = lazy(
+  () => import('@/pages/teacher/ClassMarksDetails/ui/ClassMarksDetails'),
+);
+export const Profile = lazy(() => import('@/pages/profile/ui/Profile'));
+export const ClassTaskCreate = lazy(
+  () => import('@/pages/teacher/ClassTaskCreate/ui/ClassTaskCreate'),
+);
+
+export const StudentEducationPlan = lazy(
+  () => import('@/pages/StudentEducationPlan/ui/StudentEducationPlan'),
+);
+
+export const StudentTestPage = lazy(
+  () => import('@/pages/StudentEducationPlan/ui/StudentTestPage'),
+);
+
+export const SubjectTaskTopic = lazy(
+  () => import('@/pages/courses/subjectTaskTopic/ui/SubjectTaskTopic'),
+);
+
+export const DailyAssignmentPage = lazy(() => import('@/pages/profile/ui/DailyAssignmentPage'));

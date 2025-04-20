@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaBLL.Services;
+using OsvitaDAL.Entities;
 using OsvitaWebApiPL.Models;
 
 namespace OsvitaWebApiPL.Controllers
@@ -12,17 +13,28 @@ namespace OsvitaWebApiPL.Controllers
     {
         private readonly IEducationClassService educationClassService;
         private readonly IEducationClassPlanService educationClassPlanService;
-        public EducationClassesController(IEducationClassService educationClassService, IEducationClassPlanService educationClassPlanService)
+        private readonly IStatisticReportService statisticReportService;
+        public EducationClassesController(IEducationClassService educationClassService, IEducationClassPlanService educationClassPlanService, IStatisticReportService statisticReportService)
         {
             this.educationClassService = educationClassService;
             this.educationClassPlanService = educationClassPlanService;
+            this.statisticReportService = statisticReportService;
         }
 
         // GET: api/classes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EducationClassModel>>> Get()
+        public async Task<ActionResult<IEnumerable<EducationClassModel>>> Get([FromQuery] int? teacherId)
         {
-            var educationClassesModels = await educationClassService.GetAllAsync();
+            IEnumerable<EducationClassModel> educationClassesModels;
+            if (teacherId is not null)
+            {
+                educationClassesModels = await educationClassService.GetByTeacherIdAsync((int)teacherId);
+            }
+            else
+            {
+                educationClassesModels = await educationClassService.GetAllAsync();
+            }
+            
             if (educationClassesModels is not null)
             {
                 return Ok(educationClassesModels);
@@ -189,6 +201,30 @@ namespace OsvitaWebApiPL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // GET api/classes/5/statistic/assignments/5
+        [HttpGet("{id}/statistic/assignments/{assignmentSetId}")]
+        public async Task<ActionResult<EducationClassPlanModel>> GetEducationClassPlan(int id, int assignmentSetId)
+        {
+            var report = await statisticReportService.GetEducationClassAssignmetSetReportModelAsync(id, assignmentSetId);
+            if (report is not null)
+            {
+                return Ok(report);
+            }
+            return NotFound();
+        }
+
+        // GET api/classes/5/educationplanvm
+        [HttpGet("{id}/educationplanvm")]
+        public async Task<ActionResult<EducationClassPlanVm>> GetEducationClassPlanVm(int id)
+        {
+            var educationClassPlansModel = await educationClassService.GetEducationClassPlanByEducationClassIdAsync(id);
+            if (educationClassPlansModel is not null)
+            {
+                return Ok(educationClassPlansModel);
+            }
+            return NotFound();
         }
     }
 }

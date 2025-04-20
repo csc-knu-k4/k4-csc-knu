@@ -114,6 +114,18 @@ namespace OsvitaWebApiPL.Configurations
                 );
             });
 
+            services.AddQuartz(q =>
+            {
+                var jobKey = new JobKey("AddDailyAssignmentJob");
+                q.AddJob<AddDailyAssignmentJob>(opts => opts.WithIdentity(jobKey));
+
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("AddDailyAssignmentJob-trigger")
+                    .WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 0, 0))
+                );
+            });
+
             services.AddQuartzServer(options =>
             {
                 options.WaitForJobsToComplete = true;

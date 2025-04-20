@@ -72,7 +72,7 @@ const MatchAssignment = ({
 
       {data.problemDescriptionImage && (
         <Image
-          src={`${window.location.origin}${data.problemDescriptionImage}`}
+          src={`${import.meta.env.VITE_IMG_URL}${data.problemDescriptionImage}`}
           alt="зображення до завдання"
           borderRadius="lg"
           maxW="100%"
@@ -91,7 +91,7 @@ const MatchAssignment = ({
               </Text>
               {child.problemDescriptionImage ? (
                 <Image
-                  src={`${window.location.origin}${child.problemDescriptionImage}`}
+                  src={`${'http://localhost:5134'}${child.problemDescriptionImage}`}
                   alt={`Запитання ${i + 1}`}
                   borderRadius="md"
                   maxW="140px"
@@ -113,7 +113,7 @@ const MatchAssignment = ({
               </Text>
               {v.valueImage ? (
                 <Image
-                  src={`${window.location.origin}${v.valueImage}`}
+                  src={`${import.meta.env.VITE_IMG_URL}${v.valueImage}`}
                   alt={`Варіант ${alphabet[i]}`}
                   borderRadius="md"
                   maxW="140px"

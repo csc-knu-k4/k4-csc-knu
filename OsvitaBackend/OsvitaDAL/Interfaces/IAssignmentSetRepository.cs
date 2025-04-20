@@ -5,6 +5,6 @@ namespace OsvitaDAL.Interfaces
 {
 	public interface IAssignmentSetRepository : IRepository<AssignmentSet>
 	{
-	}
+    }
 }
 

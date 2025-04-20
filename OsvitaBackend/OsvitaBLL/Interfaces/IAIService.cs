@@ -9,6 +9,7 @@ namespace OsvitaBLL.Interfaces
         Task<string> GetRecomendationTextByDiagnosticalAssignmentSetResultAsync(AssignmentSetReportModel assignmentSetReportModel);
         Task<string> GetRecomendationTextByAssignmentResultsAsync(List<AssignmentReportModel> assignmentReportModels);
         Task<RecomendationAIModel> GetRecomendationByDiagnosticalAssignmentSetResultAsync(AssignmentSetReportModel assignmentSetReportModel);
+        Task<AssistantResponseModel> GetChatAssistantResponseAsync(AssistantRequestModel assistantRequestModel);
     }
 }
 

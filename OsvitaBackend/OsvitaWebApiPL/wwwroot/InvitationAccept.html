@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Підтвердженння запрошення</title>
+		<style>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+				background: linear-gradient(135deg, #e0f7fa, #e1bee7);
+				height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				color: #333;
+			}
+
+			.card {
+				background: white;
+				padding: 2rem 3rem;
+				border-radius: 1rem;
+				box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+				max-width: 500px;
+				text-align: center;
+			}
+
+			.card h1 {
+				font-size: 2rem;
+				color: #4a148c;
+				margin-bottom: 1rem;
+			}
+
+			.card p {
+				font-size: 1.1rem;
+				margin-bottom: 2rem;
+			}
+		</style>
+		<script>
+			function getUrlParam(name) {
+				const urlParams = new URLSearchParams(window.location.search);
+				return urlParams.get(name);
+			}
+
+			window.onload = function () {
+				const id = getUrlParam("id");
+				const userId = getUrlParam("userId");
+				const guid = getUrlParam("guid");
+
+				if (id && userId && guid) {
+					const url = `/api/classes/${id}/students/${userId}/confirmations/${guid}`;
+
+					fetch(url);
+				} else {
+					console.error("Invalid params");
+				}
+			};
+		</script>
+	</head>
+	<body>
+		<div class="card">
+			<h1>🎉 Вас додано до класу!</h1>
+			<p>Тепер ви можете повернутися до виконання ваших завдань.</p>
+		</div>
+	</body>
+</html>

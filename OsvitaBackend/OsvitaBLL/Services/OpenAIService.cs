@@ -77,7 +77,7 @@ namespace OsvitaBLL.Services
             stringBuilder.AppendLine("Ти вчитель. Проаналізуй статистику проходження тестів за темами при підготовці до іспиту у форматі НМТ і порадь учню навчальний план підготовки:");
             foreach (var model in assignmentSetReportModel.Assignments.GroupBy(x => x.TopicId))
             {
-                stringBuilder.AppendLine($"Тема: \"{model.First().TopicName}\"; Результат: {model.Sum(x => x.MaxPoints)}; Максимальний результат: {model.Sum(x => x.MaxPoints)}; ID теми: {model.Key}");
+                stringBuilder.AppendLine($"Тема: \"{model.First().TopicName}\"; Результат: {model.Sum(x => x.Points)}; Максимальний результат: {model.Sum(x => x.MaxPoints)}; ID теми: {model.Key}");
             }
             stringBuilder.AppendLine($"Розмір відповіді повинна бути не більше 10 рядків тексту. Звертайся до учня. Привітання не потрібне. Відповідь у вигляді списку аналізу тем. В RecomendationText ніколи не згадуй про ID. В TopicIds запиши ID тем, які необхідно вивчити. Не вигадуй власні ID. Бери ID лише з інформації про проходження тем.");
             var messages = new List<ChatMessage>
@@ -88,6 +88,24 @@ namespace OsvitaBLL.Services
             var result = JsonSerializer.Deserialize<RecomendationAIModel>(completion.Content[0].Text);
 
             return result;
+        }
+
+        public async Task<AssistantResponseModel> GetChatAssistantResponseAsync(AssistantRequestModel assistantRequestModel)
+        {
+            ChatClient client = new(model: openAISettings.Model, apiKey: openAISettings.ApiKey);
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Ти вчитель. Учень готується до іспиту. Учень питає визначення терміну. Поясни визначення терміну. Якщо терміну не існує або питання немає, надсилай відповідь 'На жаль, я не можу Вам допогти.' Питання учня:");
+            stringBuilder.AppendLine($"{assistantRequestModel.RequestText}");
+            stringBuilder.AppendLine("Не використовуй Markdown");
+            ChatCompletion completion = await client.CompleteChatAsync(stringBuilder.ToString());
+            var assistantResponseModel = new AssistantResponseModel
+            {
+                UserId = assistantRequestModel.UserId,
+                CreationDate = DateTime.Now,
+                RequestText = assistantRequestModel.RequestText,
+                ResponseText = completion.Content[0].Text
+            };
+            return assistantResponseModel;
         }
     }
 }

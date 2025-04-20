@@ -186,9 +186,14 @@ namespace OsvitaDAL.Migrations
                     b.Property<int?>("EducationClassPlanId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("EducationPlanId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EducationClassPlanId");
+
+                    b.HasIndex("EducationPlanId");
 
                     b.ToTable("AssignmentSetPlanDetails");
                 });
@@ -278,6 +283,32 @@ namespace OsvitaDAL.Migrations
                     b.HasIndex("MaterialId");
 
                     b.ToTable("ContentBlocks");
+                });
+
+            modelBuilder.Entity("OsvitaDAL.Entities.DailyAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AssignmentSetId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignmentSetId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DailyAssignments");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.EducationClass", b =>
@@ -609,9 +640,17 @@ namespace OsvitaDAL.Migrations
 
             modelBuilder.Entity("OsvitaDAL.Entities.AssignmentSetPlanDetail", b =>
                 {
-                    b.HasOne("OsvitaDAL.Entities.EducationClassPlan", null)
+                    b.HasOne("OsvitaDAL.Entities.EducationClassPlan", "EducationClassPlan")
                         .WithMany("AssignmentSetPlanDetails")
                         .HasForeignKey("EducationClassPlanId");
+
+                    b.HasOne("OsvitaDAL.Entities.EducationPlan", "EducationPlan")
+                        .WithMany("AssignmentSetPlanDetails")
+                        .HasForeignKey("EducationPlanId");
+
+                    b.Navigation("EducationClassPlan");
+
+                    b.Navigation("EducationPlan");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.AssignmentSetProgressDetail", b =>
@@ -643,6 +682,25 @@ namespace OsvitaDAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Material");
+                });
+
+            modelBuilder.Entity("OsvitaDAL.Entities.DailyAssignment", b =>
+                {
+                    b.HasOne("OsvitaDAL.Entities.AssignmentSet", "AssignmentSet")
+                        .WithMany()
+                        .HasForeignKey("AssignmentSetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OsvitaDAL.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignmentSet");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("OsvitaDAL.Entities.EducationClass", b =>
@@ -788,6 +846,8 @@ namespace OsvitaDAL.Migrations
 
             modelBuilder.Entity("OsvitaDAL.Entities.EducationPlan", b =>
                 {
+                    b.Navigation("AssignmentSetPlanDetails");
+
                     b.Navigation("TopicPlanDetails");
                 });
 

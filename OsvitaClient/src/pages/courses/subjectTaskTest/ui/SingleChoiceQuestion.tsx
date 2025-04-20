@@ -27,11 +27,9 @@ const SingleChoiceQuestion = ({
     const shuffled = shuffle(data.answers);
     setShuffledAnswers(shuffled);
 
-    if (isFinished) {
-      const existing = userAnswers.find((a) => a.assignmentId === data.id);
-      if (existing) setSelected(existing.answerValue);
-    }
-  }, [data, isFinished]);
+    const existing = userAnswers.find((a) => a.assignmentId === data.id);
+    if (existing) setSelected(existing.answerValue);
+  }, []);
 
   const handleSelect = (ans: any) => {
     if (isFinished) return;
@@ -46,7 +44,7 @@ const SingleChoiceQuestion = ({
       </Text>
       {data.problemDescriptionImage && (
         <Image
-          src={`${window.location.origin}${data.problemDescriptionImage}`}
+          src={`${import.meta.env.VITE_IMG_URL}${data.problemDescriptionImage}`}
           alt="зображення до завдання"
           borderRadius="lg"
           maxW="100%"
@@ -108,8 +106,18 @@ const SingleChoiceQuestion = ({
 
       <HStack>
         {shuffledAnswers.map((ans, i) => {
-          const isCorrect = ans.isCorrect;
-          const isChecked = isFinished ? isCorrect : selected === ans.value;
+          const isUserAnswer = selected === ans.value;
+          const isCorrectAnswer = ans.isCorrect;
+
+          const isChecked = isFinished ? isUserAnswer || isCorrectAnswer : selected === ans.value;
+
+          const color = isFinished
+            ? isCorrectAnswer
+              ? 'green'
+              : isUserAnswer
+                ? 'orange'
+                : 'gray'
+            : 'orange';
 
           return (
             <Flex
@@ -125,8 +133,8 @@ const SingleChoiceQuestion = ({
                 checked={isChecked}
                 disabled={isFinished}
                 onChange={() => handleSelect(ans)}
-                borderColor={isFinished && isCorrect ? 'green.500' : 'orange'}
-                colorPalette={isFinished && isCorrect ? 'green' : 'orange'}
+                borderColor={color === 'green' ? 'green.500' : 'orange'}
+                colorPalette={color}
               />
             </Flex>
           );

@@ -1,4 +1,10 @@
+using System.Text;
+using OsvitaBLL.Interfaces;
 ﻿using System.Text;
+using Microsoft.Extensions.Options;
+using OpenAI;
+using OpenAI.Chat;
+using OsvitaBLL.Configurations;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaBLL.Models.ReportModels;
@@ -14,12 +20,46 @@ namespace OsvitaBLL.Services
         private readonly IAssignmentService assignmentService;
         private readonly IUnitOfWork unitOfWork;
         private readonly IAIService aiService;
-        public StatisticReportService(IStatisticService statisticService, IUnitOfWork unitOfWork, IAssignmentService assignmentService, IAIService aiService)
+        private readonly OpenAISettings openAISettings;
+        public StatisticReportService(IStatisticService statisticService, IUnitOfWork unitOfWork, IAssignmentService assignmentService, IOptions<OpenAISettings> openAISettings)
         {
             this.statisticService = statisticService;
             this.unitOfWork = unitOfWork;
             this.assignmentService = assignmentService;
             this.aiService = aiService;
+            this.openAISettings = openAISettings.Value;
+        }
+
+        public async Task<string> GenerateAssignmetSetsReportAIAsync(int userId, int assignmentSetProgressDetailId)
+        {
+            var models = new List<AssignmentSetReportModel>();
+            if (assignmentSetProgressDetailId > 0)
+            {
+                var model = await GetAssignmetSetReportModelAsync(userId, assignmentSetProgressDetailId);
+                models.Add(model);
+            }
+            else
+            {
+                var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
+                var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).Select(x => x.Id).ToList();
+                foreach (var id in assignmentSetProgressDetailsIds)
+                {
+                    var model = await GetAssignmetSetReportModelAsync(userId, id);
+                    models.Add(model);
+                }
+            }
+
+            ChatClient client = new(model: openAISettings.Model, apiKey: openAISettings.ApiKey);
+            
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Проаналізуй статистику проходження тестів за темами при підготовці до НМТ і порадь учню теми для вивчення:");
+            foreach (var model in models)
+            {
+                stringBuilder.AppendLine($"Тема: \"{model.ObjectName}\"; Результат: {model.Score}; Максимальний результат: {model.MaxScore}");
+            }
+            ChatCompletion completion = client.CompleteChat(stringBuilder.ToString());
+
+            return completion.Content[0].Text; 
         }
 
         public async Task<byte[]> GenerateAssignmetSetsReportAsync(int userId, int assignmentSetProgressDetailId)
@@ -51,11 +91,18 @@ namespace OsvitaBLL.Services
             if (assignmentSetsCount > 0)
             {
                 var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
-                var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).OrderBy(x => x.CompletedDate).Take(assignmentSetsCount).Select(x => x.Id).ToList();
+                var assignmentSetProgressDetailsIds = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).OrderBy(x => x.CompletedDate).Select(x => x.Id).ToList();
                 foreach (var id in assignmentSetProgressDetailsIds)
                 {
                     var model = await GetAssignmetSetReportModelAsync(userId, id);
-                    models.Add(model);
+                    if (model.ObjectType == ObjectModelType.TopicModel)
+                    {
+                        models.Add(model);
+                    }
+                    if (models.Count >= assignmentSetsCount)
+                    {
+                        break;
+                    }
                 }
             }
             return models;
@@ -225,7 +272,7 @@ namespace OsvitaBLL.Services
             return assignmetReportModels;
         }
 
-        private async Task<EducationClassAssignmetSetReportModel> GetEducationClassAssignmetSetReportModelAsync(int educationClassId, int assignmentSetId)
+        public async Task<EducationClassAssignmetSetReportModel> GetEducationClassAssignmetSetReportModelAsync(int educationClassId, int assignmentSetId)
         {
             var educationClass = await unitOfWork.EducationClassRepository.GetByIdWithDetailsAsync(educationClassId);
             var educationClassAssignmetSetReportModel = new EducationClassAssignmetSetReportModel
@@ -247,6 +294,65 @@ namespace OsvitaBLL.Services
             }
 
             return educationClassAssignmetSetReportModel;
+        }
+
+        public async Task<IEnumerable<AssignmetSetProgressChartModel>> GetAssignmetSetSubjectProgressesChartModelAsync(int userId)
+        {
+            var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
+            var assignmentSets = (await unitOfWork.AssignmentSetRepository.GetAllAsync()).Where(x => statistic.AssignmentSetProgressDetails.Select(d => d.AssignmentSetId).Contains(x.Id));
+            var assignmetSetProgressChartModels = new List<AssignmetSetProgressChartModel>();
+            var subjects = await unitOfWork.SubjectRepository.GetAllWithDetailsAsync();
+            foreach (var subject in subjects)
+            {
+                var topicIds = subject.Chapters.SelectMany(c => c.Topics).Select(x => x.Id);
+                var subjectAssignmentSetsIds = assignmentSets.Where(x => x.ObjectType == ObjectType.Topic && topicIds.Contains(x.ObjectId))
+                    .Concat(assignmentSets.Where(x => (x.ObjectType == ObjectType.Subject || x.ObjectType == ObjectType.Diagnostical) && x.ObjectId == subject.Id)).Select(x => x.Id);
+                var subjectAssignmentSetsByUser = statistic.AssignmentSetProgressDetails.Where(x => subjectAssignmentSetsIds.Contains(x.AssignmentSetId));
+                var assignmetSetProgressChartModel = new AssignmetSetProgressChartModel
+                {
+                    ObjectId = subject.Id,
+                    ObjectName = subject.Title,
+                    Score = subjectAssignmentSetsByUser.Sum(x => x.Score),
+                    MaxScore = subjectAssignmentSetsByUser.Sum(x => x.MaxScore)
+                };
+                assignmetSetProgressChartModels.Add(assignmetSetProgressChartModel);
+            }
+            
+            return assignmetSetProgressChartModels;
+        }
+
+        public async Task<IEnumerable<AssignmetSetProgressChartModel>> GetAssignmetSetTopicProgressesChartModelAsync(int userId, int? subjectId)
+        {
+            var statistic = await statisticService.GetStatisticByUserIdAsync(userId);
+            var assignmentSets = (await unitOfWork.AssignmentSetRepository.GetAllAsync()).Where(x => x.ObjectType == ObjectType.Topic && statistic.AssignmentSetProgressDetails.Select(d => d.AssignmentSetId).Contains(x.Id));
+            var assignmetSetProgressChartModels = new List<AssignmetSetProgressChartModel>();
+            var topics = new List<Topic>();
+            if (subjectId is not null)
+            {
+                topics = (await unitOfWork.SubjectRepository.GetByIdWithDetailsAsync(subjectId.Value)).Chapters.SelectMany(c => c.Topics).ToList();
+            }
+            else
+            {
+                topics = (await unitOfWork.TopicRepository.GetAllAsync()).ToList();
+            }
+            foreach (var topic in topics)
+            {
+                var topicAssignmentSetsIds = assignmentSets.Where(x => x.ObjectType == ObjectType.Topic && x.ObjectId == topic.Id).Select(x => x.Id);
+                var topicAssignmentSetsByUser = statistic.AssignmentSetProgressDetails.Where(x => topicAssignmentSetsIds.Contains(x.AssignmentSetId));
+                var assignmetSetProgressChartModel = new AssignmetSetProgressChartModel
+                {
+                    ObjectId = topic.Id,
+                    ObjectName = topic.Title,
+                    Score = topicAssignmentSetsByUser.Sum(x => x.Score),
+                    MaxScore = topicAssignmentSetsByUser.Sum(x => x.MaxScore)
+                };
+                if (assignmetSetProgressChartModel.MaxScore > 0)
+                {
+                    assignmetSetProgressChartModels.Add(assignmetSetProgressChartModel);
+                }
+            }
+
+            return assignmetSetProgressChartModels;
         }
     }
 }

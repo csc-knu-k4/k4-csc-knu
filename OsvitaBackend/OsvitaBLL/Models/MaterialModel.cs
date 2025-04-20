@@ -9,6 +9,7 @@ namespace OsvitaBLL.Models
         public int OrderPosition { get; set; }
 
         public List<int> ContentBlocksIds { get; set; }
+        public List<ContentBlockModel>? ContentBlocks { get; set; }
     }
 }
 

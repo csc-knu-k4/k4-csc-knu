@@ -13,7 +13,7 @@ export default function BaseLayout() {
       templateRows="auto 1fr"
       gap="1.5rem"
       h="100vh"
-      padding="1.25rem 1.5rem"
+      padding={{ base: '0.5rem 0.75rem', md: '1.25rem 1.5rem' }}
       overflow="hidden"
     >
       <GridItem area="toolbar" w="100%">

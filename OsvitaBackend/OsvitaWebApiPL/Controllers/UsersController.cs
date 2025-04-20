@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
+using OsvitaBLL.Models.ReportModels;
 using OsvitaBLL.Services;
 using OsvitaDAL.Entities;
+using OsvitaWebApiPL.Identity;
 using OsvitaWebApiPL.Interfaces;
+using OsvitaWebApiPL.Models;
 
 namespace OsvitaWebApiPL.Controllers
 {
@@ -11,19 +14,25 @@ namespace OsvitaWebApiPL.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly IEducationClassService educationClassService;
         private readonly IStatisticService statisticService;
+        private readonly IStatisticReportService statisticReportService;
         private readonly IUserService userService;
         private readonly IIdentityService identityService;
         private readonly IEducationPlanService educationPlanService;
         private readonly IRecomendationService recomendationService;
+        private readonly IAssignmentService assignmentService;
 
-        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService)
+        public UsersController(IStatisticService statisticService, IUserService userService, IIdentityService identityService, IEducationPlanService educationPlanService, IRecomendationService recomendationService, IAssignmentService assignmentService, IEducationClassService educationClassService, IStatisticReportService statisticReportService)
         {
             this.statisticService = statisticService;
             this.userService = userService;
             this.identityService = identityService;
             this.educationPlanService = educationPlanService;
             this.recomendationService = recomendationService;
+            this.assignmentService = assignmentService;
+            this.educationClassService = educationClassService;
+            this.statisticReportService = statisticReportService;
         }
 
         // GET api/users/5/statistic/
@@ -98,13 +107,97 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
+        // GET api/users/5/statistic/assignments/5
         [HttpGet("{id}/statistic/assignments/{assignmentSetProgressDetailId}")]
-        public async Task<ActionResult<AssignmentSetProgressDetailModel>> PostAssignmentSetProgressDetail(int id, int assignmentSetProgressDetailId)
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetAssignmentSetProgressDetail(int id, int assignmentSetProgressDetailId)
         {
             try
             {
                 var assignmentSetProgressDetail = await statisticService.GetAssignmentSetProgressDetailAsync(id, assignmentSetProgressDetailId);
                 return Ok(assignmentSetProgressDetail);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/statistic/dailyassignment/isdone
+        [HttpGet("{id}/statistic/dailyassignment/isdone")]
+        public async Task<ActionResult<bool>> IsDailyAssignmentDone(int id)
+        {
+            try
+            {
+                var isDailyAssignmentDone = await statisticService.IsDailyAssignmentDoneAsync(id);
+                return Ok(isDailyAssignmentDone);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/statistic/dailyassignment/streak
+        [HttpGet("{id}/statistic/dailyassignment/streak")]
+        public async Task<ActionResult<int>> GetDailyAssignmentStreak(int id, DateTime? fromDate)
+        {
+            try
+            {
+                var dailyAssignmentStreak = await statisticService.GetDailyAssignmentStreakAsync(id, fromDate);
+                return Ok(dailyAssignmentStreak);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/dailyassignmentset
+        [HttpGet("{id}/dailyassignmentset")]
+        public async Task<ActionResult<AssignmentSetModel>> GetDailyAssignmentSet(int id)
+        {
+            try
+            {
+                var dailyAssignmentSet = await assignmentService.GetDailyAssignmentSetAsync(id);
+                return Ok(dailyAssignmentSet);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/dailyassignment/rating
+        [HttpGet("dailyassignment/rating")]
+        public async Task<ActionResult<IEnumerable<UserDailyAssignmentRatingModel>>> GetDailyAssignmentRating()
+        {
+            try
+            {
+                var users = await userService.GetAllAsync();
+                foreach (var user in users)
+                {
+                    user.Roles = await identityService.GetUserRoles(user.Email);
+                }
+                var students = users.Where(x => x.Roles.Contains(RoleSettings.StudentRole));
+                var dailyAssignmentRating = await statisticService.GetDailyAssignmentRatingAsync(students);
+                return Ok(dailyAssignmentRating);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/dailyassignment/rating
+        [HttpGet("{id}/dailyassignment/rating")]
+        public async Task<ActionResult<UserDailyAssignmentRatingModel>> GetDailyAssignmentRatingForUser(int id)
+        {
+            try
+            {
+                var user = await userService.GetByIdAsync(id);
+                var students = new List<UserModel> { user };
+                var dailyAssignmentRating = await statisticService.GetDailyAssignmentRatingAsync(students);
+                return Ok(dailyAssignmentRating.FirstOrDefault());
             }
             catch (Exception ex)
             {
@@ -136,6 +229,18 @@ namespace OsvitaWebApiPL.Controllers
             if (educationPlanModel is not null)
             {
                 return Ok(educationPlanModel);
+            }
+            return NotFound();
+        }
+
+        // GET api/users/5/educationplanvm
+        [HttpGet("{id}/educationplanvm")]
+        public async Task<ActionResult<EducationPlanVm>> GetEducationPlanVm(int id)
+        {
+            var educationPlanVm = await educationPlanService.GetEducationPlanVmByUserIdsync(id);
+            if (educationPlanVm is not null)
+            {
+                return Ok(educationPlanVm);
             }
             return NotFound();
         }
@@ -197,6 +302,36 @@ namespace OsvitaWebApiPL.Controllers
             }
         }
 
+        // POST: api/users/5/educationplan/assignments
+        [HttpPost("{id}/educationplan/assignments")]
+        public async Task<ActionResult> PostAssignmentSetPlanDetail(int id, [FromBody] AssignmentSetPlanDetailModel model)
+        {
+            try
+            {
+                await educationPlanService.AddAssignmentSetPlanDetailAsync(model, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // DELETE: api/users/5/educationplan/assignments/5
+        [HttpDelete("{id}/educationplan/assignments/{assignmentSetId}")]
+        public async Task<ActionResult> DeleteAssignmentSetProgressDetail(int id, int assignmentSetId)
+        {
+            try
+            {
+                await educationPlanService.DeleteAssignmentSetPlanDetailAsync(id, assignmentSetId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //GET api/users/5/recomendationmessages/
         [HttpGet("{id}/recomendationmessages/")]
         public async Task<ActionResult<IEnumerable<RecomendationMessageModel>>> GetRecomendationMessages(int id)
@@ -205,6 +340,18 @@ namespace OsvitaWebApiPL.Controllers
             if (messages is not null)
             {
                 return Ok(messages);
+            }
+            return NotFound();
+        }
+
+        //GET api/users/5/recomendationmessages/
+        [HttpGet("{id}/dailyrecomendationmessage/")]
+        public async Task<ActionResult<RecomendationMessageModel>> IsTodayRecomendationMessageRead(int id)
+        {
+            var message = await recomendationService.GetTodayRecomendationMessageAsync(id);
+            if (message is not null)
+            {
+                return Ok(message);
             }
             return NotFound();
         }
@@ -251,6 +398,60 @@ namespace OsvitaWebApiPL.Controllers
                 return Ok(recomendation);
             }
             return NotFound();
+        }
+
+        // GET api/users/5/classes
+        [HttpGet("{id}/classes")]
+        public async Task<ActionResult<IEnumerable<EducationClassModel>>> GetEducationClasses(int id)
+        {
+            var educationClassModels = await educationClassService.GetByStudentIdAsync(id);
+            if (educationClassModels is not null)
+            {
+                return Ok(educationClassModels);
+            }
+            return NotFound();
+        }
+
+        // GET api/users/5/classes/educationplans
+        [HttpGet("{id}/classes/educationplans")]
+        public async Task<ActionResult<IEnumerable<EducationClassPlanVm>>> GetEducationClassPlans(int id)
+        {
+            var educationClassPlansModels = await educationClassService.GetEducationClassPlansByStudentIdAsync(id);
+            if (educationClassPlansModels is not null)
+            {
+                return Ok(educationClassPlansModels);
+            }
+            return NotFound();
+        }
+
+        // GET api/users/5/statistic/charts/subjects
+        [HttpGet("{id}/statistic/charts/subjects")]
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetAssignmetSetSubjectProgressesChartModel(int id)
+        {
+            try
+            {
+                var assignmentSetProgressDetail = await statisticReportService.GetAssignmetSetSubjectProgressesChartModelAsync(id);
+                return Ok(assignmentSetProgressDetail);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/users/5/statistic/charts/topics
+        [HttpGet("{id}/statistic/charts/topics")]
+        public async Task<ActionResult<AssignmentSetProgressDetailModel>> GetAssignmetSetTopicProgressesChartModel(int id, int? subjectId)
+        {
+            try
+            {
+                var assignmentSetProgressDetail = await statisticReportService.GetAssignmetSetTopicProgressesChartModelAsync(id, subjectId);
+                return Ok(assignmentSetProgressDetail);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

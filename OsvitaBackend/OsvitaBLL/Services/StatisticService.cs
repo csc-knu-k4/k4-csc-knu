@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Spreadsheet;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
+using OsvitaBLL.Models.ReportModels;
 using OsvitaDAL.Entities;
 using OsvitaDAL.Interfaces;
 using OsvitaDAL.Repositories;
@@ -268,6 +270,84 @@ namespace OsvitaBLL.Services
             }
             return result;
         }
+
+        public async Task<bool> IsDailyAssignmentDoneAsync(int userId)
+        {
+            var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
+            var statistic = await statisticRepository.GetStatisticByUserIdAsync(userId);
+            var assignmentSetProgressDetails = await statisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+            var todaysAssignmentSetProgressDetails = assignmentSetProgressDetails
+                .Where(aspd => aspd.CompletedDate.Date == DateTime.Today &&
+                   dailyAssignments.Select(da => da.AssignmentSetId)
+                                   .Contains(aspd.AssignmentSetId));
+            return todaysAssignmentSetProgressDetails.Any();
+        }
+
+        public async Task<int> GetDailyAssignmentStreakAsync(int userId, DateTime? fromDate)
+        { 
+            var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(userId);
+            var statistic = await statisticRepository.GetStatisticByUserIdAsync(userId);
+            var assignmentSetProgressDetails = await statisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+            var dailyAssignmentSetProgressDetails = dailyAssignments.Join(assignmentSetProgressDetails,
+                                                                            da => da.AssignmentSetId,
+                                                                            aspd => aspd.AssignmentSetId,
+                                                                            (da, aspd) => new { aspd.CompletedDate })
+                                                                     .OrderByDescending(x => x.CompletedDate)
+                                                                     .ToList();
+            int count = 0;
+            var day = DateTime.Today;
+            foreach (var daspd in dailyAssignmentSetProgressDetails)
+            {
+                if ((fromDate is not null) ? fromDate > day : false) 
+                    break;
+                if (daspd.CompletedDate.Date != day) 
+                    break;
+                day = day.AddDays(-1);
+                count++;
+            }
+            return count;
+        }
+
+        public async Task<IEnumerable<UserDailyAssignmentRatingModel>> GetDailyAssignmentRatingAsync(IEnumerable<UserModel> students)
+        {
+            var userDailyAssignmentRatingModels = new List<UserDailyAssignmentRatingModel>();
+
+            foreach (var student in students)
+            {
+                var dailyAssignments = await unitOfWork.DailyAssignmentRepository.GetDailyAssignmentsByUserIdWithDetailsAsync(student.Id);
+                var statistic = await statisticRepository.GetStatisticByUserIdAsync(student.Id);
+                if (statistic == null) continue;
+
+                var assignmentSetProgressDetails = await statisticRepository.GetAssignmentSetProgressDetailsByStatisticIdAsync(statistic.Id);
+
+                var score = dailyAssignments
+                    .Join(assignmentSetProgressDetails,
+                        da => da.AssignmentSetId,
+                        aspd => aspd.AssignmentSetId,
+                        (da, aspd) => aspd.Score)
+                    .Sum();
+
+                userDailyAssignmentRatingModels.Add(new UserDailyAssignmentRatingModel
+                {
+                    UserModel = student,
+                    Score = score,
+                    Place = 0
+                });
+            }
+
+            userDailyAssignmentRatingModels = userDailyAssignmentRatingModels
+                .OrderByDescending(x => x.Score)
+                .ToList();
+
+            int place = 1;
+            foreach (var udarm in userDailyAssignmentRatingModels)
+            {
+                udarm.Place = place++;
+            }
+
+            return userDailyAssignmentRatingModels;
+        }
+
     }
 }
 

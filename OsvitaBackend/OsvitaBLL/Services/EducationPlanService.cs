@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Spreadsheet;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
 using OsvitaDAL.Entities;
@@ -18,6 +19,17 @@ namespace OsvitaBLL.Services
             this.unitOfWork = unitOfWork;
             educationPlanRepository = unitOfWork.EducationPlanRepository;
             this.mapper = mapper;
+        }
+
+        public async Task<int> AddAssignmentSetPlanDetailAsync(AssignmentSetPlanDetailModel model, int userId)
+        {
+            var assignmentSetPlanDetail = mapper.Map<AssignmentSetPlanDetail>(model);
+            var educationPlan = await educationPlanRepository.GetEducationPlanByUserIdWithDetailsAsync(userId);
+            assignmentSetPlanDetail.EducationClassPlanId = null;
+            educationPlan.AssignmentSetPlanDetails.Add(assignmentSetPlanDetail);
+            await educationPlanRepository.UpdateAsync(educationPlan);
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSetPlanDetail.Id;
         }
 
         public async Task<int> AddAsync(EducationPlanModel model)
@@ -41,6 +53,15 @@ namespace OsvitaBLL.Services
             await educationPlanRepository.UpdateAsync(educationPlan);
             await unitOfWork.SaveChangesAsync();
             return topicPlanDetail.Id;
+        }
+
+        public async Task<int> DeleteAssignmentSetPlanDetailAsync(int userId, int assignmentSetId)
+        {
+            var educationPlan = await educationPlanRepository.GetEducationPlanByUserIdWithDetailsAsync(userId);
+            var assignmentSetPlanDetail = await educationPlanRepository.GetAssignmentSetPlanDetailByEducationPlanIdAndAssignmentSetIdAsync(educationPlan.Id, assignmentSetId);
+            await educationPlanRepository.DeleteAssignmentSetPlanDetailByIdAsync(assignmentSetPlanDetail.Id);
+            await unitOfWork.SaveChangesAsync();
+            return assignmentSetPlanDetail.Id;
         }
 
         public async Task DeleteAsync(EducationPlanModel model)
@@ -107,6 +128,58 @@ namespace OsvitaBLL.Services
             // some changes
             await unitOfWork.SaveChangesAsync();
             return oldTopicPlanDetail.Id;
+        }
+
+        public async Task<EducationPlanVm> GetEducationPlanVmByUserIdsync(int userId)
+        {
+            var educationPlan = await educationPlanRepository.GetEducationPlanByUserIdWithDetailsAsync(userId);
+            var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdWithDetailsAsync(userId);
+            var educationPlanVm = new EducationPlanVm
+            {
+                Id = educationPlan.Id,
+                Topics = new List<TopicVm>(),
+                AssignmentSets = new List<AssignmentSetVm>()
+            };
+            foreach (var topicPlanDetail in educationPlan.TopicPlanDetails)
+            {
+                var topicPlanVm = new TopicVm
+                {
+                    Id = topicPlanDetail.Id,
+                    TopicId = topicPlanDetail.TopicId,
+                    Title = topicPlanDetail.Topic.Title,
+                    IsCompleted = statistic.TopicProgressDetails.Where(x => x.IsCompleted).Select(x => x.TopicId).Contains(topicPlanDetail.TopicId)
+                };
+                educationPlanVm.Topics.Add(topicPlanVm);
+            }
+            foreach (var assignmentSetPlanDetail in educationPlan.AssignmentSetPlanDetails)
+            {
+                var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(assignmentSetPlanDetail.AssignmentSetId);
+                var title = await GetAssignmentSetTitleAsync(assignmentSet.ObjectId, assignmentSet.ObjectType);
+                var assignmentSetVm = new AssignmentSetVm
+                {
+                    Id = assignmentSetPlanDetail.Id,
+                    AssignmentSetId = assignmentSetPlanDetail.AssignmentSetId,
+                    ObjectModelType = mapper.Map<ObjectModelType>(assignmentSet.ObjectType),
+                    Title = title,
+                    IsCompleted = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).Select(x => x.AssignmentSetId).Contains(assignmentSetPlanDetail.AssignmentSetId)
+                };
+                educationPlanVm.AssignmentSets.Add(assignmentSetVm);
+            }
+            return educationPlanVm;
+        }
+
+        private async Task<string> GetAssignmentSetTitleAsync(int objectId, ObjectType objectType)
+        {
+            var title = string.Empty;
+            if (objectType == ObjectType.Subject)
+            {
+                title = (await unitOfWork.SubjectRepository.GetByIdAsync(objectId)).Title;
+            }
+            if (objectType == ObjectType.Topic)
+            {
+                title = (await unitOfWork.TopicRepository.GetByIdAsync(objectId)).Title;
+            }
+            return title;
         }
     }
 }

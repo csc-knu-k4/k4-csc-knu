@@ -79,6 +79,119 @@ namespace OsvitaBLL.Services
             await unitOfWork.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<EducationClassModel>> GetByStudentIdAsync(int studentId)
+        {
+            var educationClasses = (await educationClassRepository.GetAllWithDetailsAsync()).Where(x => x.Students.Select(x => x.Id).Contains(studentId));
+            var educationClassesModels = mapper.Map<IEnumerable<EducationClass>, IEnumerable<EducationClassModel>>(educationClasses);
+            return educationClassesModels;
+        }
+
+        public async Task<IEnumerable<EducationClassModel>> GetByTeacherIdAsync(int teacherId)
+        {
+            var educationClasses = (await educationClassRepository.GetAllWithDetailsAsync()).Where(x => x.TeacherId == teacherId);
+            var educationClassesModels = mapper.Map<IEnumerable<EducationClass>, IEnumerable<EducationClassModel>>(educationClasses);
+            return educationClassesModels;
+        }
+
+        public async Task<EducationClassPlanVm> GetEducationClassPlanByEducationClassIdAsync(int id)
+        {
+            var educationClass = await educationClassRepository.GetByIdWithDetailsAsync(id);
+            var educationClassPlan = new EducationClassPlanVm
+            {
+                Id = educationClass.EducationClassPlan.Id,
+                EducationClassId = educationClass.Id,
+                EducationClassName = educationClass.Name,
+                Topics = new List<TopicVm>(),
+                AssignmentSets = new List<AssignmentSetVm>()
+            };
+            foreach (var topicPlanDetail in educationClass.EducationClassPlan.TopicPlanDetails)
+            {
+                var topicPlanVm = new TopicVm
+                {
+                    Id = topicPlanDetail.Id,
+                    TopicId = topicPlanDetail.TopicId,
+                    Title = topicPlanDetail.Topic.Title
+                };
+                educationClassPlan.Topics.Add(topicPlanVm);
+            }
+            foreach (var assignmentSetPlanDetail in educationClass.EducationClassPlan.AssignmentSetPlanDetails)
+            {
+                var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(assignmentSetPlanDetail.AssignmentSetId);
+                var title = await GetAssignmentSetTitleAsync(assignmentSet.ObjectId, assignmentSet.ObjectType);
+                var assignmentSetVm = new AssignmentSetVm
+                {
+                    Id = assignmentSetPlanDetail.Id,
+                    AssignmentSetId = assignmentSetPlanDetail.AssignmentSetId,
+                    ObjectModelType = mapper.Map<ObjectModelType>(assignmentSet.ObjectType),
+                    Title = title
+                };
+                educationClassPlan.AssignmentSets.Add(assignmentSetVm);
+            }
+            return educationClassPlan;
+        }
+
+        public async Task<IEnumerable<EducationClassPlanVm>> GetEducationClassPlansByStudentIdAsync(int studentId)
+        {
+            var educationClassPlans = new List<EducationClassPlanVm>();
+            var educationClasses = (await educationClassRepository.GetAllWithDetailsAsync()).Where(x => x.Students.Select(x => x.Id).Contains(studentId));
+            var statistic = await unitOfWork.StatisticRepository.GetStatisticByUserIdWithDetailsAsync(studentId);
+            if (educationClasses is not null)
+            {
+                foreach (var educationClass in educationClasses)
+                {
+                    var educationClassPlan = new EducationClassPlanVm
+                    {
+                        Id = educationClass.EducationClassPlan.Id,
+                        EducationClassId = educationClass.Id,
+                        EducationClassName = educationClass.Name,
+                        Topics = new List<TopicVm>(),
+                        AssignmentSets = new List<AssignmentSetVm>()
+                    };
+                    foreach (var topicPlanDetail in educationClass.EducationClassPlan.TopicPlanDetails)
+                    {
+                        var topicPlanVm = new TopicVm
+                        {
+                            Id = topicPlanDetail.Id,
+                            TopicId = topicPlanDetail.TopicId,
+                            Title = topicPlanDetail.Topic.Title,
+                            IsCompleted = statistic.TopicProgressDetails.Where(x => x.IsCompleted).Select(x => x.TopicId).Contains(topicPlanDetail.TopicId)
+                        };
+                        educationClassPlan.Topics.Add(topicPlanVm);
+                    }
+                    foreach (var assignmentSetPlanDetail in educationClass.EducationClassPlan.AssignmentSetPlanDetails)
+                    {
+                        var assignmentSet = await unitOfWork.AssignmentSetRepository.GetByIdAsync(assignmentSetPlanDetail.AssignmentSetId);
+                        var title = await GetAssignmentSetTitleAsync(assignmentSet.ObjectId, assignmentSet.ObjectType);
+                        var assignmentSetVm = new AssignmentSetVm
+                        {
+                            Id = assignmentSetPlanDetail.Id,
+                            AssignmentSetId = assignmentSetPlanDetail.AssignmentSetId,
+                            ObjectModelType = mapper.Map<ObjectModelType>(assignmentSet.ObjectType),
+                            Title = title,
+                            IsCompleted = statistic.AssignmentSetProgressDetails.Where(x => x.IsCompleted).Select(x => x.AssignmentSetId).Contains(assignmentSetPlanDetail.AssignmentSetId)
+                        };
+                        educationClassPlan.AssignmentSets.Add(assignmentSetVm);
+                    }
+                    educationClassPlans.Add(educationClassPlan);
+                }
+            }
+            return educationClassPlans;
+        }
+
+        private async Task<string> GetAssignmentSetTitleAsync(int objectId, ObjectType objectType)
+        {
+            var title = string.Empty;
+            if (objectType == ObjectType.Subject)
+            {
+                title = (await unitOfWork.SubjectRepository.GetByIdAsync(objectId)).Title;
+            }
+            if (objectType == ObjectType.Topic)
+            {
+                title = (await unitOfWork.TopicRepository.GetByIdAsync(objectId)).Title;
+            }
+            return title;
+        }
+
         public async Task InviteStudentByEmailAsync(string email, int educationClassId)
         {
             var user = (await unitOfWork.UserRepository.GetAllAsync()).FirstOrDefault(x => x.Email == email);
@@ -92,8 +205,8 @@ namespace OsvitaBLL.Services
                     CreatedDate = DateTime.Now
                 };
                 await educationClassRepository.AddEducationClassInvitationAsync(invitation);
-                var subject = "Invitation to class";
-                var message = $"Your invitation link is {settings.BaseUrl}/api/classes/{educationClassId}/students/{user.Id}/confirmations/{invitation.Guid}";
+                var subject = "Запрошення до навчального класу";
+                var message = $"Щоб прийняти запрошення, перейдіть за посиланням: {settings.BaseUrl}/invitationAccept.html?id={educationClassId}&userId={user.Id}&guid={invitation.Guid}";
                 await emailService.SendEmailAsync(email, subject, message);
             }
             await unitOfWork.SaveChangesAsync();

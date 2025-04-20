@@ -9,6 +9,8 @@ import { toaster } from '@/components/ui/toaster';
 import Layout from '@/app/layouts/AuthLayout/AuthLayout';
 import { login } from '@/shared/api/auth';
 import { AppDispatch } from '@/processes/store';
+import { setUserRoles } from '@/processes/store/authSlice';
+import { getUserById } from '@/shared/api/userApi';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,16 +23,22 @@ const Login = () => {
   const handleLogin = async () => {
     setIsLoading(true);
     try {
-      await login({ email, password }, dispatch);
+      const data = await login({ email, password }, dispatch);
+
+      const userId = data.id;
+      const user = await getUserById(userId);
+      dispatch(setUserRoles(user.roles));
+
       toaster.success({
         title: 'Вхід успішний',
         type: 'info',
       });
+
       navigate('/course');
     } catch (error) {
       toaster.error({
-        title: `Помилка при авторизації ${error}`,
-        type: 'erorr',
+        title: `Помилка при авторизації: ${error}`,
+        type: 'error',
       });
     } finally {
       setIsLoading(false);

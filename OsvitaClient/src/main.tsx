@@ -1,3 +1,4 @@
+import { LightMode } from '@/components/ui/color-mode';
 import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
 import { ThemeProvider } from 'next-themes';
 import { StrictMode } from 'react';
@@ -9,6 +10,7 @@ import { ReactQueryProvider } from './app/providers/ReactQueryProvider';
 import { Provider } from 'react-redux';
 import store from './processes/store';
 import { Toaster } from './components/ui/toaster';
+import { AssistantDrawer } from './widgets/assistantDrawer/AssistantDrawer';
 
 const system = createSystem(defaultConfig, config);
 
@@ -17,10 +19,13 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <ChakraProvider value={system}>
         <ThemeProvider attribute="class" disableTransitionOnChange>
+          <LightMode>
             <ReactQueryProvider>
               <RouterProvider router={router} />
               <Toaster />
+              <AssistantDrawer />
             </ReactQueryProvider>
+          </LightMode>
         </ThemeProvider>
       </ChakraProvider>
     </Provider>

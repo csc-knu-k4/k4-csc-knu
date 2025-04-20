@@ -6,6 +6,7 @@
         TopicModel,
         AssignmentSetModel,
         SubjectModel,
-        DiagnosticalModel
+        DiagnosticalModel,
+        DailyModel
     }
 }
