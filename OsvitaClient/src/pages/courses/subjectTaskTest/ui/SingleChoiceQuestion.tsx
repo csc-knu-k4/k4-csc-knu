@@ -79,7 +79,7 @@ const SingleChoiceQuestion = ({
               {ans.valueImage ? (
                 <>
                   <Image
-                    src={`${window.location.origin}${ans.valueImage}`}
+                    src={`${import.meta.env.VITE_IMG_URL}${ans.valueImage}`}
                     alt={`Варіант ${alphabet[i]}`}
                     borderRadius="md"
                     maxW="120px"
