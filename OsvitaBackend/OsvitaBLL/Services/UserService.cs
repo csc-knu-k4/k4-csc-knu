@@ -10,12 +10,14 @@ namespace OsvitaBLL.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IUserRepository userRepository;
+        private readonly IDailyAssignmentService dailyAssignmentService;
         private readonly IMapper mapper;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IDailyAssignmentService dailyAssignmentService, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             userRepository = unitOfWork.UserRepository;
+            this.dailyAssignmentService = dailyAssignmentService;
             this.mapper = mapper;
         }
 
@@ -26,6 +28,11 @@ namespace OsvitaBLL.Services
             user.EducationPlan = new EducationPlan();
             await userRepository.AddAsync(user);
             await unitOfWork.SaveChangesAsync();
+            // generate daily assignments
+            for (int i = 0; i < 10; i++)
+            {
+                await dailyAssignmentService.AddDailyAssignmentAsync(user.Id);
+            }
             return user.Id;
         }
 

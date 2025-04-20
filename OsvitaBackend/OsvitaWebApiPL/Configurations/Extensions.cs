@@ -121,7 +121,13 @@ namespace OsvitaWebApiPL.Configurations
 
                 q.AddTrigger(opts => opts
                     .ForJob(jobKey)
-                    .WithIdentity("AddDailyAssignmentJob-trigger")
+                    .WithIdentity("AddDailyAssignmentJob-trigger-startup")
+                    .StartNow()
+                );
+
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("AddDailyAssignmentJob-trigger-weekly")
                     .WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 0, 0))
                 );
             });
