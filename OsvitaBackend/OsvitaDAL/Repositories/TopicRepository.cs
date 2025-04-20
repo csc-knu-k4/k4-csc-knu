@@ -15,8 +15,10 @@ namespace OsvitaDAL.Repositories
 
         public async Task<bool> AreTopicIdsPresent(List<int> topicIds)
         {
-            return await context.Topics
-                .AnyAsync(x => topicIds.Contains(x.Id));
+            var count = await context.Topics
+                .CountAsync(x => topicIds.Contains(x.Id));
+
+            return count == topicIds.Count;
         }
 
     }
