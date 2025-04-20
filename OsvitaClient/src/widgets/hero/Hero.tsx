@@ -1,7 +1,10 @@
 import IndexPictureHero from '@/shared/assets/IndexPictureHero';
 import { Button, Flex, Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <Flex
       justifyContent={{ base: 'center', md: 'space-between' }}
@@ -29,6 +32,7 @@ const Hero = () => {
           bgColor="orange"
           borderRadius="1rem"
           alignSelf={{ base: 'center', md: 'flex-start' }}
+          onClick={() => navigate('/login')}
         >
           Розпочати підготовку
         </Button>

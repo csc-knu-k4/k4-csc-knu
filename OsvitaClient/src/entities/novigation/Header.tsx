@@ -10,7 +10,7 @@ const Header = () => {
       <Flex justifyContent="center" alignItems="center" flexDir="row" gap={2}>
         <HatIcon />
         <Text fontFamily="Oswald" fontSize="xl" color="orange">
-          Підготовка до НМТ
+          Osvita+
         </Text>
       </Flex>
       <Button
