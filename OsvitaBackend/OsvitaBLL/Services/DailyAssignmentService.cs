@@ -14,6 +14,7 @@ namespace OsvitaBLL.Services
         private readonly IAssignmentRepository assignmentRepository;
         private readonly IAssignmentSetRepository assignmentSetRepository;
         private readonly IAssignmentLinkRepository assignmentLinkRepository;
+        private readonly ITopicRepository topicRepository;
         private readonly IRecomendationService recommendationService;
         private readonly IAssignmentService assignmentService;
         private readonly ITopicService topicService;
@@ -25,6 +26,7 @@ namespace OsvitaBLL.Services
             this.assignmentRepository = unitOfWork.AssignmentRepository;
             this.assignmentSetRepository = unitOfWork.AssignmentSetRepository;
             this.assignmentLinkRepository = unitOfWork.AssignmentLinkRepository;
+            this.topicRepository = unitOfWork.TopicRepository;
             this.recommendationService = recommendationService;
             this.assignmentService = assignmentService;
             this.topicService = topicService;
@@ -58,7 +60,8 @@ namespace OsvitaBLL.Services
             if (assignmentSet.ObjectType == ObjectType.Daily)
             {
                 var topicIds = await recommendationService.GetRecommendedTopicIdsAsync(userId);
-                if (topicIds.Count == 0)
+                bool isCorrect = await topicRepository.AreTopicIdsPresent(topicIds);
+                if (topicIds.Count == 0 || !isCorrect)
                 {
                     var topics = await topicService.GetAllAsync(); // incorrect if subjects aren't only math :(
                     topicIds = topics.Select(x => x.Id).ToList();
