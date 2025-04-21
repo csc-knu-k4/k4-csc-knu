@@ -94,9 +94,9 @@ namespace OsvitaBLL.Services
         {
             ChatClient client = new(model: openAISettings.Model, apiKey: openAISettings.ApiKey);
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("Ти вчитель. Учень готується до іспиту. Учень питає визначення терміну. Поясни визначення терміну. Якщо терміну не існує або питання немає, надсилай відповідь 'На жаль, я не можу Вам допогти.' Питання учня:");
+            stringBuilder.AppendLine("Ти вчитель. Учень готується до іспиту. Учень питає визначення терміну. Поясни визначення терміну. Відповідай лише на питання, що повʼязані з навчальною програмою підготовки до НМТ. Якщо терміну не існує або питання немає, надсилай відповідь 'На жаль, я не можу Вам допогти.' Питання учня:");
             stringBuilder.AppendLine($"{assistantRequestModel.RequestText}");
-            stringBuilder.AppendLine("Не використовуй Markdown");
+            stringBuilder.AppendLine("Не використовуй Markdown.");
             ChatCompletion completion = await client.CompleteChatAsync(stringBuilder.ToString());
             var assistantResponseModel = new AssistantResponseModel
             {

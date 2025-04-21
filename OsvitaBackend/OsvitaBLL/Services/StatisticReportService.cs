@@ -296,6 +296,42 @@ namespace OsvitaBLL.Services
             return educationClassAssignmetSetReportModel;
         }
 
+        public async Task<IEnumerable<EducationClassAssignmetSetReportModel>> GetEducationClassAssignmetSetReportModelsAsync(int educationClassId)
+        {
+            var educationClass = await unitOfWork.EducationClassRepository.GetByIdWithDetailsAsync(educationClassId);
+            var educationClassAssignmetSetReportModels = new List<EducationClassAssignmetSetReportModel>();
+            var studentStatistics = new List<StatisticModel>();
+            foreach (var user in educationClass.Students)
+            {
+                var statistic = await statisticService.GetStatisticByUserIdAsync(user.Id);
+                studentStatistics.Add(statistic);
+            }
+            foreach (var assignmentSetPlanDetail in educationClass.EducationClassPlan.AssignmentSetPlanDetails)
+            {
+                var educationClassAssignmetSetReportModel = new EducationClassAssignmetSetReportModel
+                {
+                    AssignmentSetId = assignmentSetPlanDetail.AssignmentSetId,
+                    AssignmetSetReportModels = new List<AssignmentSetReportModel>()
+                };
+                foreach (var user in educationClass.Students)
+                {
+                    var statistic = studentStatistics.FirstOrDefault(x => x.UserId == user.Id);
+                    var assignmentSetProgressDetail = statistic.AssignmentSetProgressDetails.OrderByDescending(x => x.CompletedDate).FirstOrDefault(x => x.IsCompleted && x.AssignmentSetId == assignmentSetPlanDetail.AssignmentSetId);
+                    if (assignmentSetProgressDetail is not null)
+                    {
+                        var assignmentSetReportModel = await GetAssignmetSetReportModelAsync(user.Id, assignmentSetProgressDetail.Id);
+                        assignmentSetReportModel.UserFirstName = user.FirstName;
+                        assignmentSetReportModel.UserSecondName = user.SecondName;
+                        assignmentSetReportModel.UserEmail = user.Email;
+                        educationClassAssignmetSetReportModel.AssignmetSetReportModels.Add(assignmentSetReportModel);
+                    }
+                }
+                educationClassAssignmetSetReportModels.Add(educationClassAssignmetSetReportModel);
+
+            }
+            return educationClassAssignmetSetReportModels;
+        }
+
         public async Task<IEnumerable<AssignmetSetProgressChartModel>> GetAssignmetSetSubjectProgressesChartModelAsync(int userId)
         {
             var statistic = await statisticService.GetStatisticByUserIdAsync(userId);

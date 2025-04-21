@@ -51,7 +51,7 @@ namespace OsvitaWebApiPL.Controllers
             return NotFound();
         }
 
-        [HttpGet("/ai/userassignments")]
+        [HttpGet("ai/userassignments")]
         public async Task<ActionResult<string>> GetUserAssignmentsReportAI(int userId, int assignmentSetProgressDetailId)
         {
             var result = await statisticReportService.GenerateAssignmetSetsReportAIAsync(userId, assignmentSetProgressDetailId);

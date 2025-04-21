@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OsvitaBLL.Interfaces;
 using OsvitaBLL.Models;
+using OsvitaBLL.Models.ReportModels;
 using OsvitaBLL.Services;
 using OsvitaDAL.Entities;
 using OsvitaWebApiPL.Models;
@@ -205,9 +206,21 @@ namespace OsvitaWebApiPL.Controllers
 
         // GET api/classes/5/statistic/assignments/5
         [HttpGet("{id}/statistic/assignments/{assignmentSetId}")]
-        public async Task<ActionResult<EducationClassPlanModel>> GetEducationClassPlan(int id, int assignmentSetId)
+        public async Task<ActionResult<EducationClassAssignmetSetReportModel>> GetEducationClassAssignmentStatistic(int id, int assignmentSetId)
         {
             var report = await statisticReportService.GetEducationClassAssignmetSetReportModelAsync(id, assignmentSetId);
+            if (report is not null)
+            {
+                return Ok(report);
+            }
+            return NotFound();
+        }
+
+        // GET api/classes/5/statistic/assignments
+        [HttpGet("{id}/statistic/assignments")]
+        public async Task<ActionResult<IEnumerable<EducationClassAssignmetSetReportModel>>> GetEducationClassAssignmentsStatistic(int id)
+        {
+            var report = await statisticReportService.GetEducationClassAssignmetSetReportModelsAsync(id);
             if (report is not null)
             {
                 return Ok(report);
